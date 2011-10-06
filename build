@@ -1,0 +1,1 @@
+node r.js -o public/scripts/app.build.js 
