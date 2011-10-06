@@ -1,8 +1,11 @@
 {
-  "name": "diplomacy",
-  "version": "0.0.1",
-  "dependencies": {
-    "express": "2.4.6",
-    "jade": "> 0.0.1"
+    "name": "Diplomacy"
+  , "version": "0.0.1"
+  , "private": true
+  , "dependencies": {
+      "connect": "1.7.x"
+    , "express": "2.4.x"
+    , "jade": ">= 0.0.1"
+    , "mongoose": "2.3.x"
   }
 }
