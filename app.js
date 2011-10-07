@@ -33,7 +33,8 @@ app.get('/', function(req, res) {
 });
 
 app.get('/canna', function(req, res) {
-  res.send('Hello Canna!');
+  r=req;
+  res.render('canna');
 });
 
 // RUN
@@ -41,5 +42,5 @@ app.get('/canna', function(req, res) {
 var port = process.env.PORT || 3000;
 
 app.listen(port, function() {
-  console.log("Listening on " + port);
+  //console.log("Listening on " + port);
 });
