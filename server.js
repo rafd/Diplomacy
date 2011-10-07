@@ -4,7 +4,6 @@ var app = express.createServer(express.logger());
 
 app.configure(function(){
   app.set('views', __dirname + '/views');
-  app.set('view engine', 'jade');
   app.set('view options', {layout: false});
   app.use(express.bodyParser());
   app.use(express.methodOverride());
@@ -29,7 +28,7 @@ app.dynamicHelpers({
 // ROUTES
 
 app.get('/', function(req, res) {
-  res.render('app', {title: 'Diplomacy'});
+  res.render('app.jade', {title: 'Diplomacy'});
 });
 
 app.get('/canna', function(req, res) {
