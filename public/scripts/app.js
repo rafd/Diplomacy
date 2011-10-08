@@ -1,9 +1,7 @@
-require(["jquery", "scripts/underscore.min.js", "scripts/backbone.min.js", "scripts/backbone-localstorage.js","scripts/ICanHaz.min.js"], function($) {
+require(["jquery", "scripts/vendor/underscore.min.js", "scripts/vendor/backbone.min.js", "scripts/vendor/backbone-localstorage.js","scripts/vendor/ICanHaz.min.js"], function($) {
   $(function() {
-    
-    // MODELS
 
-    window.LogItem = Backbone.Model.extend({
+    window.Event = Backbone.Model.extend({
       defaults: function(){
         return {
           content: 'default content'
