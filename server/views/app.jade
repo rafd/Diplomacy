@@ -3,13 +3,13 @@ html(lang="en")
   head
     title= title
     - if(env == "development")
-      script(data-main='scripts/app', src='scripts/require-jquery.js')
+      script(data-main='scripts/app', src='scripts/vendor/require-jquery.js')
     - if(env == "production")
       script(src='scripts/app.min.js')
   body
     h1 Diplomacy
 
     #diplomacyapp
-      #log
+      #eventlog
 
-      input(id="new-logitem", placeholder="enter here to log", type="text")
+      input(id="new-event", placeholder="enter text here", type="text")

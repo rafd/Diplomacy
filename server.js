@@ -3,7 +3,7 @@ var express = require('express');
 var app = express.createServer(express.logger());
 
 app.configure(function(){
-  app.set('views', __dirname + '/views');
+  app.set('views', __dirname + '/server/views');
   app.set('view options', {layout: false});
   app.use(express.bodyParser());
   app.use(express.methodOverride());
