@@ -2,6 +2,8 @@
   "name": "diplomacy",
   "version": "0.0.1",
   "dependencies": {
-    "express": "2.4.6"
+    "express": "2.4.6",
+    "stylus": "0.16.0",
+    "nib": "0.2.0"
   }
 }

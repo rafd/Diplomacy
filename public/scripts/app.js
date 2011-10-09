@@ -1,6 +1,19 @@
 require(["jquery", "scripts/vendor/underscore.min.js", "scripts/vendor/backbone.min.js", "scripts/vendor/backbone-localstorage.js","scripts/vendor/ICanHaz.min.js"], function($) {
   $(function() {
 
+    window.updateOrientation = function() {
+      switch(window.orientation){
+        //portrait
+        case 0:
+        case 180:
+          break;
+        //landscape
+        case -90:
+        case 90:
+          break;
+      }
+    };
+
     window.Event = Backbone.Model.extend({
       defaults: function(){
         return {

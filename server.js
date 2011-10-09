@@ -1,6 +1,7 @@
-var express = require('express');
-
-var app = express.createServer(express.logger());
+var express = require('express')
+  , stylus = require('stylus')
+  , nib = require('nib')
+  , app = express.createServer(express.logger());
 
 app.configure(function(){
   app.set('views', __dirname + '/server/views');
@@ -8,6 +9,15 @@ app.configure(function(){
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(app.router);
+  app.use(stylus.middleware({
+    src: __dirname + '/public',
+    compile: function (str, path){
+      return stylus(str)
+        .set('filename', path)
+        .set('compress', true)
+        .use(nib());
+    }
+  }));
   app.use(express.static(__dirname + '/public'));
 });
 
