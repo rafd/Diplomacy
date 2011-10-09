@@ -6,6 +6,8 @@
       "connect": "1.7.x"
     , "express": "2.4.x"
     , "jade": ">= 0.0.1"
+    , "stylus": "0.16.x"
+    , "nib": "0.2.x"
     , "mongoose": "2.3.x"
   }
 }

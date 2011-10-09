@@ -1,0 +1,21 @@
+iPad
+  Portrait
+      Browser:
+        Screen:   768 x  946
+        Map:      768 x  690
+        Side:     768 x  256
+      App:
+        Screen:   768 x 1004
+        Map:      768 x  748
+        Side:     768 x  256
+  
+  Landscape
+    Browser:
+      Screen: 1024 x 690
+      Map:     768 x 690
+      Side:    256 x 690   
+    App:
+      Screen: 1024 x 748
+      Map:     768 x 748
+      Side:    256 x 748
+  
