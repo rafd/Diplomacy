@@ -4,7 +4,12 @@ require(["jquery", "scripts/vendor/underscore.min.js", "scripts/vendor/backbone.
 	  //CANNA PUTS HER SEXY CODE HERE:
 	  $('#chatthing').submit(function() {
 		  //alert($("#chatthing input:first").val());
-		  $("#chatbox").append("<p>"+$("#chatthing input:first").val()+"</p>");
+		  var derp = $("#chatthing input:first").val();
+		  $("#chatbox").append("<p>"+derp+"</p>");
+		  $.post("/canna", { chat: derp },
+				   function(data) {
+				     alert("Data Loaded: " + data);
+				   });
 		  $("#chatthing input:first").val("");
 		  return false;
 		});

@@ -49,11 +49,9 @@ app.get('/canna', function(req, res) {
 });
 
 app.post('/canna', function(req, res) {
-		console.log(req);
-		chat.push(req.body.chat);
-		c=chat;
-		res.render('canna.jade');
-	});
+	chat.push(req.body.chat);
+	res.send(true);
+});
 
 
 // RUN
