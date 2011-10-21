@@ -1,10 +1,17 @@
-html
+!!! 5
+html(lang="en")
   head
+    - if(env == "development")
+      script(data-main='scripts/app', src='scripts/vendor/require-jquery.js')
+    - if(env == "production")
+      script(src='scripts/app.min.js')
   body
     p This is a form
-    form(method="post")
+    form(method="post", id="chatthing")
       input(type="text", name="chat")
       input(type="submit", value="Submit")
-    - for(var i in c)
-      p= c[i]
+    #chatbox
+      - for(var i in c)
+        p= c[i]
+    
 

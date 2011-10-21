@@ -1,6 +1,17 @@
 require(["jquery", "scripts/vendor/underscore.min.js", "scripts/vendor/backbone.min.js", "scripts/vendor/backbone-localstorage.js","scripts/vendor/ICanHaz.min.js"], function($) {
   $(function() {
-
+	  
+	  //CANNA PUTS HER SEXY CODE HERE:
+	  $('#chatthing').submit(function() {
+		  //alert($("#chatthing input:first").val());
+		  $("#chatbox").append("<p>"+$("#chatthing input:first").val()+"</p>");
+		  $("#chatthing input:first").val("");
+		  return false;
+		});
+	  
+	  
+	  //
+	
     window.updateOrientation = function() {
       switch(window.orientation){
         //portrait
