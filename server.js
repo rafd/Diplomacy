@@ -3,6 +3,8 @@ var express = require('express')
   , nib = require('nib')
   , app = express.createServer(express.logger());
 
+var chat=[];
+
 app.configure(function(){
   app.set('views', __dirname + '/server/views');
   app.set('view options', {layout: false});
@@ -42,9 +44,17 @@ app.get('/', function(req, res) {
 });
 
 app.get('/canna', function(req, res) {
-  r=req;
-  res.render('canna');
+	c=chat;
+	res.render('canna.jade');
 });
+
+app.post('/canna', function(req, res) {
+		console.log(req);
+		chat.push(req.body.chat);
+		c=chat;
+		res.render('canna.jade');
+	});
+
 
 // RUN
 

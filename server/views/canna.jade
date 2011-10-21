@@ -2,8 +2,9 @@ html
   head
   body
     p This is a form
-    form 
+    form(method="post")
       input(type="text", name="chat")
       input(type="submit", value="Submit")
-    p= r.query.chat
+    - for(var i in c)
+      p= c[i]
 
