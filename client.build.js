@@ -1,9 +1,11 @@
 ({
-    name: 'app',
-    out: 'app.min.js',
-    
+    name: 'scripts/app',
+    out: 'public/scripts/app.min.js',
+    baseUrl: './public/',
+    dir: './public/',
+
     paths: {
-        "jquery": "require-jquery"
+        "jquery": "scripts/vendor/require-jquery"
     },
 
     modules: [
