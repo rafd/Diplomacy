@@ -53,7 +53,9 @@ app.post('/canna', function(req, res) {
 	res.send(true);
 });
 
-
+app.post('/chat', function(req, res) {
+	res.send(chat);
+})
 // RUN
 
 var port = process.env.PORT || 3000;
