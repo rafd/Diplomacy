@@ -1,14 +1,23 @@
-var express = require('express');
-
-var app = express.createServer(express.logger());
+var express = require('express')
+  , stylus = require('stylus')
+  , nib = require('nib')
+  , app = express.createServer(express.logger());
 
 app.configure(function(){
-  app.set('views', __dirname + '/views');
-  app.set('view engine', 'jade');
+  app.set('views', __dirname + '/server/views');
   app.set('view options', {layout: false});
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(app.router);
+  app.use(stylus.middleware({
+    src: __dirname + '/public',
+    compile: function (str, path){
+      return stylus(str)
+        .set('filename', path)
+        .set('compress', true)
+        .use(nib());
+    }
+  }));
   app.use(express.static(__dirname + '/public'));
 });
 
@@ -29,7 +38,7 @@ app.dynamicHelpers({
 // ROUTES
 
 app.get('/', function(req, res) {
-  res.render('app', {title: 'Diplomacy'});
+  res.render('app.jade', {title: 'Diplomacy'});
 });
 
 app.get('/canna', function(req, res) {

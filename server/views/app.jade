@@ -1,0 +1,33 @@
+!!! 5
+html(lang="en")
+  head
+    title= title
+    - if(env == "development")
+      script(data-main='scripts/app', src='scripts/vendor/require-jquery.js')
+    - if(env == "production")
+      script(src='scripts/app.min.js')
+
+    link(href="/stylesheets/app.css", media="only screen", rel="stylesheet", type="text/css")
+    link(href="/stylesheets/screen.css", media="only screen and (min-device-width: 1025px)", rel="stylesheet", type="text/css")
+    link(href="/stylesheets/mobile.css", media="only screen and (max-device-width: 480px)", rel="stylesheet", type="text/css")
+    link(href="/stylesheets/tablet.css", media="only screen and (min-device-width: 481px) and (max-device-width: 1024px)", rel="stylesheet", type="text/css")
+
+    link(rel="apple-touch-icon", href="./images/icon.png")
+    link(rel="apple-touch-startup-image", href="./images/startup.png")
+
+    link(rel="apple-touch-startup-image", href="./images/startup_ipad_landscape.png", media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape)")
+
+    link(rel="apple-touch-startup-image", href="./images/startup_ipad_portrait.png", media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait)")
+
+    meta(name="viewport", content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0")
+    meta(name="apple-mobile-web-app-capable", content="yes")
+
+  body(ontouchmove="event.preventDefault();", onorientationchange="updateOrientation();")
+    #diplomacyapp
+      #game
+        #map
+
+        #side
+          log
+            #eventlog
+            input(id="new-event", placeholder="enter text here", type="text")
