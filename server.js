@@ -1,7 +1,8 @@
 var express = require('express')
   , stylus = require('stylus')
   , nib = require('nib')
-  , app = express.createServer(express.logger());
+  , app = express.createServer(express.logger())
+  , io = require('socket.io').listen(app);
 
 var chat=[];
 
@@ -48,18 +49,19 @@ app.get('/canna', function(req, res) {
 	res.render('canna.jade');
 });
 
-app.post('/canna', function(req, res) {
-	chat.push(req.body.chat);
-	res.send(true);
+io.sockets.on('connection', function (socket) {
+  socket.on('chat create message', function (data) {
+    chat.push(data.content);
+    // broadcast the message
+    console.log('message received derp derp');
+    socket.broadcast.emit('chat receive message', data);
+  });
 });
 
-app.post('/chat', function(req, res) {
-	res.send(chat);
-})
 // RUN
 
 var port = process.env.PORT || 3000;
 
 app.listen(port, function() {
-  //console.log("Listening on " + port);
+  console.log("Listening on " + port);
 });
