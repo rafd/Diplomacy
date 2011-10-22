@@ -32,6 +32,11 @@ app.configure('production', function(){
   app.use(express.errorHandler()); 
 });
 
+io.configure("production", function () { 
+  io.set("transports", ["xhr-polling"]); 
+  io.set("polling duration", 10); 
+});
+
 app.dynamicHelpers({
   env: function(req, res){
     return app.settings.env;
