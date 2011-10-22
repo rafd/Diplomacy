@@ -8,7 +8,7 @@ require(["jquery", "scripts/vendor/underscore.min.js", "scripts/vendor/backbone.
 				   function(data) {
 			  		$("#chatbox").html("");
 				     for(var i in data){
-				    	 $("#chatbox").append("<p>"+data[i]+"</p>");
+				    	 $("#chatbox").prepend("<p>"+data[i]+"</p>");
 				     }
 		  			})
 	  }
@@ -19,7 +19,7 @@ require(["jquery", "scripts/vendor/underscore.min.js", "scripts/vendor/backbone.
 	  $('#chatthing').submit(function() {
 		  //alert($("#chatthing input:first").val());
 		  var derp = $("#chatthing input:first").val();
-		  $("#chatbox").append("<p>"+derp+"</p>");
+		  $("#chatbox").prepend("<p>"+derp+"</p>");
 		  $.post("/canna", { chat: derp },
 				   function(data) {
 				     //alert("Data Loaded: " + data);
