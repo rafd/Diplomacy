@@ -7,6 +7,7 @@
     paths: {
         "jquery": "scripts/vendor/require-jquery"
         ,"socket.io": "../node_modules/socket.io/node_modules/socket.io-client/dist/socket.io"
+        ,"order":"scripts/vendor/order.min"
     },
 
     modules: [

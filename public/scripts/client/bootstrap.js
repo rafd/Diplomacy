@@ -1,7 +1,7 @@
 define([
-  "vendor/order.min!scripts/vendor/underscore.min.js"
-  , "vendor/order.min!scripts/vendor/backbone.min.js"
-  , "vendor/order.min!scripts/vendor/localstorage.js"
+  "order!scripts/vendor/underscore.min.js"
+  , "order!scripts/vendor/backbone.min.js"
+  , "order!scripts/vendor/localstorage.js"
   , "scripts/vendor/ICanHaz.min.js"
   , "socket.io"
 ], function(){

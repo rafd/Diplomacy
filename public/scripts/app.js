@@ -1,4 +1,10 @@
-require({paths: {"socket.io":"/socket.io/socket.io"}},
+require(
+{
+  paths: {
+    "socket.io":"/socket.io/socket.io"
+    ,"order":"vendor/order.min"
+  }
+},
 [
   "jquery"
   ,"scripts/client/bootstrap.js"
