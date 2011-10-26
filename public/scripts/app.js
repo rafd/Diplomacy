@@ -20,10 +20,13 @@ require({paths: {"socket.io":"/socket.io/socket.io"}},
       }
     };
 
-    user_id = Math.floor(Math.random()*1001);
+    window.user_id = Math.floor(Math.random()*1001);
     
     Socket.on('connect', function() {
       console.log('socket connected');
+
+      Chat.update_from_server();
+
       Socket.emit('user:authenticate', user_id);
     });
     Socket.on('disconnect', function() {

@@ -56,7 +56,7 @@ app.get('/canna', function(req, res) {
 
 io.sockets.on('connection', function (socket) {
   socket.on('chat:message', function (data) {
-    chat.push(data.content);
+    chat.push(data);
     // broadcast the message
     console.log('message received');
     socket.broadcast.emit('chat:message', data);
@@ -67,6 +67,10 @@ io.sockets.on('connection', function (socket) {
     socket.user_id = user_id;
     //TODO: send updates, based on when last online
     //socket.emit('game:updates',data)
+  });
+
+  socket.on('chat:getAll',function(callback){
+    callback(chat);
   });
 
   socket.on('disconnect', function(){
