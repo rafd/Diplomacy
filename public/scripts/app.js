@@ -1,6 +1,7 @@
 require({paths: {"socket.io":"/socket.io/socket.io"}},
 [
   "jquery"
+  ,"scripts/client/bootstrap.js"
   ,"scripts/client/chat.js"
   ,"scripts/client/event_log.js"
 ], function($) {
