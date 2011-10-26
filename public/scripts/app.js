@@ -4,6 +4,7 @@ require({paths: {"socket.io":"/socket.io/socket.io"}},
   ,"scripts/client/bootstrap.js"
   ,"scripts/client/chat.js"
   ,"scripts/client/event_log.js"
+  ,"scripts/client/user.js"
 ], function($) {
 
   $(function() {
@@ -20,15 +21,11 @@ require({paths: {"socket.io":"/socket.io/socket.io"}},
           break;
       }
     };
-
-    window.user_id = Math.floor(Math.random()*1001);
     
     Socket.on('connect', function() {
       console.log('socket connected');
 
       Chat.update_from_server();
-
-      Socket.emit('user:authenticate', user_id);
     });
     Socket.on('disconnect', function() {
       console.log('socket disconnected');

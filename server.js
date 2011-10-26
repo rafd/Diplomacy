@@ -4,7 +4,7 @@ var express = require('express')
   , app = express.createServer(express.logger())
   , io = require('socket.io').listen(app);
 
-var chat=[];
+var chat=[], users={};
 
 app.configure(function(){
   app.set('views', __dirname + '/server/views');
@@ -66,11 +66,14 @@ io.sockets.on('connection', function (socket) {
     socket.broadcast.emit('chat:message', data);
   });
 
-  socket.on('user:authenticate', function(user_id){
-    console.log('welcome back '+user_id);
-    socket.user_id = user_id;
+  socket.on('chat:connect', function(user){
+    console.log('welcome '+user.name);
+    socket.user_id = user.id;
+    users[user.id] = user;
     //TODO: send updates, based on when last online
     //socket.emit('game:updates',data)
+    socket.emit('chat:users',users);
+    socket.broadcast.emit('chat:users',users);
   });
 
   socket.on('chat:getAll',function(callback){
@@ -78,7 +81,11 @@ io.sockets.on('connection', function (socket) {
   });
 
   socket.on('disconnect', function(){
-    console.log('bye bye '+socket.user_id)
+    console.log('bye bye '+socket.user_id);
+    delete users[socket.user_id];
+    console.log(users);
+    socket.emit('chat:users',users);
+    socket.broadcast.emit('chat:users',users);
   });
 
 });

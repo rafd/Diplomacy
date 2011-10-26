@@ -25,16 +25,11 @@ define(['scripts/client/bootstrap.js'], function(){
     localStorage: new Store("messages")
   }))();
 
-  /*
-    input text box
-    list of messages (5 most recent)
-    'more' link that shows 5 more
-  */
+
   window.ChatView = Backbone.View.extend({
     el: $("#chat"),
     events: {
-      "click #submit": "send",
-      "click #more": "more"
+      "click #submit": "send"
     },
     initialize: function(){
       this.input = $("form #chat-input");
@@ -64,15 +59,11 @@ define(['scripts/client/bootstrap.js'], function(){
     send: function(){
       var content = this.input.val();
       
-      m = Messages.create({content:content,username:user_id});
+      m = Messages.create({content:content,username:user.get('name')});
 
       Socket.emit('chat:message', m.toJSON());
 
       this.input.val('');
-      return false;
-    },
-    more: function(){
-      alert('moo');
       return false;
     },
     update_from_server: function(){
