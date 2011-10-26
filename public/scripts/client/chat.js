@@ -43,7 +43,7 @@ define(['scripts/client/bootstrap.js'], function(){
       
       Messages.fetch();
 
-      Socket.on('chat receive message', function (data) {
+      Socket.on('chat:message', function (data) {
         Messages.create({content:data.content,username:'Canna'})
       });
     },
@@ -56,7 +56,7 @@ define(['scripts/client/bootstrap.js'], function(){
     },
     send: function(){
       var content = this.input.val();
-      Socket.emit('chat create message', { content: content, username:'Raf'});
+      Socket.emit('chat:message', { content: content, username:'Raf'});
       Messages.create({content:content,username:'Raf'});
       this.input.val('');
       return false;

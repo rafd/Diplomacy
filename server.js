@@ -55,11 +55,11 @@ app.get('/canna', function(req, res) {
 });
 
 io.sockets.on('connection', function (socket) {
-  socket.on('chat create message', function (data) {
+  socket.on('chat:message', function (data) {
     chat.push(data.content);
     // broadcast the message
     console.log('message received');
-    socket.broadcast.emit('chat receive message', data);
+    socket.broadcast.emit('chat:message', data);
   });
 
   socket.on('user:authenticate', function(user_id){
