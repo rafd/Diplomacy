@@ -1,0 +1,20 @@
+!!! 5
+html(lang="en")
+  head
+    script(src="/socket.io/socket.io.js")
+    - if(env == "development")
+      script(data-main='scripts/app', src='scripts/vendor/require-jquery.js')
+    - if(env == "production")
+      script(src='scripts/app.min.js')
+
+    
+  body
+    p This is a form
+    form(method="post", id="chat")
+      input(type="text", name="chat")
+      input(type="submit", value="Submit")
+    #chatbox
+      - for(var i in c)
+        p= c[c.length-i-1]
+    
+

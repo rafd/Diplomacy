@@ -9,5 +9,6 @@
     , "stylus": "0.16.x"
     , "nib": "0.2.x"
     , "mongoose": "2.3.x"
+    , "socket.io": "0.8.5"
   }
 }

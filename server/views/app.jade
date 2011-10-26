@@ -30,4 +30,14 @@ html(lang="en")
         #side
           log
             #eventlog
-            input(id="new-event", placeholder="enter text here", type="text")
+            input#new-event(placeholder="enter text here", type="text")
+          #chat
+            #messages
+  
+            #input-box
+              form
+                input#chat-input(placeholder="chat here", type="text")
+                input#submit(type="submit")
+            
+            p Connected Users:
+            #users
