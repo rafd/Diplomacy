@@ -83,7 +83,7 @@ define(['scripts/client/bootstrap.js'], function(){
         
         console.log('received messages from server');
         
-        if(data.length == 0 || (_.last(data).created_at != Messages.last().get('created_at'))){
+        if(data.length == 0 || Messages.length == 0 || (_.last(data).created_at != Messages.last().get('created_at'))){
           console.log('replacing messages with those from server')
           //should be able to just do the following, but it isn't being persisted in LocalStorage
           //Messages.reset(data);
