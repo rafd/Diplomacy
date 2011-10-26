@@ -58,9 +58,21 @@ io.sockets.on('connection', function (socket) {
   socket.on('chat create message', function (data) {
     chat.push(data.content);
     // broadcast the message
-    console.log('message received derp derp');
+    console.log('message received');
     socket.broadcast.emit('chat receive message', data);
   });
+
+  socket.on('user:authenticate', function(user_id){
+    console.log('welcome back '+user_id);
+    socket.user_id = user_id;
+    //TODO: send updates, based on when last online
+    //socket.emit('game:updates',data)
+  });
+
+  socket.on('disconnect', function(){
+    console.log('bye bye '+socket.user_id)
+  });
+
 });
 
 // RUN

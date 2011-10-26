@@ -1,31 +1,11 @@
-require(["jquery", "scripts/vendor/underscore.min.js", "scripts/vendor/backbone.min.js", "scripts/vendor/backbone-localstorage.js","scripts/vendor/ICanHaz.min.js"], function($) {
+require({paths: {"socket.io":"/socket.io/socket.io"}},
+[
+  "jquery"
+  ,"scripts/client/chat.js"
+  ,"scripts/client/event_log.js"
+], function($) {
+
   $(function() {
-    
-    //CANNA PUTS HER SEXY CODE HERE:
-
-    var socket = io.connect('/');
-    socket.on('chat receive message', function (data) {
-       $("#chatbox").prepend($("<p/>").text(data.content));
-    });
-    
-    //setInterval(poll,1000);
-    
-    
-    $('#chat').submit(function() {
-      var content = $("form#chat input:first").val();
-      
-      $("#chatbox").prepend($("<p/>").text(content));
-      
-      socket.emit('chat create message', { content: content });
-        
-      //clear chatbox
-      $("form#chat input:first").val("");
-
-      return false;
-    });
-    
-    
-    //
   
     window.updateOrientation = function() {
       switch(window.orientation){
@@ -40,105 +20,21 @@ require(["jquery", "scripts/vendor/underscore.min.js", "scripts/vendor/backbone.
       }
     };
 
-    window.Event = Backbone.Model.extend({
-      defaults: function(){
-        return {
-          content: 'default content'
-        }
-      },
-      initialize: function (spec) {
-        if (!spec || !spec.content) {
-          throw "InvalidConstructArgs";
-        }
-        this.set({
-            htmlId: 'event_' + this.cid
-        });
-      },
-      validate: function (attrs) {
-        if (attrs.content) {
-          if (!_.isString(attrs.content) || attrs.content.length === 0 ) {
-            return "Title must be a string with a length";
-          }
-        }
-      }
+    user_id = Math.floor(Math.random()*1001);
+    
+    Socket.on('connect', function() {
+      console.log('socket connected');
+      Socket.emit('user:authenticate', user_id);
     });
-
-    window.EventView = Backbone.View.extend({
-      tagName: "div",
-      template: _.template("<%= content %>"),
-      events: {
-        "click" : "remove"
-      },
-      initialize: function() {
-        // bindings
-      },
-      render: function() {
-        $(this.el).html(this.template(this.model.toJSON()));
-        return this;
-      },
-      remove: function() {
-        alert('i been clicked!');
-      }
+    Socket.on('disconnect', function() {
+      console.log('socket disconnected');
     });
-
-    // COLLECTIONS
-
-    window.Events = Backbone.Collection.extend({
-      model: Event,
-      localStorage: new Store("events"),
-      /*all: function(){
-        return this;
-      },*/
-      initialize: function() {
-        //
-      }
+    Socket.on('reconnect_failed', function() {
+      console.log('reconnect failed');
     });
-
-    window.EventLog = new Events();
-
-    // VIEWS
-
-
-
-
-
-    // APP
-
-    window.AppView = Backbone.View.extend({
-      el: $("#diplomacyapp"),
-      events: {
-        "keypress #new-event":  "createOnEnter"
-      },
-      initialize: function() {
-        this.input = this.$("#new-event");
-
-        EventLog.bind('add', this.addOne, this);
-        EventLog.bind('reset', this.addAll, this);
-        EventLog.bind('all', this.render, this);
-
-        EventLog.fetch();
-      },
-      render: function() {
-      },
-      addOne: function(m) {
-        var view = new EventView({model: m});
-        this.$("#eventlog").append(view.render().el);
-      },
-      addAll: function() {
-        EventLog.each(this.addOne);
-      },
-      createOnEnter: function(e) {
-        var content = this.input.val();
-        if (!content || e.keyCode != 13) return;
-        EventLog.create({content: content});
-        this.input.val('');
-      }
-
+    Socket.on('reconnecting', function(delay, attempts){
+      console.log('reconnecting '+delay+' '+attempts);
     });
-
-
-    window.App = new AppView();
-
 
   });
 });
