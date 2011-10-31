@@ -53,9 +53,8 @@ app.get('/', function(req, res) {
   res.render('app.jade', {title: 'Diplomacy'});
 });
 
-app.get('/canna', function(req, res) {
-	c=chat;
-	res.render('canna.jade');
+app.get('/test', function(req, res) {
+  res.render('test.jade', {title: 'Diplomacy'});
 });
 
 io.sockets.on('connection', function (socket) {
