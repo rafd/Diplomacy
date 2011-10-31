@@ -25,7 +25,7 @@ app.configure(function(){
 });
 
 app.configure('development', function(){
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
+  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
 app.configure('production', function(){
@@ -37,6 +37,11 @@ io.configure("development", function () {
 });
 
 io.configure("production", function () { 
+  io.set("transports", ["xhr-polling"]); 
+  io.set("polling duration", 10); 
+});
+
+io.configure("test", function () { 
   io.set("transports", ["xhr-polling"]); 
   io.set("polling duration", 10); 
 });
