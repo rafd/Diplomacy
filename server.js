@@ -2,9 +2,13 @@ var express = require('express')
   , stylus = require('stylus')
   , nib = require('nib')
   , app = express.createServer(express.logger())
-  , io = require('socket.io').listen(app);
+  , io = require('socket.io').listen(app)
+  , mongoose = require('mongoose')
+  , db_uri = process.env.MONGOLAB_URI || 'mongodb://localhost/diplomacy-dev';
 
-var chat=[], users={};
+var MODEL_PATH = './server/model/';
+
+var users={};
 
 app.configure(function(){
   app.set('views', __dirname + '/server/views');
@@ -52,7 +56,23 @@ app.dynamicHelpers({
   }
 });
 
+//Mongoose Stuff
+
+mongoose.connect(db_uri, function(err) {
+ if (err) console.log(err);
+});
+
+
+//Load and instantiate models.
+var Game = require(MODEL_PATH + 'game.js').create(mongoose);
+var Chatroom = require(MODEL_PATH + 'chatroom.js').create(mongoose);
+
+var ch = new Chatroom();
+var gm = new Game();
+
+
 // ROUTES
+
 
 app.get('/', function(req, res) {
   res.render('app.jade', {title: 'Diplomacy'});
@@ -64,7 +84,9 @@ app.get('/test', function(req, res) {
 
 io.sockets.on('connection', function (socket) {
   socket.on('chat:message', function (data) {
-    chat.push(data);
+    delete data.id //mongoose requires specific userid type. removed for now.
+    ch.messages.push(data);
+    ch.save();
     // broadcast the message
     console.log('message received');
     socket.broadcast.emit('chat:message', data);
@@ -81,8 +103,17 @@ io.sockets.on('connection', function (socket) {
   });
 
   socket.on('chat:getAll',function(callback){
-    callback(chat);
+    callback(ch.messages);
   });
+
+  socket.on('game:create', function(data){
+    newGame = new Game(data);
+    newGame.save();
+  })
+
+  socket.on('game:getAll', function(callback){
+    callback(gm.find());
+  })
 
   socket.on('disconnect', function(){
     console.log('bye bye '+socket.user_id);
@@ -93,6 +124,7 @@ io.sockets.on('connection', function (socket) {
   });
 
 });
+
 
 // RUN
 

@@ -11,6 +11,9 @@ require(
   ,"scripts/client/chat.js"
   ,"scripts/client/event_log.js"
   ,"scripts/client/user.js"
+  ,"scripts/client/app.js"
+  ,"scripts/client/lobby.js"
+  ,"scripts/client/game.js"
 ], function($) {
 
   $(function() {
@@ -32,6 +35,7 @@ require(
       console.log('socket connected');
 
       Chat.update_from_server();
+      Game.update_from_server();
     });
     Socket.on('disconnect', function() {
       console.log('socket disconnected');

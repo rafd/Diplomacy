@@ -1,3 +1,19 @@
+var create = function(mongoose) {
+
+  var Schema = mongoose.Schema;
+
+  var game_schema = new Schema({
+    name: String
+   ,owner_id: Schema.ObjectId 
+  });
+
+  return mongoose.model('Game', game_schema);
+
+}
+
+
+exports.create = create
+
 /*
 
 Game
@@ -28,7 +44,6 @@ game.owner = function(){
 */
 
 
-
 /*
 
 Player
@@ -46,3 +61,4 @@ player.user = function(){
 }
 
 */
+

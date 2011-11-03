@@ -36,7 +36,14 @@ html(lang="en")
         h2#qunit-userAgent
         ol#qunit-tests
     #diplomacyapp
-      #game
+      #lobby
+        p This is the lobby.
+        #add-game-box
+          form
+            input#new-game-input(placeholder="new game name", type="text")
+            input#create-game(type="submit")
+          #gameslist
+      #game(style="display: none")
         #map
 
         #side
@@ -53,3 +60,5 @@ html(lang="en")
             
             p Connected Users:
             #users
+            a#exit-game(href="#") go to lobby
+            a#delete-game(href="#") delete game
