@@ -8,6 +8,14 @@ User
 
 user = {
   id: ID
+  current_games: {
+  	gameID,
+  	gameID
+  }
+  past_games:{
+  	gameID,
+  	gameID
+  }
 }
 
 
