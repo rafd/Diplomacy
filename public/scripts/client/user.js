@@ -29,4 +29,9 @@ define(['scripts/client/bootstrap.js'], function(){
     _.each(data, function(x){$('#users').append("<div>"+x.name+"</div>")});
   });
 
+  $('#users div').live('click', function(){
+    $('#private-messages').text($(this).html());
+    console.log(user.get("name") + ' ' + $(this).html())
+  });
+
 });
