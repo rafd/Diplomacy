@@ -45,7 +45,6 @@ define(['scripts/client/bootstrap.js'], function(){
 
   window.Events = Backbone.Collection.extend({
     model: Event,
-    localStorage: new Store("events"),
     /*all: function(){
       return this;
     },*/

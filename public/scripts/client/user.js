@@ -1,6 +1,6 @@
 define(['scripts/client/bootstrap.js'], function(){
 
-  User = Backbone.Model.extend({
+  window.User = Backbone.Model.extend({
     initialize: function(spec){
       this.set({
         name: this.get('name') || Math.floor(Math.random()*1001)
@@ -13,25 +13,10 @@ define(['scripts/client/bootstrap.js'], function(){
   
   window.CurrentUser = new (Backbone.Collection.extend({
     model: User,
-    localStorage: new Store("user"),
     initialize: function() {
       this.fetch();
     }
   }))();
 
-
-  window.user = CurrentUser.first() || CurrentUser.create();
- 
-  user.join_chat();
-
-  Socket.on('chat:users',function(data){
-    $('#users').html('');
-    _.each(data, function(x){$('#users').append("<div>"+x.name+"</div>")});
-  });
-
-  $('#users div').live('click', function(){
-    $('#private-messages').text($(this).html());
-    console.log(user.get("name") + ' ' + $(this).html())
-  });
 
 });
