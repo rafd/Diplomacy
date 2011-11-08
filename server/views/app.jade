@@ -36,28 +36,12 @@ html(lang="en")
         h2#qunit-userAgent
         ol#qunit-tests
     #diplomacyapp
+      #templates
+        script#chatroom(type="x-kite")
+          include ../../public/scripts/templates/chatroom.m
       #game
         #map
 
         #side
-          log
-            #eventlog
-            input#new-event(placeholder="enter text here", type="text")
-          #chat
-            #messages
-  
-            #input-box
-              form
-                input#chat-input(placeholder="chat here", type="text", name="chat-input")
-                input#submit(type="submit")
-            
             p Connected Users:
             #users
-
-            p Private Chat with user:
-            #private-messages
-
-            #private-chat
-            form
-              input#private-input(placeholder="chat here",type="text")
-              input#private-submit(type="submit")

@@ -50,7 +50,7 @@ require(
 
     window.user = CurrentUser.first() || CurrentUser.create();
  
-    user.join_chat();
+    //user.join_chat();
 
     Socket.on('chat:users',function(data){
       $('#users').html('');
@@ -62,15 +62,19 @@ require(
       console.log(user.get("name") + ' ' + $(this).html())
     });
 
+    
 
-  /*  games = new Games();
+    games = new Games();
     games.create();
 
     current_game = games.first();
     current_game.players.add(window.user);
-    
+
+    public_chatroom = new ChatRoomView(current_game.public_chat);
     current_game.public_chat.messages.create({content:"commonpoo",username:"123"});
+
+    private_chatroom = new ChatRoomView(current_game.private_chat);
     current_game.private_chat.messages.create({content:"privatepee",username:"345"});
-*/
+
   });
 });

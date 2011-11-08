@@ -9,6 +9,10 @@ define(['scripts/client/bootstrap.js'], function(){
     }
   });
 
+  window.Messages = Backbone.Collection.extend({
+    model: Message
+  });
+
   window.MessageView = Backbone.View.extend({
     tagName: 'div',
     template: _.template("<span class='username'><%= username %>: </span><span class='content'><%- content %></span>"),
@@ -18,39 +22,41 @@ define(['scripts/client/bootstrap.js'], function(){
     }
   });
 
-  // COLLECTION
-
-  window.Messages = Backbone.Collection.extend({
-    model: Message
-  });
+  // Chat Room
 
   window.ChatRoom = Backbone.Model.extend({
     initialize: function(){
       this.messages=new Messages; 
       this.participants;
     }
-
   });
 
-
-
-/*
-  window.ChatView = Backbone.View.extend({
-    el: $("#chat"),
+  window.ChatRoomView = Backbone.View.extend({
+    className: 'chatroom',
     events: {
-      "click #submit": "send"
+      "click .submit": "send"
     },
-    initialize: function(){
-      this.input = $("form #chat-input");
-      Messages.bind('reset', this.addAll, this);
-      Messages.bind('add', this.addOne, this);
+    template: kite('#chatroom'),
+    initialize: function(chatroom){
+      this.chatroom = chatroom;
+
+      $(this.el).append(this.template({}));
+      $('#side').append(this.el);
+
+      this.input = $(this.el).find("form input[type=text]");
+      this.output = $(this.el).find(".messages");
+
+
+      this.chatroom.messages.bind('reset', this.addAll, this);
+      this.chatroom.messages.bind('add', this.addOne, this);
       
-      console.log('fetching messages from LocalStorage');
+      /*console.log('fetching messages from LocalStorage');
+      
       Messages.fetch({
         success: function(){
           console.log('received messages from LocalStorage');
         }
-      });
+      });*/
       
       // receive messages
       Socket.on('chat:message', function(data) {
@@ -59,21 +65,22 @@ define(['scripts/client/bootstrap.js'], function(){
     },
     addOne: function(m) {
       var view = new MessageView({model: m});
-      $("#messages").append(view.render().el);
+      this.output.append(view.render().el);
     },
     addAll: function() {
-      $("#messages").html('');
-      Messages.each(this.addOne);
+      this.output.html('');
+      this.chatroom.messages.each(this.addOne);
     },
-    send: function(){
+    send: function(e){
+      e.preventDefault();
+
       var content = this.input.val();
       
-      m = Messages.create({content:content,username:user.get('name')});
+      m = this.chatroom.messages.create({content:content,username:user.get('name')});
 
       Socket.emit('chat:message', m.toJSON());
 
       this.input.val('');
-      return false;
     },
     update_from_server: function(){
       console.log('fetching messages from server');
@@ -88,11 +95,11 @@ define(['scripts/client/bootstrap.js'], function(){
           //should be able to just do the following, but it isn't being persisted in LocalStorage
           //Messages.reset(data);
 
-          l = Messages.models.length
+          l = this.chatroom.messages.models.length
           for(i=0;i<l;i++){
-            Messages.models[0].destroy();
+            this.chatroom.messages.models[0].destroy();
           }
-          Messages.reset();
+          this.chatroom.messages.reset();
         
           _.each(data, function(d){Messages.create(d)});
         } else {
@@ -102,6 +109,4 @@ define(['scripts/client/bootstrap.js'], function(){
     }
   });
 
-  window.Chat = new ChatView();
-*/
 });
