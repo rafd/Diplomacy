@@ -1,6 +1,7 @@
 define(['scripts/client/bootstrap.js'], function(){
 
-  window.Message = Backbone.Model.extend({
+  window.Message = Backbone.RelationalModel.extend({
+    urlRoot: "message",
     initialize: function(spec){
       this.set({
         htmlId: 'message_' + this.cid,
@@ -24,10 +25,26 @@ define(['scripts/client/bootstrap.js'], function(){
 
   // Chat Room
 
-  window.ChatRoom = Backbone.Model.extend({
+  window.ChatRoom = Backbone.RelationalModel.extend({
+    urlRoot: "chatroom",
+    relations: [
+      {
+        type: 'HasMany',
+        key: 'messages',
+        relatedModel: 'Message',
+        collectionType: 'Messages'
+      }
+    ],
+    initialize: function(spec){
+      console.log('creating chatroom');
+      //this.get('messages').url = this.urlRoot + '/' + this.id + '/';
+    }
+  });
+
+  window.ChatRooms = Backbone.Collection.extend({
+    model: ChatRoom,
     initialize: function(){
-      this.messages=new Messages; 
-      this.participants;
+      console.log('creating chatrooms collection')
     }
   });
 
@@ -38,7 +55,7 @@ define(['scripts/client/bootstrap.js'], function(){
     },
     template: kite('#chatroom'),
     initialize: function(chatroom){
-      this.chatroom = chatroom;
+      this.messages = chatroom.get('messages');
 
       $(this.el).append(this.template({}));
       $('#side').append(this.el);
@@ -47,8 +64,8 @@ define(['scripts/client/bootstrap.js'], function(){
       this.output = $(this.el).find(".messages");
 
 
-      this.chatroom.messages.bind('reset', this.addAll, this);
-      this.chatroom.messages.bind('add', this.addOne, this);
+      this.messages.bind('reset', this.addAll, this);
+      this.messages.bind('add', this.addOne, this);
       
       /*console.log('fetching messages from LocalStorage');
       
@@ -59,9 +76,9 @@ define(['scripts/client/bootstrap.js'], function(){
       });*/
       
       // receive messages
-      Socket.on('chat:message', function(data) {
+      /*Socket.on('chat:message', function(data) {
         Messages.create(data);
-      });
+      });*/
     },
     addOne: function(m) {
       var view = new MessageView({model: m});
@@ -69,16 +86,16 @@ define(['scripts/client/bootstrap.js'], function(){
     },
     addAll: function() {
       this.output.html('');
-      this.chatroom.messages.each(this.addOne);
+      this.messages.each(this.addOne);
     },
     send: function(e){
       e.preventDefault();
 
       var content = this.input.val();
       
-      m = this.chatroom.messages.create({content:content,username:user.get('name')});
+      m = this.messages.create({content:content,username:user.get('name')});
 
-      Socket.emit('chat:message', m.toJSON());
+      /*Socket.emit('chat:message', m.toJSON());*/
 
       this.input.val('');
     },
@@ -86,6 +103,7 @@ define(['scripts/client/bootstrap.js'], function(){
       console.log('fetching messages from server');
       //TODO: check if there are new messages to grab (by last timestamp)
       //      instead of getting all and *then* checking
+      /*
       Socket.emit('chat:getAll', function(data) {
         
         console.log('received messages from server');
@@ -105,7 +123,7 @@ define(['scripts/client/bootstrap.js'], function(){
         } else {
           console.log('nothing to update');
         }
-      });
+      }); */
     }
   });
 

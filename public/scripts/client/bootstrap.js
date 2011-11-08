@@ -1,15 +1,12 @@
 define([
   "order!scripts/vendor/underscore.min.js"
   , "order!scripts/vendor/backbone.min.js"
+  , "order!scripts/vendor/backbone-relational.js"
   , "order!scripts/vendor/sync.js"
   , "scripts/vendor/kite.js"
   , "socket.io"
 ], function(){
 
-  window.Socket = io.connect('/', {
-      'reconnect':true,
-      'reconnection delay': 1000,
-      'max reconnection attempts':10
-    });
+  Backbone.Model.prototype.idAttribute = "_id"
 
 });
