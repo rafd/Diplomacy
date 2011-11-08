@@ -11,6 +11,7 @@ require(
   ,"scripts/client/chat.js"
   ,"scripts/client/event_log.js"
   ,"scripts/client/user.js"
+  ,"scripts/client/game.js"
 ], function($) {
 
   $(function() {
@@ -27,11 +28,13 @@ require(
           break;
       }
     };
+
+    /*
     
     Socket.on('connect', function() {
       console.log('socket connected');
 
-      Chat.update_from_server();
+      //Chat.update_from_server();
     });
     Socket.on('disconnect', function() {
       console.log('socket disconnected');
@@ -42,6 +45,32 @@ require(
     Socket.on('reconnecting', function(delay, attempts){
       console.log('reconnecting '+delay+' '+attempts);
     });
+*/
+    // temp stuff
 
+    window.user = CurrentUser.first() || CurrentUser.create();
+ 
+    user.join_chat();
+
+    Socket.on('chat:users',function(data){
+      $('#users').html('');
+      _.each(data, function(x){$('#users').append("<div>"+x.name+"</div>")});
+    });
+
+    $('#users div').live('click', function(){
+      $('#private-messages').text($(this).html());
+      console.log(user.get("name") + ' ' + $(this).html())
+    });
+
+
+  /*  games = new Games();
+    games.create();
+
+    current_game = games.first();
+    current_game.players.add(window.user);
+    
+    current_game.public_chat.messages.create({content:"commonpoo",username:"123"});
+    current_game.private_chat.messages.create({content:"privatepee",username:"345"});
+*/
   });
 });

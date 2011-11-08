@@ -20,12 +20,21 @@ define(['scripts/client/bootstrap.js'], function(){
 
   // COLLECTION
 
-  window.Messages = new (Backbone.Collection.extend({
-    model: Message,
-    localStorage: new Store("messages")
-  }))();
+  window.Messages = Backbone.Collection.extend({
+    model: Message
+  });
+
+  window.ChatRoom = Backbone.Model.extend({
+    initialize: function(){
+      this.messages=new Messages; 
+      this.participants;
+    }
+
+  });
 
 
+
+/*
   window.ChatView = Backbone.View.extend({
     el: $("#chat"),
     events: {
@@ -94,5 +103,5 @@ define(['scripts/client/bootstrap.js'], function(){
   });
 
   window.Chat = new ChatView();
-
+*/
 });
