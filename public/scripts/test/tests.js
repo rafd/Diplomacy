@@ -1,4 +1,4 @@
-test('assertions', function() {
+/*test('assertions', function() {
   equals( 1, 1, 'one equals one');
 });
 
@@ -11,4 +11,49 @@ test('chat', function(){
        start();
     });
   
+});*/
+pavlov.specify("crud", function(){
+  
+  /*before(function(){
+    
+  });*/
+
+  describe("game", function(){ 
+    describe("create + read", function(){
+      
+      it("should store in memory");
+      it("should store in localstorage");
+      it("should store in server");
+      it("should appear on another client immediately");
+
+    });
+    describe("readAll", function(){
+      
+      it("should store in memory");
+      it("should store in localstorage");
+      it("should store in server");
+      it("should appear on another client immediately");
+
+    });
+    describe("update", function(){
+      
+      it("should store in memory");
+      it("should store in localstorage");
+      it("should store in server");
+      it("should appear on another client immediately");
+
+    });
+    describe("destroy", function(){
+
+      it("should store in memory");
+      it("should store in localstorage");
+      it("should store in server");
+      it("should appear on another client immediately");
+
+    });
+  });
+
 });
+
+
+

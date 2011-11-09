@@ -7,8 +7,9 @@ require(
 [
   "order!scripts/app.js"
   ,"order!scripts/test/lib/qunit.js"
+  ,"order!scripts/test/lib/pavlov.js"
   ,"order!scripts/test/lib/syn/syn.js"
-  ,"order!scripts/test/tests.js"
+  //,"order!scripts/test/tests.js"
 ], function() {
 
     QUnit.log = function(params){//result, actual, expected, message

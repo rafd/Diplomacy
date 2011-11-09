@@ -8,6 +8,7 @@ html(lang="en")
       script(src='scripts/app.min.js')
     - else if(env == "test")
       script(src='scripts/test.min.js')
+      script(src="scripts/test/tests.js")
       link(rel="stylesheet", href="scripts/test/lib/qunit.css", type="text/css", media="screen")
 
     link(href="/stylesheets/app.css", media="only screen", rel="stylesheet", type="text/css")
@@ -29,7 +30,7 @@ html(lang="en")
 
   body(ontouchmove="event.preventDefault();", onorientationchange="updateOrientation();")
     -if(env == "test")
-      #test(style="position:absolute; top:0; left:0;z-index:200")
+      #test(style="position:absolute; top:0; left:0;z-index:200; width: 50%; height: 500px; overflow: auto;")
         h1#qunit-header QUnit Test Suite
         h2#qunit-banner
         #qunit-testrunner-toolbar
