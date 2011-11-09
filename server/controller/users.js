@@ -20,21 +20,21 @@ function controller(io,_und) {
     });
 
     socket.on('read', function (data, callback) {
-      console.log(store)
+      var result = null
 
       if(data.model.length == 0){
         //read all
         result = _und.values(store[data.class]);
 
-        callback(null, JSON.stringify(result));
+
 
       } else {
         //read one
         if(typeof store[data.class] == "undefined") store[data.class] = {}
         result = store[data.class][data.model._id];
-
-        callback(null, JSON.stringify(result));
       } 
+      console.log(store)
+      callback(null, JSON.stringify(result));
 
     });
 

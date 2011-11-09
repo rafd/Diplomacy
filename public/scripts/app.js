@@ -62,14 +62,17 @@ require(
   
     window.socket = io.connect('/', socket_defaults);
 
-
     if(typeof localStorage.user_id == "undefined"){
       window.user = new User();
       user.save();
       localStorage.user_id = user.id;
     } else {
       window.user = new User({_id: localStorage.user_id});
-      user.save();
+      user.fetch({success:function(err, data){
+        if(data == null){
+          user.save();
+        }
+      }});
     }
 
     /*
