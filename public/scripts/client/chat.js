@@ -12,6 +12,7 @@ define(['scripts/client/bootstrap.js'], function(){
   });
 
   window.Messages = Backbone.Collection.extend({
+    url: 'messages',
     model: Message
   });
 
@@ -33,10 +34,15 @@ define(['scripts/client/bootstrap.js'], function(){
         type: 'HasMany',
         key: 'messages',
         relatedModel: 'Message',
-        collectionType: 'Messages'
+        collectionType: 'Messages',
+        reverseRelation: {
+          key: 'chatroom',
+          includeInJSON: false
+        }
       }
     ],
     initialize: function(spec){
+      this.get('messages').url = "chatrooms/"+this.id+'/messages';
       if(spec.messages){
         _.each(spec.messages, function(msg) {
           this.get('messages').create(msg);
@@ -68,9 +74,10 @@ define(['scripts/client/bootstrap.js'], function(){
       this.input = $(this.el).find("form input[type=text]");
       this.output = $(this.el).find(".messages");
 
-
       this.messages.bind('reset', this.addAll, this);
       this.messages.bind('add', this.addOne, this);
+
+      this.messages.reset();
       
       //this.messages.fetch();
       /*console.log('fetching messages from LocalStorage');

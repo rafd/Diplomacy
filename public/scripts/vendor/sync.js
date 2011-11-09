@@ -90,21 +90,28 @@
         nested: model.nested
       }
 
-      window.socket.emit(method, data, function(err, data){
-        if(err){
-          //
-        } else {
-          console.log('response:'+method+':'+data)
-          if(method == "create")
-            console.log("save succesfull")
-          else
-            options.success(JSON.parse(data));
-        }
-      });
+      if(url.split('/').slice(-1)[0] == "messages"){ //TODO: make this generic
+        //console.log(model);
 
-      //immediately return
-      if(method=="create") options.success(model);
+        //window.current_game.get('chatrooms').get(url.split('/').slice(1)[0]).save();
 
+        options.success(model);
+      } else {
+        window.socket.emit(method, data, function(err, data){
+          if(err){
+            //
+          } else {
+            console.log('response:'+method+':'+data)
+            if(method == "create")
+              console.log("save succesfull")
+            else
+              options.success(JSON.parse(data));
+          }
+        });
+
+        //immediately return
+        if(method=="create") options.success(model);
+      }
     /*
     var resp;
     var store = model.sync_collection || model.collection.sync_collection;
