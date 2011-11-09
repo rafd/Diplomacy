@@ -17,20 +17,47 @@
   };
 
   _.extend(Store.prototype, {
-    find: function(){
-      
+    find: function(options,model){
+      data = {
+        class: url.split('/')[0],
+        model: model.toJSON() || {}
+      }
+
+      window.socket.emit('read', data, function(err, data){
+        if(err){
+          options.error(err);
+        } else {
+          options.success(JSON.parse(data));
+        }
+      });
     },
-    findAll: function(){
-      
+    findAll: function(model){
+      model
     },
-    create: function(){
-      
+    create: function(options,model){
+      model.set({_id:guid()}, {silent:true});
+
+      data = {
+        class: url.split('/')[0],
+        model: model.toJSON() || {}
+      }
+
+      window.socket.emit('create', data, function(err, data){
+        if(err){
+          //
+        } else {
+          console.log("save succesfull")
+        }
+      });
+
+      //immediately return
+      return options.success(model);
     },
-    update: function(){
-      
+    update: function(model){
+      model
     },
-    destroy: function(){
-      
+    destroy: function(model){
+      model
     }
   });
 
@@ -41,24 +68,42 @@
 
 
   Backbone.sync = function(method, model, options) {
-    
-    console.log(method)
-    console.log(options.url || getUrl(model) || urlError());
 
+    url = options.url || getUrl(model) || urlError();
+    store = new Store();
 
+    console.log(method+":"+url)
 
+    /*
+    switch (method) {
+      case "read":    resp = model.id ? store.find(options,model) : store.findAll(); break;
+      case "create":  resp = store.create(options,model);                            break;
+      case "update":  resp = store.update(model);                            break;
+      case "delete":  resp = store.destroy(model);                           break;
+    }*/
 
+      if(method=="create") model.set({_id:guid()}, {silent:true});
 
-      if(typeof model.cid != 'undefined') {
-          // ..fake that it's .cid turns into a "real" .id:
-          //model.unset('cid').set({_id:cid}, {silent:true});
-          model.set({_id:H4()}, {silent:true});
+      data = {
+        class: url.split('/')[0],
+        model: model.toJSON() || {},
+        nested: model.nested
       }
 
+      window.socket.emit(method, data, function(err, data){
+        if(err){
+          //
+        } else {
+          console.log('response:'+method+':'+data)
+          if(method == "create")
+            console.log("save succesfull")
+          else
+            options.success(JSON.parse(data));
+        }
+      });
 
-      // Oh yes, it all went sooo well ;-)
-      options.success(model);
-      
+      //immediately return
+      if(method=="create") options.success(model);
 
     /*
     var resp;

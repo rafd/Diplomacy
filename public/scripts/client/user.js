@@ -1,7 +1,16 @@
 define(['scripts/client/bootstrap.js'], function(){
 
   window.User = Backbone.RelationalModel.extend({
-    urlRoot: 'user',
+    urlRoot: 'users',
+    relations: [
+      {
+        type: 'HasMany',
+        key: 'games',
+        relatedModel: 'Game',
+        collectionType: 'Games',
+        includeInJSON: Backbone.Model.prototype.idAttribute
+      }
+    ],
     initialize: function(spec){
       this.set({
         name: this.get('name') || Math.floor(Math.random()*1001)
@@ -12,8 +21,12 @@ define(['scripts/client/bootstrap.js'], function(){
     }
   });
 
+  window.Player = Backbone.RelationalModel.extend({
+    urlRoot: 'players'
+  })
+
   window.Players = Backbone.Collection.extend({
-    model: User
+    model: Player
   });
   /*
   window.CurrentUser = new (Backbone.Collection.extend({

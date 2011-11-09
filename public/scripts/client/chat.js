@@ -2,6 +2,7 @@ define(['scripts/client/bootstrap.js'], function(){
 
   window.Message = Backbone.RelationalModel.extend({
     urlRoot: "message",
+    nested: true,
     initialize: function(spec){
       this.set({
         htmlId: 'message_' + this.cid,
@@ -36,16 +37,20 @@ define(['scripts/client/bootstrap.js'], function(){
       }
     ],
     initialize: function(spec){
-      console.log('creating chatroom');
+      if(spec.messages){
+        _.each(spec.messages, function(msg) {
+          this.get('messages').create(msg);
+        }, this);
+      } else {
+        this.get('messages').create({content:"Welcome",username:"000"});
+      }
+      
       //this.get('messages').url = this.urlRoot + '/' + this.id + '/';
     }
   });
 
   window.ChatRooms = Backbone.Collection.extend({
-    model: ChatRoom,
-    initialize: function(){
-      console.log('creating chatrooms collection')
-    }
+    model: ChatRoom
   });
 
   window.ChatRoomView = Backbone.View.extend({
@@ -67,6 +72,7 @@ define(['scripts/client/bootstrap.js'], function(){
       this.messages.bind('reset', this.addAll, this);
       this.messages.bind('add', this.addOne, this);
       
+      //this.messages.fetch();
       /*console.log('fetching messages from LocalStorage');
       
       Messages.fetch({

@@ -49,12 +49,9 @@ require(
     // temp stuff
 
     //window.user = CurrentUser.first() || CurrentUser.create();
-    window.user = new User();
-    user.save();
+    
  
     //user.join_chat();
-
-    window.Socket = {};
 
     socket_defaults = {
       'reconnect':true,
@@ -62,13 +59,18 @@ require(
       'max reconnection attempts':10
     };
 
-    Socket.users = io.connect('/users', socket_defaults);
+  
+    window.socket = io.connect('/', socket_defaults);
 
-    Socket.users.on('connect', function(){
-      Socket.users.emit('ping', null, function(error, res) {
-        console.log(res);
-      });
-    });
+
+    if(typeof localStorage.user_id == "undefined"){
+      window.user = new User();
+      user.save();
+      localStorage.user_id = user.id;
+    } else {
+      window.user = new User({_id: localStorage.user_id});
+      user.save();
+    }
 
     /*
     Socket.on('chat:users',function(data){
@@ -82,21 +84,30 @@ require(
     });
     */
     
-    //user.get('games').create();
+    user.get('games').fetch({
+      success : function(){
+        if(user.get('games').length == 0) {
+          user.get('games').create();
+        }
+        current_game = user.get('games').first();
 
-    games = new Games();
-    games.create();
-    current_game = games.first();
+        //TODO: should be capturing an event
+        setTimeout(function(){
+          public_chatroom = new ChatRoomView(current_game.get('chatrooms').at(0));
+          private_chatroom = new ChatRoomView(current_game.get('chatrooms').at(1));
+        }, 100);
+
+        //current_game.get('chatrooms').at(0).get('messages')
+        //current_game.get('players').add(window.user);
+        //public_chatroom = new ChatRoomView(current_game.get('chatrooms').at(0));
+        //current_game.get('chatrooms').at(0).get('messages').create({content:"commonpoo",username:"123"});
+
+        //
+        //current_game.get('chatrooms').at(1).get('messages').create({content:"privatepee",username:"345"});
+
+      }
+    });
     
-    current_game.get('players').add(window.user);
-
     
-    public_chatroom = new ChatRoomView(current_game.get('chatrooms').at(0));
-    current_game.get('chatrooms').at(0).get('messages').create({content:"commonpoo",username:"123"});
-
-    private_chatroom = new ChatRoomView(current_game.get('chatrooms').at(1));
-    current_game.get('chatrooms').at(1).get('messages').create({content:"privatepee",username:"345"});
-    
-
   });
 });

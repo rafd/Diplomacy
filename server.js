@@ -2,7 +2,8 @@ var express = require('express')
   , stylus = require('stylus')
   , nib = require('nib')
   , app = express.createServer(express.logger())
-  , io = require('socket.io').listen(app);
+  , io = require('socket.io').listen(app)
+  , _und = require('underscore');
 
 var chat=[], users={};
 
@@ -54,6 +55,8 @@ app.dynamicHelpers({
 
 // ROUTES
 
+require('./server/controller/users.js').controller(io,_und);
+
 app.get('/', function(req, res) {
   res.render('app.jade', {title: 'Diplomacy'});
 });
@@ -63,6 +66,10 @@ app.get('/test', function(req, res) {
 });
 
 io.sockets.on('connection', function (socket) {
+  //
+
+  //
+
   socket.on('chat:message', function (data) {
     chat.push(data);
     // broadcast the message
