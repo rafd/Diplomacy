@@ -112,7 +112,7 @@ io.sockets.on('connection', function (socket) {
   })
 
   socket.on('game:getAll', function(callback){
-    callback(gm.find());
+    Game.find({}, function(err, docs){callback(docs);});
   })
 
   socket.on('disconnect', function(){
