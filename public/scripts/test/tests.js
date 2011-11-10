@@ -17,18 +17,26 @@ setTimeout(function(){
 
 pavlov.specify("crud", function(){
   
-  var user_id;
+  var gen_id = function() {
+    return '00000000000000000000' + Math.floor(Math.random() * 10000)
+  }
 
-  var gen_spec = function(){
+  var gen_user_spec = function(){
     return { 
       name: Math.floor(Math.random() * 1000),
-      _id: '00000000000000000000' + Math.floor(Math.random() * 10000)
+      _id: gen_id()
+    }
+  }
+
+  var gen_game_spec = function(){
+    return {
+      name: Math.floor(Math.random() * 1000)
     }
   }
 
   describe("user", function(){ 
     describe("create and read", function(){
-      var user_spec = gen_spec();
+      var user_spec = gen_user_spec();
 
       var user = new User(user_spec);
       stop();
@@ -52,7 +60,7 @@ pavlov.specify("crud", function(){
 
     });
     describe("update", function(){
-      var user_spec = gen_spec();
+      var user_spec = gen_user_spec();
 
       var user = new User(user_spec);
       stop();
@@ -83,7 +91,7 @@ pavlov.specify("crud", function(){
 
     });
     describe("destroy", function(){
-      var user_spec = gen_spec();
+      var user_spec = gen_user_spec();
 
       var user = new User(user_spec);
       stop();
@@ -110,16 +118,36 @@ pavlov.specify("crud", function(){
     });
   });
 
-
   describe("game", function(){ 
     describe("create + read", function(){
-      before(function(){
+      // create user
+      var user_spec = gen_user_spec();
+      var user = new User(user_spec);
+      stop();
+      user.save(null, {success:function(){ start(); }});
+
+      // create game
+      var spec = gen_game_spec();
+      var game = user.get('games').create(spec);
+      stop();
+      game.save(null, {success:function(){ start(); }});
+
+      it("in memory", function(){
+        assert(game.get('name')).equals(spec.name);
       });
 
-      it("should store in memory");
-      it("should store in localstorage");
-      it("should store in server");
-      it("should appear on another client immediately");
+
+      var temp = new Game({_id: game.id});
+
+      stop();
+      temp.fetch({success: function(data){ start(); }});
+
+      it("in server", function(){
+        assert(temp.get('name')).equals(spec.name);
+      });
+
+      //it("in localstorage");
+      //it("on another client immediately");
 
     });
     describe("readAll", function(){

@@ -101,14 +101,13 @@
       } else {
         window.socket.emit(method, data, function(err, data){
           if(err){
-            //
+            //TODO
           } else {
             console.log('response:'+method+':'+data)
             if(method == "create"){
-              console.log("save succesfull");
+              //TODO
             }
             else {
-              console.log(JSON.parse(data))
               options.success(JSON.parse(data));
             }
           }
