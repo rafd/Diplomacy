@@ -25,16 +25,13 @@ function controller(io,_und) {
       if(data.model.length == 0){
         //read all
         result = _und.values(store[data.class]);
-
-
-
       } else {
         //read one
         if(typeof store[data.class] == "undefined") store[data.class] = {}
         result = store[data.class][data.model._id];
       } 
       console.log(store)
-      callback(null, JSON.stringify(result));
+      callback(null, JSON.stringify(result || {}));
 
     });
 
@@ -50,8 +47,9 @@ function controller(io,_und) {
     });
 
     socket.on('delete', function (data, callback) {
+      delete store[data.class][data.model._id]
 
-      // callback(null, json);
+      callback(null, JSON.stringify(data.model));
     }); 
     
     socket.on('ping', function (data, callback) {

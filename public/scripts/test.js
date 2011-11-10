@@ -12,12 +12,13 @@ require(
   //,"order!scripts/test/tests.js"
 ], function() {
 
+/*
     QUnit.log = function(params){//result, actual, expected, message
     console.log("test:"+params.message);
     if(!params.result){
       console.log("test:"+'\texp: '+params.expected+'\n\tact: '+params.actual)
     }
   };
-  
+  */
 
 });

@@ -62,6 +62,7 @@ require(
   
     window.socket = io.connect('/', socket_defaults);
 
+/*
     if(typeof localStorage.user_id == "undefined"){
       window.user = new User();
       user.save();
@@ -74,6 +75,7 @@ require(
         }
       }});
     }
+    */
 
     /*
     Socket.on('chat:users',function(data){
@@ -87,6 +89,7 @@ require(
     });
     */
     
+    /*
     user.get('games').fetch({
       success : function(){
         if(user.get('games').length == 0) {
@@ -110,7 +113,7 @@ require(
 
       }
     });
-    
+    */
     
   });
 });

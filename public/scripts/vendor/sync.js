@@ -9,6 +9,7 @@
   }
 
 
+  /*
   var Store = function(name) {
     this.name = name;
 
@@ -60,6 +61,7 @@
       model
     }
   });
+  */
 
   var getUrl = function(object) {
     if (!(object && object.url)) return null;
@@ -70,7 +72,7 @@
   Backbone.sync = function(method, model, options) {
 
     url = options.url || getUrl(model) || urlError();
-    store = new Store();
+    //store = new Store();
 
     console.log(method+":"+url)
 
@@ -102,15 +104,18 @@
             //
           } else {
             console.log('response:'+method+':'+data)
-            if(method == "create")
-              console.log("save succesfull")
-            else
+            if(method == "create"){
+              console.log("save succesfull");
+            }
+            else {
+              console.log(JSON.parse(data))
               options.success(JSON.parse(data));
+            }
           }
         });
 
         //immediately return
-        if(method=="create") options.success(model);
+        if(method=="create") {options.success(model);}
       }
     /*
     var resp;
