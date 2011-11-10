@@ -43,7 +43,7 @@ pavlov.specify("crud", function(){
       user.save(null, {success: function(){ start(); }}); 
 
       it("in memory", function(){
-        assert(user.get('name')).equals(user_spec.name);
+        assert(user.get('name')).equals(user_spec.name, "user name matches");
       });
 
       var temp_user = new User({_id: user_spec._id});
@@ -52,11 +52,10 @@ pavlov.specify("crud", function(){
       temp_user.fetch({success: function(data){ start(); }});
       
       it("in the server", function(){
-        assert(temp_user.get('name')).equals(user_spec.name);
+        assert(temp_user.get('name')).equals(user_spec.name, "user name matches");
       });
 
       //it("in localstorage");
-      //it("on another client immediately");
 
     });
     describe("update", function(){
@@ -75,7 +74,7 @@ pavlov.specify("crud", function(){
       user.save(null, {success: function(){ start(); }});
       
       it("in memory", function(){
-        assert(user.get('name')).equals(name_change);
+        assert(user.get('name')).equals(name_change, "user name changed");
       });
 
       var temp_user = new User({_id: user_spec._id});
@@ -83,11 +82,10 @@ pavlov.specify("crud", function(){
       temp_user.fetch({success: function(){ start(); }});
 
       it("on the server", function(){
-        assert(temp_user.get('name')).equals(name_change);
+        assert(temp_user.get('name')).equals(name_change, "user name changed");
       });
 
       //it("in localstorage");
-      //it("on another client immediately");
 
     });
     describe("destroy", function(){
@@ -107,13 +105,12 @@ pavlov.specify("crud", function(){
 
         stop();
         temp_user.fetch({success: function(model,resp){ 
-          assert(JSON.stringify(resp)).equals("{}");
+          assert(JSON.stringify(resp)).equals("{}", "user deleted");
           start(); 
           }});
       });
 
       //it("in localstorage");
-      //it("on another client immediately");
 
     });
   });
@@ -133,7 +130,9 @@ pavlov.specify("crud", function(){
       game.save(null, {success:function(){ start(); }});
 
       it("in memory", function(){
-        assert(game.get('name')).equals(spec.name);
+        assert(game.get('name')).equals(spec.name, "game name matches");
+        assert(game.get('chatrooms').length).equals(2, "chatroom count correct");
+        assert(game.get('chatrooms').at(0).get('messages').length).equals(1, "message count correct");
       });
 
 
@@ -143,35 +142,36 @@ pavlov.specify("crud", function(){
       temp.fetch({success: function(data){ start(); }});
 
       it("in server", function(){
-        assert(temp.get('name')).equals(spec.name);
+        assert(temp.get('name')).equals(spec.name, "game name matches");
+        assert(temp.get('chatrooms').length).equals(2, "chatroom count correct");
+        assert(temp.get('chatrooms').at(0).get('messages').length).equals(1, "message count correct");
       });
 
       //it("in localstorage");
-      //it("on another client immediately");
 
     });
-    describe("readAll", function(){
+    describe("fetch all", function(){
       
-      it("should store in memory");
-      it("should store in localstorage");
-      it("should store in server");
-      it("should appear on another client immediately");
+      it("in memory");
+      it("in server");
+
+      //it("in localstorage");
 
     });
     describe("update", function(){
       
-      it("should store in memory");
-      it("should store in localstorage");
-      it("should store in server");
-      it("should appear on another client immediately");
+      it("in memory");
+      it("in server");
+
+      //it("in localstorage");
 
     });
     describe("destroy", function(){
 
-      it("should store in memory");
-      it("should store in localstorage");
-      it("should store in server");
-      it("should appear on another client immediately");
+      it("in memory");
+      it("in server");
+
+      //it("in localstorage");
 
     });
   });
@@ -181,34 +181,34 @@ pavlov.specify("crud", function(){
       before(function(){
       });
 
-      it("should store in memory");
-      it("should store in localstorage");
-      it("should store in server");
-      it("should appear on another client immediately");
+      it("in memory");
+      it("in localstorage");
+      it("in server");
+      it("on another client immediately");
 
     });
     describe("readAll", function(){
       
-      it("should store in memory");
-      it("should store in localstorage");
-      it("should store in server");
-      it("should appear on another client immediately");
+      it("in memory");
+      it("in localstorage");
+      it("in server");
+      it("on another client immediately");
 
     });
     describe("update", function(){
       
-      it("should store in memory");
-      it("should store in localstorage");
-      it("should store in server");
-      it("should appear on another client immediately");
+      it("in memory");
+      it("in localstorage");
+      it("in server");
+      it("on another client immediately");
 
     });
     describe("destroy", function(){
 
-      it("should store in memory");
-      it("should store in localstorage");
-      it("should store in server");
-      it("should appear on another client immediately");
+      it("in memory");
+      it("in localstorage");
+      it("in server");
+      it("on another client immediately");
 
     });
   });
@@ -218,34 +218,34 @@ pavlov.specify("crud", function(){
       before(function(){
       });
 
-      it("should store in memory");
-      it("should store in localstorage");
-      it("should store in server");
-      it("should appear on another client immediately");
+      it("in memory");
+      it("in localstorage");
+      it("in server");
+      it("on another client immediately");
 
     });
     describe("readAll", function(){
       
-      it("should store in memory");
-      it("should store in localstorage");
-      it("should store in server");
-      it("should appear on another client immediately");
+      it("in memory");
+      it("in localstorage");
+      it("in server");
+      it("on another client immediately");
 
     });
     describe("update", function(){
       
-      it("should store in memory");
-      it("should store in localstorage");
-      it("should store in server");
-      it("should appear on another client immediately");
+      it("in memory");
+      it("in localstorage");
+      it("in server");
+      it("on another client immediately");
 
     });
     describe("destroy", function(){
 
-      it("should store in memory");
-      it("should store in localstorage");
-      it("should store in server");
-      it("should appear on another client immediately");
+      it("in memory");
+      it("in localstorage");
+      it("in server");
+      it("on another client immediately");
 
     });
   });
