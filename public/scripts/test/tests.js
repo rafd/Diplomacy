@@ -151,8 +151,35 @@ pavlov.specify("crud", function(){
 
     });
     describe("fetch all", function(){
+      // create user
+      var user_spec = gen_user_spec();
+      var user = new User(user_spec);
+      stop();
+      user.save(null, {success:function(){ start(); }});
+
+      // create game
+      var spec = gen_game_spec();
+      var game1 = user.get('games').create(spec);
+      stop();
+      game1.save(null, {success:function(){ start(); }});
+
+      // create another game
+      var spec = gen_game_spec();
+      var game2 = user.get('games').create(spec);
+      stop();
+      game2.save(null, {success:function(){ start(); }});
       
-      it("in memory");
+      // recreate the user
+      var temp = new User({_id: user_spec._id})
+      stop();
+      temp.fetch({success: function(data){ start(); }});
+
+      it("in memory", function(){
+        assert(temp.get('games').length).equals(2);
+        assert(temp.get('games').at(0).get('name')).equals(game1.get('name'))
+
+      });
+
       it("in server");
 
       //it("in localstorage");

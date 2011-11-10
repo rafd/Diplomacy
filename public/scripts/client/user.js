@@ -12,6 +12,15 @@ define(['scripts/client/bootstrap.js'], function(){
       }
     ],
     initialize: function(spec){
+      if(typeof spec._id == "undefined"){
+        // 
+      } else {
+        if(spec.games){
+          _.each(spec.games, function(game_id) {
+            this.get('messages').create({_id: game_id});
+          }, this);
+        }
+      }
       this.set({
         name: this.get('name') || Math.floor(Math.random()*1001)
       });
