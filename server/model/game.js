@@ -7,18 +7,23 @@ Game
   
 game = {
   id: ID,
-  settings: {}
-  state: ""
+  settings: {},
+  state: "",
+
+  units: {},
+  supply: {},
+  orders: [],
+
   players: { 
-    1: playerObj,
-    2: playerObj,
-    3: playerObj, 
-    4: playerObj, 
-    5: playerObj, 
-    6: playerObj
-    7: playerObj,
+    1: player,
+    2: player,
+    3: player, 
+    4: player, 
+    5: player, 
+    6: player,
+    7: player
   },
-  owner_id: ID
+  owner_id: ID,
   chatrooms: {
     0: ID,
     12: ID,
@@ -60,13 +65,35 @@ Player
 
 
 player = {
-  id: ID
-  user_id: ID
-  country: ""
+  id: ID,
+  user_id: ID,
+  country: "",
 }
 
 player.user = function(){
   User.find(this.user_id)
 }
+
+*/
+
+
+
+/*
+unit =
+{
+  owner: "";//"Eng"
+  province: "";//"Edi"
+  utype: "";//army or fleet
+
+  order = {
+    move: "";//move, support, convoy, hold
+    from: "";//"Edi"
+    to: "";//"Lvp"
+    tag: "";//string
+    support: "";//integer
+    nohelp: "";//array
+  }
+}
+
 
 */
