@@ -89,11 +89,14 @@ unit =
     move: "";//move, support, convoy, hold
     from: "";//"Edi"
     to: "";//"Lvp"
-    tag: "";//string
+    tag: "";//string: invalid, sup_cut, success, cant_swap, lost, tied, RETREAT
     support: "";//integer
     nohelp: "";//array
   }
 }
 
+
+    //check: if unit is dislodged when supporting an attack but the attacker attacks back, cut support
+    //check: cannot dislodge your own unit
 
 */

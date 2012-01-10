@@ -5,26 +5,125 @@
 //output new game state
 
 
-function resolve(game)
+
+function sameToFrom(x,y)
 {
-  //Does "owner" have right to move "order.from"
-  var units = game.units;//TODO: magic
-  var convoyarmylist;
-  var convoysuccesslist;
-
-  for(x in units)
-  {
-    
-  }
-
-  resolveconvoyarmy(units,convoyarmylist);
-  resolveconvoyfleet(units);
-  markInvalidSupport(units);
-
-  //TODO: reset variables
-  //MAP[Abc].entrylist[], unit.order.valid, unit.support, unit.nohelp
-  return new_game_state;
+  return (x.order.from==y.order.from) && (x.order.to==y.order.to)
 }
+
+//list: list of provinces
+//goal: target province
+//return: true/false if a fleet can move there
+function validMove(list,goal,type)
+{
+  if(type=="f" || type=="F")
+    for(x in list)
+    {
+      if($.inArray(goal,MAP[list[x]].fleet_moves))
+        return true;
+    }
+  else if (type=="a" || type=="A")
+    for(x in list)
+    {
+      if($.inArray(goal,MAP[list[x]].army_moves))
+        return true;
+    }
+  return false;
+}
+
+function invalidateUnit(unit)
+{
+  unit.order.tag="invalid";
+  unit.order.move="h";
+  unit.order.from=unit.province;
+  unit.order.to=unit.province;
+}
+
+
+//constants.
+var MAP = {
+  NAt : {fullname: "North Atlantic",
+        army_moves: [],
+        fleet_moves: ["Cly","Lvp","Iri","Mid","Nrg"],
+        belongsto: "",
+        supply: 0,
+        combatlist: []},
+  Nrg : {fullname: "Norwegian Sea",
+        army_moves: [],
+        fleet_moves: ["Edi","Nth","Nwy","Bar","NAt","Cly"],
+        belongsto: "",
+        supply: 0,
+        combatlist: []},
+  Nth : {fullname: "North Sea",
+        army_moves: [],
+        fleet_moves: ["Edi","Nrg","Nwy","Ska","Den","Hel","Hol","Bel","Eng","Lon","Yor"],
+        belongsto: "",
+        supply: 0,
+        combatlist: []},
+  Cly : {fullname: "Clyde",
+        army_moves: ["Edi","Lvp"],
+        fleet_moves: ["Edi","Lvp","Nrg","NAt"],
+        belongsto: "Eng",
+        supply: 0,
+        combatlist: []},
+  Edi : {fullname: "Edinburgh",
+        army_moves: ["Cly","Lvp","Yor",],
+        fleet_moves: ["Cly","Nth","Yor","Nrg"],
+        belongsto: "Eng",
+        supply: 1,
+        combatlist: []},
+  Lvp : {fullname: "Liverpool",
+        army_moves: ["Edi","Cly","Yor","Wal"],
+        fleet_moves: ["Cly","Atl","Wal","Iri"],
+        belongsto: "Eng",
+        supply: 1,
+        combatlist: []},
+
+
+
+
+};
+
+var COUNTRY = ["Aus","Eng","Fra","Ger","Ita","Rus","Tur"];
+
+
+//example use: valid("Lvp","Edi","A")
+function valid(from,to,type)
+{
+  if(type=="A" || type == "a")
+    return ( _.include(MAP[from].army_moves,to));
+  else if (type=="F" || type=="f")
+    return _.include(MAP[from].fleet_moves,to);
+  console.log("invalid army type encountered")
+}
+
+
+/*
+cutSupport, executed for a particular moving unit
+    If the move is to a location occupied by a supporting unit that fits all of the following criteria:
+
+        is not already marked "cut" or "void,"
+        is not owned by the same power as the moving unit,
+        if (and only if) the moving unit is a convoyed army, the supporting unit is not offering support for or against any convoying fleet (whose order is not marked "void"), and
+        either we are executing Step 9 of the main algorithm or the supporting unit is not offering support for a move into the space from which the moving unit originated. 
+
+    then do the following:
+
+        Mark the supporting unit "cut"
+        Decrement the number of supports that the supported unit has.
+        Remove the supporting unit from the supported unit's "no help list" (if it appears there). 
+*/
+function cutSupport(unit)
+{
+  
+}
+
+
+
+
+
+
+
 
 /*
 For all convoying armies:
@@ -93,7 +192,7 @@ For all fleets issuing convoy orders:
     If the army being convoyed does not exist, either change the fleet's order to HOLD or mark the fleet "void" (the decision as to which should be done is based on a game option).
     Otherwise, if the army being convoyed did not issue the matching order, mark the fleet "void." 
 */
-function resolveconvoyfleet(units);
+function resolveconvoyfleet(units)
 {
   //for all valid convoying armies
   var convoy = _.select(units,function(unit){
@@ -194,94 +293,29 @@ function calcInitStr(units)
 
 
 
-function sameToFrom(x,y)
+
+
+function resolve(game)
 {
-  return (x.order.from==y.order.from) && (x.order.to==y.order.to)
+  //Does "owner" have right to move "order.from"
+  var units = game.units;//TODO: magic
+  var convoyarmylist;
+  var convoysuccesslist;
+
+  for(x in units)
+  {
+    
+  }
+
+  resolveconvoyarmy(units,convoyarmylist);
+  resolveconvoyfleet(units);
+  markInvalidSupport(units);
+
+  //TODO: reset variables
+  //MAP[Abc].entrylist[], unit.order.valid, unit.support, unit.nohelp
+  return new_game_state;
 }
 
-//list: list of provinces
-//goal: target province
-//return: true/false if a fleet can move there
-function validMove(list,goal,type)
-{
-  if(type=="f" || type=="F")
-    for(x in list)
-    {
-      if($.inArray(goal,MAP[list[x]].fleet_moves))
-        return true;
-    }
-  else if (type=="a" || type=="A")
-    for(x in list)
-    {
-      if($.inArray(goal,MAP[list[x]].army_moves))
-        return true;
-    }
-  return false;
-}
-
-function invalidateUnit(unit)
-{
-  unit.order.tag="invalid";
-  unit.order.move="h";
-  unit.order.from=unit.province;
-  unit.order.to=unit.province;
-}
-
-
-//constants.
-var MAP = {
-  NAt : {fullname: "North Atlantic",
-        army_moves: [],
-        fleet_moves: ["Cly","Lvp","Iri","Mid","Nrg"],
-        belongsto: "",
-        supply: 0,
-        combatlist: []},
-  Nrg : {fullname: "Norwegian Sea",
-        army_moves: [],
-        fleet_moves: ["Edi","Nth","Nwy","Bar","NAt","Cly"],
-        belongsto: "",
-        supply: 0,
-        combatlist: []},
-  Nth : {fullname: "North Sea",
-        army_moves: [],
-        fleet_moves: ["Edi","Nrg","Nwy","Ska","Den","Hel","Hol","Bel","Eng","Lon","Yor"],
-        belongsto: "",
-        supply: 0,
-        combatlist: []},
-  Cly : {fullname: "Clyde",
-        army_moves: ["Edi","Lvp"],
-        fleet_moves: ["Edi","Lvp","Nrg","NAt"],
-        belongsto: "Eng",
-        supply: 0,
-        combatlist: []},
-  Edi : {fullname: "Edinburgh",
-        army_moves: ["Cly","Lvp","Yor",],
-        fleet_moves: ["Cly","Nth","Yor","Nrg"],
-        belongsto: "Eng",
-        supply: 1,
-        combatlist: []},
-  Lvp : {fullname: "Liverpool",
-        army_moves: ["Edi","Cly","Yor","Wal"],
-        fleet_moves: ["Cly","Atl","Wal","Iri"],
-        belongsto: "Eng",
-        supply: 1,
-        combatlist: []},
-
-
-
-
-};
-
-var COUNTRY = ["Aus","Eng","Fra","Ger","Ita","Rus","Tur"];
-
-
-//example use: valid("Lvp","Edi","A")
-function valid(from,to,type)
-{
-  if(type=="A" || type == "a")
-    return ( _.include(MAP[from].army_moves,to));
-  return _.include(MAP[from].fleet_moves,to)
-}
 
 
 
