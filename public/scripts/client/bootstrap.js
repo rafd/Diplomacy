@@ -2,7 +2,7 @@ define([
   "order!scripts/vendor/underscore.min.js"
   , "order!scripts/vendor/backbone.min.js"
   , "order!scripts/vendor/localstorage.js"
-  , "scripts/vendor/ICanHaz.min.js"
+  , "scripts/vendor/hogan.js"
   , "socket.io"
 ], function(){
 

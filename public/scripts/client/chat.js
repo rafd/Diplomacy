@@ -11,9 +11,9 @@ define(['scripts/client/bootstrap.js'], function(){
 
   window.MessageView = Backbone.View.extend({
     tagName: 'div',
-    template: _.template("<span class='username'><%= username %>: </span><span class='content'><%- content %></span>"),
+    template: Hogan.compile("<span class='username'>{{ username }}: </span><span class='content'>{{ content }}</span>"),
     render: function(){
-      $(this.el).html(this.template(this.model.toJSON()));
+      $(this.el).html(this.template.render(this.model.toJSON()));
       return this;
     }
   });
