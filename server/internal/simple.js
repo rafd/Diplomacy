@@ -1,6 +1,57 @@
+_=require("../../public/scripts/vendor/underscore.min");
 
 
+var GAME1={
+  units : [  
+    {owner: "Eng", province: "NAt", utype: "F", order: {move: "m", from: "NAt", to: "Nrg", tag: "", support: 0} },
+    {owner: "Aus", province: "Cly", utype: "F", order: {move: "s", from: "NAt", to: "Nrg", tag: "", support: 0} },
+    {owner: "Fra", province: "Nth", utype: "F", order: {move: "m", from: "Nth", to: "Nrg", tag: "", support: 0} },
+    {owner: "Eng", province: "Edi", utype: "A", order: {move: "m", from: "Edi", to: "Lvp", tag: "", support: 0} },
+    {owner: "Ger", province: "Wal", utype: "A", order: {move: "m", from: "Wal", to: "Lvp", tag: "", support: 0} }
+  ]
+}
 
+var GAME2={
+  units : [  
+    {owner: "Eng", province: "NAt", utype: "F", order: {move: "m", from: "NAt", to: "Nrg", tag: "", support: 0} },
+    {owner: "Aus", province: "Edi", utype: "F", order: {move: "s", from: "NAt", to: "Nrg", tag: "", support: 0} },
+    {owner: "Fra", province: "Nth", utype: "F", order: {move: "m", from: "Nth", to: "Nrg", tag: "", support: 0} },
+    {owner: "Eng", province: "Cly", utype: "F", order: {move: "m", from: "Cly", to: "NAt", tag: "", support: 0} },
+    {owner: "Ger", province: "Lvp", utype: "A", order: {move: "m", from: "Lvp", to: "Cly", tag: "", support: 0} },
+    {owner: "Ger", province: "Yor", utype: "A", order: {move: "m", from: "Yor", to: "Lvp", tag: "", support: 0} },
+    {owner: "Eng", province: "Wal", utype: "A", order: {move: "m", from: "Wal", to: "Lvp", tag: "", support: 0} },
+    {owner: "Ger", province: "Iri", utype: "F", order: {move: "m", from: "Iri", to: "Wal", tag: "", support: 0} }
+  ]
+}
+
+var GAME3={
+  units : [  
+    {owner: "Eng", province: "NAt", utype: "F", order: {move: "m", from: "NAt", to: "Nrg", tag: "", support: 0} },
+    {owner: "Aus", province: "Edi", utype: "F", order: {move: "s", from: "NAt", to: "Nrg", tag: "", support: 0} },
+    {owner: "Fra", province: "Nth", utype: "F", order: {move: "s", from: "Nrg", to: "Nrg", tag: "", support: 0} },
+    {owner: "Fra", province: "Nrg", utype: "F", order: {move: "h", from: "Nrg", to: "Nrg", tag: "", support: 0} },
+    {owner: "Ger", province: "Lvp", utype: "A", order: {move: "h", from: "Lvp", to: "Lvp", tag: "", support: 0} },
+    {owner: "Ger", province: "Lon", utype: "A", order: {move: "s", from: "Wal", to: "Lvp", tag: "", support: 0} },
+    {owner: "Eng", province: "Wal", utype: "A", order: {move: "m", from: "Wal", to: "Lvp", tag: "", support: 0} },
+    {owner: "Ger", province: "Iri", utype: "F", order: {move: "m", from: "Iri", to: "Cly", tag: "", support: 0} }
+  ]
+}
+
+var GAME4={
+  units : [  
+    {owner: "Eng", province: "NAt", utype: "F", order: {move: "m", from: "NAt", to: "Nrg", tag: "", support: 0} },
+    {owner: "Fra", province: "Nth", utype: "F", order: {move: "s", from: "NAt", to: "Nrg", tag: "", support: 0} },
+    {owner: "Aus", province: "Nrg", utype: "F", order: {move: "h", from: "Nrg", to: "Nrg", tag: "", support: 0} },
+  ]
+}
+
+var GAME5={
+  units : [  
+    {owner: "Eng", province: "NAt", utype: "F", order: {move: "m", from: "NAt", to: "Nrg", tag: "", support: 0} },
+    {owner: "Fra", province: "Nth", utype: "F", order: {move: "s", from: "NAt", to: "Nrg", tag: "", support: 0} },
+    {owner: "Fra", province: "Nrg", utype: "F", order: {move: "h", from: "Nrg", to: "Nrg", tag: "", support: 0} },
+  ]
+}
 
 //constants.
 var MAP = {
@@ -92,9 +143,9 @@ function validMove(unit)
   var type=unit.utype;
 
   if (type=="a" || type=="A")
-    return _.contains(MAP[from].army_moves),goal)
+    return _.contains(MAP[from].army_moves,goal)
   else if(type=="f" || type=="F")
-    return _.contains(MAP[from].fleet_moves),goal)
+    return _.contains(MAP[from].fleet_moves,goal)
 
   console.log("invalid army type encountered in validMove");
   return false;
@@ -113,7 +164,7 @@ function invalidateUnit(unit,t)
 //return the "unit" object of province p
 function unit(prov,units)
 {
-  for(x in units)
+  for(var x in units)
     if(units[x].province==prov)
       return units[x];
   return null;
@@ -127,13 +178,13 @@ function unit(prov,units)
 
 function markInvalidMoves(units)
 {
-  for(x in units)
+  for(var x in units)
   {
     //for moves and supports
     if(units[x].order.move=="m" || units[x].order.move=="s")
     {
       //make sure the unit can go there
-      var v = validMove(unit[x]);
+      var v = validMove(units[x]);
 
       //if moving, order must be from original province
       if(units[x].order.move=="m"
@@ -146,14 +197,14 @@ function markInvalidMoves(units)
         v=false;
     }
     if(v==false)
-      invalidateUnit(unit[x],"invalid");
+      invalidateUnit(units[x],"invalid");
   }
 }
 
 function markCutSupport(units)
 {
   //for all units
-  for(x in units)
+  for(var x in units)
   {
     var existingUnit=unit(units[x].order.to,units);
 
@@ -173,21 +224,23 @@ function markCutSupport(units)
   }
 }
 
+
 function calcInitialStrengths(units)
 {
   //for all units
-  for(x in units)
+  for(var x in units)
   {
     //find supporting units
-    if(units[x].move=="s")
+    if(units[x].order.move=="s")
     {
       //find who unit[x] is supporting
       var supported = unit(units[x].order.from,units)
       //if their orders match, increase support
-      if(supported.order.move=="m" //attack move
+      if((supported.order.move=="m" || supported.order.move=="h")//attack move or hold
         && sameToFrom(supported,units[x]) )//same to, from
         //increase support count
         supported.order.support+=1;
+      invalidateUnit(units[x],"supporter")
     }
   }
 
@@ -195,20 +248,21 @@ function calcInitialStrengths(units)
 
 function cannotSwapSpaces(units)
 {
-  for(x in units)
+  for(var x in units)
   {
-    if(unit[x].order.move=="m")
+    if(units[x].order.move=="m" && unit(units[x].order.to) != undefined)
     {
       //where is the unit that you are going to going?
-      var ex-unit = unit(unit[x].order.to).order.to;
+      var exunit = unit(units[x].order.to).order.to;
       //if the ex-unit is going to my sqare
       //and we have the same support: standoff
-      if ( ex-unit==unit[x].order.from 
-        && (unit(unit[x].order.to).order.support==unit[x].order.support) )
+      if ( exunit==units[x].order.from 
+        && (unit(units[x].order.to).order.support==units[x].order.support) )
       {
-        invalidateUnit(unit[x],"cant_swap");
-        invalidateUnit(unit(unit[x].order.to),"cant_swap");
+        invalidateUnit(units[x],"cant_swap");
+        invalidateUnit(unit(units[x].order.to),"cant_swap");
       }
+    }
   }
 }
 
@@ -219,36 +273,46 @@ function resolveStrengths(units)
   {
     again=false;
     //for each space
-    for(x in MAP)
+    for(var x in MAP)
     {
       //if more than one entrant into a space
       if(MAP[x].combatlist.length>1)
       {
-        var sup;
+        var sup=[];
         //count each prov's supply
-        for(y in MAP[x].combatlist)
+        for(var y in MAP[x].combatlist)
         {
           sup[y]={ prov: MAP[x].combatlist[y],
-            sup: unit(MAP[x].combatlist[y]).order.support };
+            sup: unit(MAP[x].combatlist[y], units).order.support };
         }
         //find max supply number
         var max = _.max(sup,function(s){ return s.sup; });
         //find all who have max
-        var top = _.select(sup,function(s){ return s.sup==max; });
+        var top = _.select(sup,function(s){ return s.sup==max.sup; });
 
         if(top.length!=sup.length)//if not all the same number
         {
           //all units less than max should be invalidated
           var invalidate = _.difference(sup,top);
           //for all losing units
-          for(y in invalidate)
+          for(var y in invalidate)
           {
-            //put onto its own combat list
-            MAP[invalidate[y].prov].combatlist.push(invalidate[y].prov);
+            var p = invalidate[y].prov;
             //remove from this combat list
             MAP[x].combatlist = _.reject(MAP[x].combatlist,function(p){return p==invalidate[y].prov;});
-            //mark the unit as hold
-            invalidateUnit(unit(invalidate[y].prov),"lost");
+
+            if(unit(p).order.move=="m")
+            {  //put onto its own combat list
+              MAP[invalidate[y].prov].combatlist.push(invalidate[y].prov);
+              //mark the unit as hold
+              invalidateUnit(unit(invalidate[y].prov,units),"lost");
+            }
+            else if (unit(p).order.move=="h")
+            {
+              //mark the unit as retreat
+              //TODO: Check if disband
+              //TODO: 
+            }
           }
           again=true;
         }
@@ -257,20 +321,20 @@ function resolveStrengths(units)
   }
 
   //assume everyone tied should be put on hold
-  for(x in MAP)
+  for(var x in MAP)
   {
     var cl = MAP[x].combatlist;
     //if more than one entrant into a space
     if(cl.length>1)
     {
-      for(y in cl)
+      MAP[x].combatlist=[];
+      for(var y in cl)
       {
+        var prov = cl[y];
         //move onto its own list combat as hold
-        MAP[cl[y]].combatlist.push(cl[y]);
-        //remove from this combat list
-        _.reject(MAP[x].combatlist,function(p){return p==invalidate[y].prov;});
+        MAP[prov].combatlist.push(prov);
         //mark the unit as hold
-        invalidateUnit(unit(invalidate[y].prov),"tied");
+        invalidateUnit(unit(prov,units),"tied");
       }
     }
   }
@@ -280,13 +344,13 @@ function resolveStrengths(units)
 function initialResolve(units)
 {
   //for each unit
-  for(x in units)
+  for(var x in units)
   {
     //add it to the combat list of the space its trying to enter/hold
     if(units[x].order.move=="m" || units[x].order.move=="h")
-      MAP[units[x].order.to].combatlist.push(unit[x].province);
+      MAP[units[x].order.to].combatlist.push(units[x].province);
     else if(units[x].order.move=="s")
-      MAP[units[x].province].combatlist.push(unit[x].province);
+      MAP[units[x].province].combatlist.push(units[x].province);
   }
 
   cannotSwapSpaces(units);
@@ -297,24 +361,26 @@ function initialResolve(units)
 function finalResolve(units)
 {
   //while there are some combatlists with >= than 2 entrants
-  while(_.some(MAP),function(m){return m.combatlist.length>=2;})
+  while(_.some(MAP,function(m){return m.combatlist.length>=2;}))
   {
     var again=true;
     while(again)
     {
       again=false;
       //for each space
-      for(x in MAP)
+      for(var x in MAP)
       {
         //if more than one entrant into a space
         if(MAP[x].combatlist.length>1)
         {
           var sup;
           //count each prov's supply
-          for(y in MAP[x].combatlist)
+          for(var y in MAP[x].combatlist)
           {
-            sup[y]={ prov: MAP[x].combatlist[y],
-              sup: unit(MAP[x].combatlist[y]).order.support };
+            sup[y]={ 
+              prov: MAP[x].combatlist[y],
+              sup: unit(MAP[x].combatlist[y]).order.support
+            };
           }
           //find max supply number
           var max = _.max(sup,function(s){ return s.sup; });
@@ -326,7 +392,7 @@ function finalResolve(units)
             //all units less than max should be invalidated
             var invalidate = _.difference(sup,top);
             //for all losing units
-            for(y in invalidate)
+            for(var y in invalidate)
             {
               //assert(MAP[invalidate[y].prov]==MAP[x]); //should only be non-successful ones that lose now
 
@@ -334,6 +400,7 @@ function finalResolve(units)
               MAP[x].combatlist = _.reject(MAP[x].combatlist,function(p){return p==invalidate[y].prov;});
               //mark the unit as hold
               invalidateUnit(unit(invalidate[y].prov),"RETREAT");
+              unit(invalidate[y].prov).order.move="r";
             }
             again=true;
           }
@@ -342,13 +409,13 @@ function finalResolve(units)
     }
 
     //assume everyone tied should be put on hold
-    for(x in MAP)
+    for(var x in MAP)
     {
       var cl = MAP[x].combatlist;
       //if more than one entrant into a space
       if(cl.length>1)
       {
-        for(y in cl)
+        for(var y in cl)
         {
           //move onto its own list combat as hold
           MAP[cl[y]].combatlist.push(cl[y]);
@@ -362,9 +429,20 @@ function finalResolve(units)
   }
 }
 
+function finalBoard(units)
+{
+  //find all the ones that say RETREAT
+  //Finalize all people on the combatlist
+}
+
+function resetVars()
+{
+  
+}
 
 function resolve(game)
 {
+
   var units = game.units;//TODO: magic
 
   //sanity test: are orders legal?
@@ -382,16 +460,23 @@ function resolve(game)
   //see if people can go where they want
   initialResolve(units);
   //if people cannot go where they want
-  //can they retreat or are they dislodged?
+  //send them back to where they came from + hold. Resolve strengths again
   finalResolve(units);
+  //deal with move and retreat
+  finalBoard(units);
+
+  //reset global variables for next turn
+  resetVars();
 
 }
 
 
 
 
-
-
+//resolve(GAME1);
+//resolve(GAME2);
+//resolve(GAME3);
+resolve(GAME4);
 
 
 

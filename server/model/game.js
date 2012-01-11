@@ -86,7 +86,7 @@ unit =
   utype: "";//army or fleet
 
   order = {
-    move: "";//move, support, convoy, hold
+    move: "";//move, support, convoy, hold, retreat
     from: "";//"Edi"
     to: "";//"Lvp"
     tag: "";//string: invalid, sup_cut, success, cant_swap, lost, tied, RETREAT
