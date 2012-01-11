@@ -11,6 +11,7 @@ require(
   ,"scripts/client/chat.js"
   ,"scripts/client/event_log.js"
   ,"scripts/client/user.js"
+  ,"scripts/client/order.js"
 ], function($) {
 
   $(function() {
