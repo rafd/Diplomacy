@@ -2,7 +2,8 @@ var express = require('express')
   , stylus = require('stylus')
   , nib = require('nib')
   , app = express.createServer(express.logger())
-  , io = require('socket.io').listen(app);
+  , io = require('socket.io').listen(app)
+  , hedgehog = require('hedgehog');
 
 var chat=[], users={};
 
@@ -50,6 +51,12 @@ app.dynamicHelpers({
   env: function(req, res){
     return app.settings.env;
   }
+});
+
+var h = new hedgehog({
+  'input_path': './public/templates',
+  'output_file': './public/scripts/client/templates.js',
+  'extension': '.m'
 });
 
 // ROUTES
