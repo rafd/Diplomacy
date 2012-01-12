@@ -12,7 +12,6 @@ define(['scripts/client/bootstrap.js'], function(){
   window.MessageView = Backbone.View.extend({
     tagName: 'div',
     render: function(){
-      console.log(this.model.toJSON())
       $(this.el).html(T['message'].r(this.model.toJSON()));
       return this;
     }
