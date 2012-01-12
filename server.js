@@ -4,9 +4,11 @@ var express = require('express')
   , app = express.createServer(express.logger())
   , io = require('socket.io').listen(app)
   , mongoose = require('mongoose')
-  , db_uri = process.env.MONGOLAB_URI || 'mongodb://localhost/diplomacy-dev';
+  , hedgehog = require('hedgehog');
 
-var MODEL_PATH = './server/model/';
+var 
+    MODEL_PATH  = './server/model/'
+  , db_uri      = process.env.MONGOLAB_URI || 'mongodb://localhost/diplomacy-dev';
 
 var users={};
 
@@ -56,20 +58,27 @@ app.dynamicHelpers({
   }
 });
 
-//Mongoose Stuff
+// Mongoose
 
 mongoose.connect(db_uri, function(err) {
  if (err) console.log(err);
 });
 
+// Load and instantiate models
 
-//Load and instantiate models.
 var Game = require(MODEL_PATH + 'game.js').create(mongoose);
 var Chatroom = require(MODEL_PATH + 'chatroom.js').create(mongoose);
 
 var ch = new Chatroom();
 var gm = new Game();
 
+// Template Compiler
+
+var h = new hedgehog({
+  'input_path': './public/templates',
+  'output_file': './public/scripts/client/templates.js',
+  'extension': '.m'
+});
 
 // ROUTES
 
