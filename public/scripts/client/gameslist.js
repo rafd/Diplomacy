@@ -59,14 +59,24 @@ define(['scripts/client/bootstrap.js'], function(){
     createGame: function(){
       var name = this.input.val();
       g = Games.create({name:name});
-      Socket.emit('game:create', g.toJSON());
+      //Socket.emit('game:create', g.toJSON());
+
+      var temp = {'collection':'game', 'action':'POST', 'data':g.toJSON()}
+      Socket.emit('db', temp);
 
       this.input.val('');
       return false;
     },
 
-    update_from_server: function(){
-      Socket.emit('game:getAll', function(data){
+    deleteGame: function(){
+      
+    }
+
+    update_from_server: functhttps://www.google.com/search?client=ubuntu&channel=fs&q=mongoose+remove&ie=utf-8&oe=utf-8https://www.google.com/search?client=ubuntu&channel=fs&q=mongoose+remove&ie=utf-8&oe=utf-8https://www.google.com/search?client=ubuntu&channel=fs&q=mongoose+remove&ie=utf-8&oe=utf-8ion(){
+      //Socket.emit('game:getAll', function(data){
+
+      var temp = {'collection': 'game', 'action':'GET'}
+      Socket.emit('db', temp, function(data){
         if(data.length == 0 || Games.length == 0 || (_.last(data).created_at != Games.last().get('created_at'))){
           l = Games.models.length
           for(i=0;i<l;i++){

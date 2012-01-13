@@ -67,6 +67,10 @@ mongoose.connect(db_uri, function(err) {
 var Game = require(MODEL_PATH + 'game.js').create(mongoose);
 var Chatroom = require(MODEL_PATH + 'chatroom.js').create(mongoose);
 
+var model = new Array()
+model['game'] = Game
+model['chatroom'] = Chatroom
+
 var ch = new Chatroom();
 var gm = new Game();
 
@@ -111,9 +115,9 @@ io.sockets.on('connection', function (socket) {
     newGame.save();
   })
 
-  socket.on('game:getAll', function(callback){
-    Game.find({}, function(err, docs){callback(docs);});
-  })
+  //socket.on('game:getAll', function(callback){
+  //  Game.find({}, function(err, docs){callback(docs);});
+  //})
 
   socket.on('disconnect', function(){
     console.log('bye bye '+socket.user_id);
@@ -123,8 +127,61 @@ io.sockets.on('connection', function (socket) {
     socket.broadcast.emit('chat:users',users);
   });
 
-});
 
+//  socket.on('db', function(action, collection, data){
+  socket.on('db', function(args, callback){
+
+    console.log(args)
+
+    //args{action, collection, data}
+    
+    var _model = model[args.collection];
+
+    switch(args.action){
+      case 'GET':
+        if (!args.data){
+          //Getall
+          _model.find({}, function(err, docs){callback(docs);});
+        }
+        else {
+          //Get one
+          //do we use findById instead? Not sure if using mongo ids or our own.
+          _model.findOne({'id':args.data}, function(err, docs){callback(docs);});
+        }
+        break;
+      
+      case 'PUT':
+        break;
+      
+      case 'POST':
+        if (args.data){
+          //create new post in collection
+          newEntry = new _model(args.data);
+          newEntry.save();
+        }
+        break;
+      
+      case 'DELETE':
+        if (args.data){
+          remEntry = new _model(args.data)
+        }
+        break;
+    }
+
+    //issue is differentiation between collection action and item action
+
+
+    //GET
+
+    //PUT
+
+    //POST
+
+    //DELETE
+    
+  })
+
+});
 
 // RUN
 
