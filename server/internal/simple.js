@@ -250,17 +250,17 @@ function cannotSwapSpaces(units)
 {
   for(var x in units)
   {
-    if(units[x].order.move=="m" && unit(units[x].order.to) != undefined)
+    if(units[x].order.move=="m" && unit(units[x].order.to,units) != undefined)
     {
       //where is the unit that you are going to going?
-      var exunit = unit(units[x].order.to).order.to;
+      var exunit = unit(units[x].order.to,units).order.to;
       //if the ex-unit is going to my sqare
       //and we have the same support: standoff
       if ( exunit==units[x].order.from 
-        && (unit(units[x].order.to).order.support==units[x].order.support) )
+        && (unit(units[x].order.to,units).order.support==units[x].order.support) )
       {
         invalidateUnit(units[x],"cant_swap");
-        invalidateUnit(unit(units[x].order.to),"cant_swap");
+        invalidateUnit(unit(units[x].order.to,units),"cant_swap");
       }
     }
   }
@@ -299,19 +299,21 @@ function resolveStrengths(units)
           {
             var p = invalidate[y].prov;
             //remove from this combat list
-            MAP[x].combatlist = _.reject(MAP[x].combatlist,function(p){return p==invalidate[y].prov;});
+            MAP[x].combatlist = _.reject(MAP[x].combatlist,function(prov){return prov==p;});
 
-            if(unit(p).order.move=="m")
+            if(unit(p,units).order.move=="m")
             {  //put onto its own combat list
-              MAP[invalidate[y].prov].combatlist.push(invalidate[y].prov);
+              MAP[p].combatlist.push(invalidate[y].prov);
               //mark the unit as hold
-              invalidateUnit(unit(invalidate[y].prov,units),"lost");
+              invalidateUnit(unit(p,units),"lost");
             }
-            else if (unit(p).order.move=="h")
+            else if (unit(p,units).order.move=="h")
             {
               //mark the unit as retreat
-              //TODO: Check if disband
-              //TODO: 
+              invalidateUnit(unit(p,units),units,"RETREAT");
+              unit(p,units).order.move='r';
+              //TODO: Check if disband (no space to move)
+              //TODO: Check if self-dislodge, no help list
             }
           }
           again=true;
@@ -379,7 +381,7 @@ function finalResolve(units)
           {
             sup[y]={ 
               prov: MAP[x].combatlist[y],
-              sup: unit(MAP[x].combatlist[y]).order.support
+              sup: unit(MAP[x].combatlist[y],units).order.support
             };
           }
           //find max supply number
@@ -397,10 +399,12 @@ function finalResolve(units)
               //assert(MAP[invalidate[y].prov]==MAP[x]); //should only be non-successful ones that lose now
 
               //remove from this combat list
-              MAP[x].combatlist = _.reject(MAP[x].combatlist,function(p){return p==invalidate[y].prov;});
+              MAP[x].combatlist = _.reject(MAP[x].combatlist,function(prov){return prov==invalidate[y].prov;});
               //mark the unit as hold
-              invalidateUnit(unit(invalidate[y].prov),"RETREAT");
-              unit(invalidate[y].prov).order.move="r";
+              invalidateUnit(unit(invalidate[y].prov,units),"RETREAT");
+              unit(invalidate[y].prov,units).order.move="r";
+              //TODO: check self-dislodgement
+              //TODO: check disbandment
             }
             again=true;
           }
@@ -422,7 +426,7 @@ function finalResolve(units)
           //remove from this combat list
           _.reject(MAP[x].combatlist,function(p){return p==invalidate[y].prov;});
           //mark the unit as hold
-          invalidateUnit(unit(invalidate[y].prov),"tied");
+          invalidateUnit(unit(invalidate[y].prov,units),"tied");
         }
       }
     }
