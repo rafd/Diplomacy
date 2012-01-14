@@ -8,13 +8,22 @@ require(
 [
   "jquery"
   ,"scripts/client/bootstrap.js"
+  ,"scripts/client/player.js"
+  ,"scripts/client/game.js"
+  ,"scripts/client/lobby.js"
   ,"scripts/client/chat.js"
+  ,"scripts/client/board.js"
   //,"scripts/client/event_log.js"
   ,"scripts/client/user.js"
-  ,"scripts/client/game.js"
+  //
+  
 ], function($) {
 
   $(function() {
+
+    window.Lobby = new LobbyView();
+
+    window.user = new User();
   
     window.updateOrientation = function() {
       switch(window.orientation){
@@ -35,6 +44,7 @@ require(
       console.log('socket connected');
 
       //Chat.update_from_server();
+      GamesList.update_from_server();
     });
     Socket.on('disconnect', function() {
       console.log('socket disconnected');

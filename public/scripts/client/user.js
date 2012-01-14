@@ -2,17 +2,17 @@ define(['scripts/client/bootstrap.js'], function(){
 
   window.User = Backbone.RelationalModel.extend({
     urlRoot: 'users',
-    relations: [
+    /*relations: [
       {
         type: 'HasMany',
         key: 'games',
         relatedModel: 'Game',
         collectionType: 'Games',
-        includeInJSON: Backbone.Model.prototype.idAttribute
+        includeInJSON: "id"
       }
-    ],
+    ],*/
     initialize: function(spec){
-      if(typeof spec._id == "undefined"){
+      /*if(spec['id'] == undefined){
         // 
       } else {
         if(spec.games){
@@ -20,7 +20,7 @@ define(['scripts/client/bootstrap.js'], function(){
             this.get('messages').create({_id: game_id});
           }, this);
         }
-      }
+      }*/
       this.set({
         name: this.get('name') || Math.floor(Math.random()*1001)
       });
@@ -30,13 +30,7 @@ define(['scripts/client/bootstrap.js'], function(){
     }
   });
 
-  window.Player = Backbone.RelationalModel.extend({
-    urlRoot: 'players'
-  })
-
-  window.Players = Backbone.Collection.extend({
-    model: Player
-  });
+  
   /*
   window.CurrentUser = new (Backbone.Collection.extend({
     model: User,

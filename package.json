@@ -11,5 +11,6 @@
     , "mongoose": "2.3.x"
     , "socket.io": "0.8.5"
     , "underscore": "1.2.1"
+    , "hedgehog": "0.0.1"
   }
 }

@@ -18,9 +18,9 @@ define(['scripts/client/bootstrap.js'], function(){
 
   window.MessageView = Backbone.View.extend({
     tagName: 'div',
-    template: _.template("<span class='username'><%= username %>: </span><span class='content'><%- content %></span>"),
+    template: T['message'],
     render: function(){
-      $(this.el).html(this.template(this.model.toJSON()));
+      $(this.el).html(this.template.r([this.model.toJSON()]));
       return this;
     }
   });
@@ -56,7 +56,8 @@ define(['scripts/client/bootstrap.js'], function(){
   });
 
   window.ChatRooms = Backbone.Collection.extend({
-    model: ChatRoom
+    model: ChatRoom,
+    url: 'chatroom'
   });
 
   window.ChatRoomView = Backbone.View.extend({
@@ -64,11 +65,11 @@ define(['scripts/client/bootstrap.js'], function(){
     events: {
       "click .submit": "send"
     },
-    template: kite('#chatroom'),
+    template: T['chatroom'],
     initialize: function(chatroom){
       this.messages = chatroom.get('messages');
 
-      $(this.el).append(this.template({}));
+      $(this.el).html(this.template.r({}));
       $('#side').append(this.el);
 
       this.input = $(this.el).find("form input[type=text]");
@@ -77,7 +78,9 @@ define(['scripts/client/bootstrap.js'], function(){
       this.messages.bind('reset', this.addAll, this);
       this.messages.bind('add', this.addOne, this);
 
-      this.messages.reset();
+      this.addAll();
+
+      //this.messages.reset();
       
       //this.messages.fetch();
       /*console.log('fetching messages from LocalStorage');
@@ -99,7 +102,7 @@ define(['scripts/client/bootstrap.js'], function(){
     },
     addAll: function() {
       this.output.html('');
-      this.messages.each(this.addOne);
+      this.messages.each(this.addOne, this);
     },
     send: function(e){
       e.preventDefault();

@@ -3,9 +3,15 @@ var express = require('express')
   , nib = require('nib')
   , app = express.createServer(express.logger())
   , io = require('socket.io').listen(app)
-  , _und = require('underscore');
+  , _und = require('underscore')
+  , mongoose = require('mongoose')
+  , hedgehog = require('hedgehog');
 
-var chat=[], users={};
+var 
+    MODEL_PATH  = './server/model/'
+  , db_uri      = process.env.MONGOLAB_URI || 'mongodb://localhost/diplomacy-dev';
+
+var users={};
 
 app.configure(function(){
   app.set('views', __dirname + '/server/views');
@@ -53,6 +59,28 @@ app.dynamicHelpers({
   }
 });
 
+// Mongoose
+
+mongoose.connect(db_uri, function(err) {
+ if (err) console.log(err);
+});
+
+// Load and instantiate models
+
+var Game = require(MODEL_PATH + 'game.js').create(mongoose);
+var Chatroom = require(MODEL_PATH + 'chatroom.js').create(mongoose);
+
+var ch = new Chatroom();
+var gm = new Game();
+
+// Template Compiler
+
+var h = new hedgehog({
+  'input_path': './public/scripts/templates',
+  'output_file': './public/scripts/client/templates.js',
+  'extension': '.m'
+});
+
 // ROUTES
 
 require('./server/controller/users.js').controller(io,_und);
@@ -71,7 +99,9 @@ io.sockets.on('connection', function (socket) {
   //
 
   socket.on('chat:message', function (data) {
-    chat.push(data);
+    delete data.id //mongoose requires specific userid type. removed for now.
+    ch.messages.push(data);
+    ch.save();
     // broadcast the message
     console.log('message received');
     socket.broadcast.emit('chat:message', data);
@@ -88,8 +118,17 @@ io.sockets.on('connection', function (socket) {
   });
 
   socket.on('chat:getAll',function(callback){
-    callback(chat);
+    callback(ch.messages);
   });
+
+  socket.on('game:create', function(data){
+    newGame = new Game(data);
+    newGame.save();
+  })
+
+  socket.on('game:getAll', function(callback){
+    Game.find({}, function(err, docs){callback(docs);});
+  })
 
   socket.on('disconnect', function(){
     console.log('bye bye '+socket.user_id);
@@ -100,6 +139,7 @@ io.sockets.on('connection', function (socket) {
   });
 
 });
+
 
 // RUN
 
