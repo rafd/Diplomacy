@@ -1,1 +1,2 @@
-You are: {{name}}
+{{name}}
+<img src="{{avatar}}"/>

@@ -21,7 +21,23 @@ require(
 
   $(function() {
 
-    window.user = new User();
+    random_user_specs = [
+      {
+        name: "Cliff",
+        avatar: "/images/cliff.jpg"
+      },
+      {
+        name: "Raf",
+        avatar: "/images/raf.jpg"
+      },
+      {
+        name: "Canna",
+        avatar: "/images/canna.jpg"
+      }
+    ]
+
+
+    window.user = new User(random_user_specs[Math.floor(Math.random() * random_user_specs.length)]);
 
     window.Lobby = new LobbyView();
 
