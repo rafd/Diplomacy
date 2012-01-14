@@ -13,7 +13,8 @@ define(['scripts/client/bootstrap.js'], function(){
       
       $('#diplomacy').append(this.el);
 
-      GamesList = new GamesView();
+      new GamesView($(this.el));
+      new UserView($(this.el));
     },
     createGame: function(e){
       var name = this.input.val();
@@ -24,6 +25,17 @@ define(['scripts/client/bootstrap.js'], function(){
       this.input.val('');
       return false;
     },
+  });
+
+
+  UserView = Backbone.View.extend({
+    className: 'user',
+    template: T['user'],
+    initialize: function(target){
+      console.log(user)
+      $(this.el).html(T['user'].r([user.toJSON()]));
+      target.append(this.el);
+    }
   });
 
   GameView = Backbone.View.extend({
@@ -51,16 +63,16 @@ define(['scripts/client/bootstrap.js'], function(){
     events: {
       
     },
-    initialize: function(){
-      this.render();
+    initialize: function(target){
+      this.render(target);
 
       Games.bind('reset', this.addAll, this);
       Games.bind('add', this.addOne, this);
 
       Games.fetch();
     },
-    render: function(){
-      $(".lobby").append(this.el);
+    render: function(target){
+      target.append(this.el);
       return this;
     },
     addOne: function(g){

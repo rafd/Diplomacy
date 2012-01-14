@@ -21,9 +21,11 @@ require(
 
   $(function() {
 
+    window.user = new User();
+
     window.Lobby = new LobbyView();
 
-    window.user = new User();
+    
   
     window.updateOrientation = function() {
       switch(window.orientation){
