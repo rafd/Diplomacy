@@ -11,7 +11,7 @@ define(['scripts/client/bootstrap.js'], function(){
 
   GameView = Backbone.View.extend({
     tagName: 'div',
-    template: _.template("<a href='#' class='game-link'><%- name %> </a>"),
+    template: _.template("<form> <a href='#' class='game-link'><%- name %> </a> <input type='hidden' value= <%- _id %> > <input type='submit' value='delete'> </form>"),
     renderLink: function(){
       $(this.el).html(this.template(this.model.toJSON()));
       return this;
@@ -21,13 +21,13 @@ define(['scripts/client/bootstrap.js'], function(){
   window.Games = new (Backbone.Collection.extend({
     model: Game,
     localStorage: new Store("games")
-    
   }))();
 
   GamesListView = Backbone.View.extend({
     el: $("#lobby"),
     events: {
       "click #create-game": "createGame"
+      //"click #delete-game": "deleteGame"
     },
 
     initialize: function(){
@@ -69,10 +69,14 @@ define(['scripts/client/bootstrap.js'], function(){
     },
 
     deleteGame: function(){
-      
-    }
+      var _id = this.input.val();
 
-    update_from_server: functhttps://www.google.com/search?client=ubuntu&channel=fs&q=mongoose+remove&ie=utf-8&oe=utf-8https://www.google.com/search?client=ubuntu&channel=fs&q=mongoose+remove&ie=utf-8&oe=utf-8https://www.google.com/search?client=ubuntu&channel=fs&q=mongoose+remove&ie=utf-8&oe=utf-8ion(){
+
+      var temp = {'collection':'game', 'action':'DELETE', 'data':_id}
+      Socket.emit('db', temp);
+    },
+
+    update_from_server: function(){
       //Socket.emit('game:getAll', function(data){
 
       var temp = {'collection': 'game', 'action':'GET'}

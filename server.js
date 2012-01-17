@@ -67,10 +67,12 @@ mongoose.connect(db_uri, function(err) {
 var Game = require(MODEL_PATH + 'game.js').create(mongoose);
 var Chatroom = require(MODEL_PATH + 'chatroom.js').create(mongoose);
 
+//Used for db recall
 var model = new Array()
 model['game'] = Game
 model['chatroom'] = Chatroom
 
+//remove later
 var ch = new Chatroom();
 var gm = new Game();
 
@@ -128,13 +130,19 @@ io.sockets.on('connection', function (socket) {
   });
 
 
-//  socket.on('db', function(action, collection, data){
   socket.on('db', function(args, callback){
 
     console.log(args)
 
-    //args{action, collection, data}
+    //expected args hash: args{action, collection, data}
     
+    //load schema based on collection specified
+
+    //TODO:
+    //  Error Handling (record not found, collectio not found, args data not found)
+    //  Automated schema loading from models folder
+    //  Unit tests
+
     var _model = model[args.collection];
 
     switch(args.action){
@@ -163,21 +171,12 @@ io.sockets.on('connection', function (socket) {
       
       case 'DELETE':
         if (args.data){
-          remEntry = new _model(args.data)
+          remEntry = new _model(args.data);
+          console.log(args);
+          remEntry.remove({'id':args.data}, function(err, docs){callback(docs);});
         }
         break;
     }
-
-    //issue is differentiation between collection action and item action
-
-
-    //GET
-
-    //PUT
-
-    //POST
-
-    //DELETE
     
   })
 
