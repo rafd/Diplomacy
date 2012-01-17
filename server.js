@@ -171,9 +171,8 @@ io.sockets.on('connection', function (socket) {
       
       case 'DELETE':
         if (args.data){
-          remEntry = new _model(args.data);
           console.log(args);
-          remEntry.remove({'id':args.data}, function(err, docs){callback(docs);});
+          _model.remove({'id':args.data}, function(err, docs){callback(docs);});
         }
         break;
     }
