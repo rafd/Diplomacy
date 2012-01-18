@@ -22,6 +22,7 @@ define(['scripts/client/bootstrap.js'], function(){
       }
       
       chatroomview = new ChatRoomView(this.model.get('chatrooms').at(0));
+      playerlist = new PlayerList(this.model.get('players'));
       
       return this;
     },
@@ -31,5 +32,18 @@ define(['scripts/client/bootstrap.js'], function(){
       $(".lobby").show();
     }
   });
+
+
+  window.PlayerList = Backbone.View.extend({
+    template: T['players'],
+    initialize: function(players){
+      $(this.el).html(this.template.r([{players:players.toJSON()}]));
+
+      $('#side').append(this.el);
+    }
+
+  });
+
+
 
 });

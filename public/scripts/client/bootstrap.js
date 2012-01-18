@@ -12,4 +12,12 @@ define([
 
   Backbone.Model.prototype.idAttribute = "_id"
 
+
+  window.Helpers = {};
+
+  Helpers.random_from = function(arr){
+    return arr[Math.floor(Math.random() * arr.length)]
+  } 
+  
+
 });

@@ -13,48 +13,24 @@ require(
   ,"scripts/client/lobby.js"
   ,"scripts/client/chat.js"
   ,"scripts/client/board.js"
+  ,"scripts/client/unit.js"
   //,"scripts/client/event_log.js"
   ,"scripts/client/user.js"
+  ,"scripts/client/initialize.js"
   //
   
 ], function($) {
 
   $(function() {
 
-    random_user_specs = [
-      {
-        name: "Cliff",
-        avatar: "/images/cliff.jpg"
-      },
-      {
-        name: "Raf",
-        avatar: "/images/raf.jpg"
-      },
-      {
-        name: "Canna",
-        avatar: "/images/canna.jpg"
-      }
-    ]
+    
+    initialize();
 
-
-    window.user = new User(random_user_specs[Math.floor(Math.random() * random_user_specs.length)]);
-
-    window.Lobby = new LobbyView();
 
     
-  
-    window.updateOrientation = function() {
-      switch(window.orientation){
-        //portrait
-        case 0:
-        case 180:
-          break;
-        //landscape
-        case -90:
-        case 90:
-          break;
-      }
-    };
+
+    
+
 
     window.DataDump = function(){
       console.log(user.toJSON());

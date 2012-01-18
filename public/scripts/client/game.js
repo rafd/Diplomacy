@@ -22,6 +22,7 @@ define(['scripts/client/bootstrap.js'], function(){
       // if no ID, create a game from scratch
       if(spec['id'] == undefined) {
         this.set({
+          name: spec.name || "Game "+Math.floor(100*Math.random()),
           created_at: new Date().getTime()
         });
 
@@ -29,7 +30,7 @@ define(['scripts/client/bootstrap.js'], function(){
         this.get('chatrooms').create();
         this.get('chatrooms').create();
 
-        this.get('players').create();
+        //this.get('units').create();
       // else, generate from spec
       } else {
         /*

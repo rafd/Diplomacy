@@ -32,7 +32,6 @@ define(['scripts/client/bootstrap.js'], function(){
     className: 'user',
     template: T['user'],
     initialize: function(target){
-      console.log(user)
       $(this.el).html(T['user'].r([user.toJSON()]));
       target.append(this.el);
     }
@@ -69,7 +68,7 @@ define(['scripts/client/bootstrap.js'], function(){
       Games.bind('reset', this.addAll, this);
       Games.bind('add', this.addOne, this);
 
-      Games.fetch();
+      //Games.fetch();
     },
     render: function(target){
       target.append(this.el);
