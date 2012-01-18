@@ -56,6 +56,15 @@ require(
       }
     };
 
+    window.DataDump = function(){
+      console.log(user.toJSON());
+
+      _.each(Games, function(game){
+        console.log(game.toJSON());
+      });
+
+    };
+
     /*
     
     Socket.on('connect', function() {
