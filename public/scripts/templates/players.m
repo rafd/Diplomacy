@@ -1,6 +1,6 @@
 Players:
 <ul>
 {{#players}}
-<li>{{name}}</li>
+{{#user}}<li>{{name}}</li>{{/user}}
 {{/players}}
 </ul>

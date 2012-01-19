@@ -25,7 +25,7 @@ define(['scripts/client/bootstrap.js'], function(){
 
 
 
-    RemotePlayer = Backbone.Model.extend({
+    RemoteUser = Backbone.RelationalModel.extend({
       initialize: function(){
         this.set({name: Helpers.random_from(USER_NAMES)});
       }
@@ -34,7 +34,15 @@ define(['scripts/client/bootstrap.js'], function(){
     window.Lobby = new LobbyView();
 
     Games.create({
-      players: [new RemotePlayer(),new RemotePlayer(),new RemotePlayer(),new RemotePlayer(),new RemotePlayer(),new RemotePlayer(),new RemotePlayer()]
+      players: [
+        {power:"Eng", user: new RemoteUser()},
+        {power:"Aus", user: new RemoteUser()},
+        {power:"Fra", user: new RemoteUser()},
+        {power:"Ger", user: new RemoteUser()},
+        {power:"Ita", user: new RemoteUser()},
+        {power:"Rus", user: new RemoteUser()},
+        {power:"Tur", user: new RemoteUser()}
+      ]
     });
     
 
