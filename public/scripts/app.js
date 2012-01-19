@@ -8,16 +8,14 @@ require(
 [
   "jquery"
   ,"scripts/client/bootstrap.js"
-  ,"scripts/client/player.js"
-  ,"scripts/client/game.js"
-  ,"scripts/client/lobby.js"
+  ,"scripts/client/model/player.js"
+  ,"scripts/client/model/game.js"
+  ,"scripts/client/model/unit.js"
+  ,"scripts/client/model/user.js"
+  ,"scripts/client/view/lobby.js"
+  ,"scripts/client/view/board.js"
   ,"scripts/client/chat.js"
-  ,"scripts/client/board.js"
-  ,"scripts/client/unit.js"
-  //,"scripts/client/event_log.js"
-  ,"scripts/client/user.js"
   ,"scripts/client/initialize.js"
-  //
   
 ], function($) {
 
