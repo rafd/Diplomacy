@@ -12,7 +12,7 @@ define(['scripts/client/bootstrap.js'], function(){
     ],
   })
 
-  window.Players = Backbone.Collection.extend({
+  window.PlayerCollection = Backbone.Collection.extend({
     model: Player
   });
 

@@ -14,8 +14,15 @@ define(['scripts/client/bootstrap.js'], function(){
         type: 'HasMany',
         key: 'players',
         relatedModel: 'Player',
-        collectionType: 'Players',
+        collectionType: 'PlayerCollection',
         includeInJSON: 'id'
+      },
+      {
+        type: 'HasMany',
+        key: 'units',
+        relatedModel: 'Unit',
+        collectionType: 'UnitCollection',
+        includeInJSON: true
       }
     ],
     initialize: function(spec){
@@ -29,6 +36,11 @@ define(['scripts/client/bootstrap.js'], function(){
         console.log("new game, creating associations...")
         this.get('chatrooms').create();
         this.get('chatrooms').create();
+
+        // create units for each player
+
+
+        this.get('units').add(starting_locations);
 
         //this.get('units').create();
       // else, generate from spec
@@ -53,5 +65,7 @@ define(['scripts/client/bootstrap.js'], function(){
   });
 
   window.Games = new GameCollection();
+
+
 
 });

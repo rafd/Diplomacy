@@ -8,6 +8,7 @@ require(
 [
   "jquery"
   ,"scripts/client/bootstrap.js"
+  ,"scripts/client/model/game_init.js"
   ,"scripts/client/model/player.js"
   ,"scripts/client/model/game.js"
   ,"scripts/client/model/unit.js"

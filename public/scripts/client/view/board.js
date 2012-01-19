@@ -23,6 +23,7 @@ define(['scripts/client/bootstrap.js'], function(){
       
       chatroomview = new ChatRoomView(this.model.get('chatrooms').at(0));
       playerlist = new PlayerList(this.model.get('players'));
+      unitlist = new UnitList(this.model.get('units'));
       
       return this;
     },
@@ -34,7 +35,7 @@ define(['scripts/client/bootstrap.js'], function(){
   });
 
 
-  window.PlayerList = Backbone.View.extend({
+  PlayerList = Backbone.View.extend({
     template: T['players'],
     initialize: function(players){
       $(this.el).html(this.template.r([{players:players.toJSON()}]));
@@ -42,6 +43,15 @@ define(['scripts/client/bootstrap.js'], function(){
       $('#side').append(this.el);
     }
 
+  });
+
+  UnitList = Backbone.View.extend({
+    template: T['map'],
+    initialize: function(units){
+      $(this.el).html(this.template.r([{units:units.toJSON()}]));
+
+      $('#map').append(this.el);
+    }
   });
 
 

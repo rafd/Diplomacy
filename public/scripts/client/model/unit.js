@@ -1,19 +1,16 @@
 define(['scripts/client/bootstrap.js'], function(){
 
-  var random_from = function(arr){
-    return arr[Math.floor(Math.random() * arr.length)]
-  } 
-
-  window.Unit = Backbone.Model.extend({
+  window.Unit = Backbone.RelationalModel.extend({
     initialize: function(spec){
     }
   });
 
   window.UnitCollection = Backbone.Collection.extend({
-    model: Unit
-  });
+    model: Unit,
+    initialize: function(){
 
-  window.Units = new UnitCollection();
+    }
+  });
 
   /*
 
