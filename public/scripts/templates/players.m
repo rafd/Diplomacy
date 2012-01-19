@@ -1,6 +1,6 @@
 Players:
 <ul>
 {{#players}}
-{{#user}}<li>{{name}}</li>{{/user}}
+<li>{{power}} ({{#user}}{{name}}{{/user}})</li>
 {{/players}}
 </ul>
