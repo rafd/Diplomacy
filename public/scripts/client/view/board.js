@@ -24,7 +24,8 @@ define(['scripts/client/bootstrap.js'], function(){
       chatroomview = new ChatRoomView(this.model.get('chatrooms').at(0));
       playerlist = new PlayerList(this.model.get('players'));
       unitlist = new UnitList(this.model.get('units'));
-      
+      ordersubmit = new OrderSubmit(this.model.get('units'));
+
       return this;
     },
     goToLobby: function(e){
@@ -53,6 +54,15 @@ define(['scripts/client/bootstrap.js'], function(){
       $('#map').append(this.el);
     }
   });
+
+  OrderSubmit = Backbone.View.extend({
+    template: T['order_submit'],
+    initialize: function(units){
+      $(this.el).html(this.template.r([{units:units.toJSON()}]));
+
+      $('#side').append(this.el);
+    }
+  })
 
 
 
