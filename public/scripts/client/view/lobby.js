@@ -15,6 +15,7 @@ define(['scripts/client/bootstrap.js'], function(){
 
       new GamesView($(this.el));
       new UserView($(this.el));
+      new RemoteUserList($(this.el));
     },
     createGame: function(e){
       var name = this.input.val();
@@ -98,5 +99,20 @@ define(['scripts/client/bootstrap.js'], function(){
       });
     }
   });
+
+  RemoteUserList = Backbone.View.extend({
+    template: T['users'],
+    initialize: function(target){
+      remote_users.bind('add', this.render, this);
+      target.append(this.el);
+      this.render();
+    },
+    render: function(){
+      $(this.el).html(this.template.r([{users:remote_users.toJSON()}]));
+    }
+
+  });
+
+
 
 });
