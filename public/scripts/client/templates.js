@@ -12,9 +12,9 @@ window.T["lobby"] = new HoganTemplate();
 window.T["lobby"].r = function(c,p,i){i = i || "";var b = i + "";var _ = this;b += "<p>This is the lobby.</p>";b += "\n" + i;b += "<form id=\"new-game\">";b += "\n" + i;b += "  <input id=\"new-game-input\" placeholder=\"new game name\" type=\"text\" />";b += "\n" + i;b += "  <input id=\"create-game\" type=\"submit\" />";b += "\n" + i;b += "</form>";return b;;}
 window.T["message"] = new HoganTemplate();
 window.T["message"].r = function(c,p,i){i = i || "";var b = i + "";var _ = this;b += "<span class='username'>";b += (_.v(_.f("username",c,p,0)));b += ": </span>";b += "\n" + i;b += "<span class='content'>";b += (_.v(_.f("content",c,p,0)));b += "</span>";return b;;}
-window.T["players"] = new HoganTemplate();
-window.T["players"].r = function(c,p,i){i = i || "";var b = i + "";var _ = this;b += "Players:";b += "\n" + i;b += "<ul>";b += "\n" + i;if(_.s(_.f("players",c,p,1),c,p,0,26,75, "{{ }}")){b += _.rs(c,p,function(c,p){ var b = "";b += "<li>";b += (_.v(_.f("power",c,p,0)));b += " (";if(_.s(_.f("user",c,p,1),c,p,0,51,59, "{{ }}")){b += _.rs(c,p,function(c,p){ var b = "";b += (_.v(_.f("name",c,p,0)));return b;});c.pop();}else{b += _.b; _.b = ""};b += ")</li>";b += "\n";return b;});c.pop();}else{b += _.b; _.b = ""};b += "</ul>";return b;;}
 window.T["user"] = new HoganTemplate();
 window.T["user"].r = function(c,p,i){i = i || "";var b = i + "";var _ = this;b += (_.v(_.f("name",c,p,0)));b += "\n" + i;b += "<img src=\"";b += (_.v(_.f("avatar",c,p,0)));b += "\"/>";return b;;}
+window.T["players"] = new HoganTemplate();
+window.T["players"].r = function(c,p,i){i = i || "";var b = i + "";var _ = this;b += "Players:";b += "\n" + i;b += "<ul>";b += "\n" + i;if(_.s(_.f("players",c,p,1),c,p,0,26,75, "{{ }}")){b += _.rs(c,p,function(c,p){ var b = "";b += "<li>";b += (_.v(_.f("power",c,p,0)));b += " (";if(_.s(_.f("user",c,p,1),c,p,0,51,59, "{{ }}")){b += _.rs(c,p,function(c,p){ var b = "";b += (_.v(_.f("name",c,p,0)));return b;});c.pop();}else{b += _.b; _.b = ""};b += ")</li>";b += "\n";return b;});c.pop();}else{b += _.b; _.b = ""};b += "</ul>";return b;;}
 
 })();

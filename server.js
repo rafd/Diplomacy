@@ -76,7 +76,7 @@ var gm = new Game();
 // Template Compiler
 
 var h = new hedgehog({
-  'input_path': './public/scripts/templates',
+  'input_path': './public/scripts/client/template',
   'output_file': './public/scripts/client/templates.js',
   'extension': '.m'
 });
