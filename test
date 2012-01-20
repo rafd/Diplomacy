@@ -1,0 +1,1 @@
+node r.js -o test.build.js && phantomjs test.bootstrap.js http://localhost:3000/

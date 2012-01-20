@@ -1,0 +1,13 @@
+
+
+
+
+Testing
+
+Syn 
+  simulates user actions
+  http://javascriptmvc.com/docs.html#!Syn
+
+QUnit
+  docs: http://docs.jquery.com/Qunit
+  tut:  http://net.tutsplus.com/tutorials/javascript-ajax/how-to-test-your-javascript-code-with-qunit/

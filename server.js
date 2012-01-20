@@ -25,7 +25,7 @@ app.configure(function(){
 });
 
 app.configure('development', function(){
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
+  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
 app.configure('production', function(){
@@ -37,6 +37,11 @@ io.configure("development", function () {
 });
 
 io.configure("production", function () { 
+  io.set("transports", ["xhr-polling"]); 
+  io.set("polling duration", 10); 
+});
+
+io.configure("test", function () { 
   io.set("transports", ["xhr-polling"]); 
   io.set("polling duration", 10); 
 });
@@ -53,9 +58,8 @@ app.get('/', function(req, res) {
   res.render('app.jade', {title: 'Diplomacy'});
 });
 
-app.get('/canna', function(req, res) {
-	c=chat;
-	res.render('canna.jade');
+app.get('/test', function(req, res) {
+  res.render('test.jade', {title: 'Diplomacy'});
 });
 
 io.sockets.on('connection', function (socket) {

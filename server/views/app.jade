@@ -4,8 +4,11 @@ html(lang="en")
     title= title
     - if(env == "development")
       script(data-main='scripts/app', src='scripts/vendor/require-jquery.js')
-    - if(env == "production")
+    - else if(env == "production")
       script(src='scripts/app.min.js')
+    - else if(env == "test")
+      script(src='scripts/test.min.js')
+      link(rel="stylesheet", href="scripts/test/lib/qunit.css", type="text/css", media="screen")
 
     link(href="/stylesheets/app.css", media="only screen", rel="stylesheet", type="text/css")
     link(href="/stylesheets/screen.css", media="only screen and (min-device-width: 1025px)", rel="stylesheet", type="text/css")
@@ -22,7 +25,16 @@ html(lang="en")
     meta(name="viewport", content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0")
     meta(name="apple-mobile-web-app-capable", content="yes")
 
+
+
   body(ontouchmove="event.preventDefault();", onorientationchange="updateOrientation();")
+    -if(env == "test")
+      #test(style="position:absolute; top:0; left:0;z-index:200")
+        h1#qunit-header QUnit Test Suite
+        h2#qunit-banner
+        #qunit-testrunner-toolbar
+        h2#qunit-userAgent
+        ol#qunit-tests
     #diplomacyapp
       #game
         #map
@@ -36,7 +48,7 @@ html(lang="en")
   
             #input-box
               form
-                input#chat-input(placeholder="chat here", type="text")
+                input#chat-input(placeholder="chat here", type="text", name="chat-input")
                 input#submit(type="submit")
             
             p Connected Users:
