@@ -17,7 +17,6 @@ require(
   ,"scripts/client/view/board.js"
   ,"scripts/client/chat.js"
   ,"scripts/client/initialize.js"
-  
 ], function($) {
 
   $(function() {
