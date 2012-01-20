@@ -33,7 +33,7 @@ define(['scripts/client/bootstrap.js'], function(){
     className: 'user',
     template: T['user'],
     initialize: function(target){
-      $(this.el).html(T['user'].r([user.toJSON()]));
+      $(this.el).html(T['user'].r(user.toJSON()));
       target.append(this.el);
     }
   });
@@ -53,7 +53,7 @@ define(['scripts/client/bootstrap.js'], function(){
       $(".lobby").hide();
     },
     render: function(){
-      $(this.el).html(this.template.r([this.model.toJSON()]));
+      $(this.el).html(this.template.r(this.model.toJSON()));
       return this;
     }
   });
@@ -108,7 +108,7 @@ define(['scripts/client/bootstrap.js'], function(){
       this.render();
     },
     render: function(){
-      $(this.el).html(this.template.r([{users:remote_users.toJSON()}]));
+      $(this.el).html(this.template.r({users:remote_users.toJSON()}));
     }
 
   });

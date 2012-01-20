@@ -20,7 +20,7 @@ define(['scripts/client/bootstrap.js'], function(){
     tagName: 'div',
     template: T['message'],
     render: function(){
-      $(this.el).html(this.template.r([this.model.toJSON()]));
+      $(this.el).html(this.template.r(this.model.toJSON()));
       return this;
     }
   });
