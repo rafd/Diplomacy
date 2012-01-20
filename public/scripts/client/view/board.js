@@ -13,7 +13,7 @@ define(['scripts/client/bootstrap.js'], function(){
     render: function(){
       console.log('rendering board...');
       
-      $(this.el).html(this.template.r([this.model.toJSON()]));
+      $(this.el).html(this.template.r(this.model.toJSON()));
 
       if($("#diplomacy .board").length == 0){
         $('#diplomacy').append(this.el);
@@ -39,7 +39,7 @@ define(['scripts/client/bootstrap.js'], function(){
   PlayerList = Backbone.View.extend({
     template: T['players'],
     initialize: function(players){
-      $(this.el).html(this.template.r([{players:players.toJSON()}]));
+      $(this.el).html(this.template.r({players:players.toJSON()}));
 
       $('#side').append(this.el);
     }
@@ -49,7 +49,7 @@ define(['scripts/client/bootstrap.js'], function(){
   UnitList = Backbone.View.extend({
     template: T['map'],
     initialize: function(units){
-      $(this.el).html(this.template.r([{units:units.toJSON()}]));
+      $(this.el).html(this.template.r({units:units.toJSON()}));
 
       $('#map').append(this.el);
     }
@@ -58,7 +58,7 @@ define(['scripts/client/bootstrap.js'], function(){
   OrderSubmit = Backbone.View.extend({
     template: T['order_submit'],
     initialize: function(units){
-      $(this.el).html(this.template.r([{units:units.toJSON()}]));
+      $(this.el).html(this.template.r({units:units.toJSON()}));
 
       $('#side').append(this.el);
     }
