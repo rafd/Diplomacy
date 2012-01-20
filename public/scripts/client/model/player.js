@@ -8,6 +8,12 @@ define(['scripts/client/bootstrap.js'], function(){
         key: 'user',
         relatedModel: 'RemoteUser',
         includeInJSON: true
+      },
+      {
+        type: 'HasMany',
+        key: 'units',
+        relatedModel: 'Unit',
+        includeInJSON: false
       }
     ],
   })
