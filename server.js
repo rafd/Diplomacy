@@ -70,6 +70,12 @@ mongoose.connect(db_uri, function(err) {
 var Game = require(MODEL_PATH + 'game.js').create(mongoose);
 var Chatroom = require(MODEL_PATH + 'chatroom.js').create(mongoose);
 
+//Used for db recall
+var model = new Array()
+model['game'] = Game
+model['chatroom'] = Chatroom
+
+//remove later
 var ch = new Chatroom();
 var gm = new Game();
 
@@ -126,9 +132,9 @@ io.sockets.on('connection', function (socket) {
     newGame.save();
   })
 
-  socket.on('game:getAll', function(callback){
-    Game.find({}, function(err, docs){callback(docs);});
-  })
+  //socket.on('game:getAll', function(callback){
+  //  Game.find({}, function(err, docs){callback(docs);});
+  //})
 
   socket.on('disconnect', function(){
     console.log('bye bye '+socket.user_id);
@@ -138,8 +144,57 @@ io.sockets.on('connection', function (socket) {
     socket.broadcast.emit('chat:users',users);
   });
 
-});
 
+  socket.on('db', function(args, callback){
+
+    console.log(args)
+
+    //expected args hash: args{action, collection, data}
+    
+    //load schema based on collection specified
+
+    //TODO:
+    //  Error Handling (record not found, collectio not found, args data not found)
+    //  Automated schema loading from models folder
+    //  Unit tests
+
+    var _model = model[args.collection];
+
+    switch(args.action){
+      case 'GET':
+        if (!args.data){
+          //Getall
+          _model.find({}, function(err, docs){callback(docs);});
+        }
+        else {
+          //Get one
+          //do we use findById instead? Not sure if using mongo ids or our own.
+          _model.findOne({'id':args.data}, function(err, docs){callback(docs);});
+        }
+        break;
+      
+      case 'PUT':
+        break;
+      
+      case 'POST':
+        if (args.data){
+          //create new post in collection
+          newEntry = new _model(args.data);
+          newEntry.save();
+        }
+        break;
+      
+      case 'DELETE':
+        if (args.data){
+          console.log(args);
+          _model.remove({'id':args.data}, function(err, docs){callback(docs);});
+        }
+        break;
+    }
+    
+  })
+
+});
 
 // RUN
 
