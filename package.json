@@ -11,6 +11,8 @@
     , "mongoose": "2.3.x"
     , "socket.io": "0.8.5"
     , "underscore": "1.2.1"
-    , "hedgehog": "0.0.1"
+    , "hogan.js": "1.0.2"
+    , "watch-tree": "0.1.1"
+    , "mkdirp": "> 0.2.1"
   }
 }

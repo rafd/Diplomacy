@@ -5,7 +5,7 @@ var express = require('express')
   , io = require('socket.io').listen(app)
   , _und = require('underscore')
   , mongoose = require('mongoose')
-  , hedgehog = require('hedgehog');
+  , hedgehog = require('./server/lib/hedgehog');
 
 var 
     MODEL_PATH  = './server/model/'
