@@ -22,6 +22,7 @@ define(['scripts/client/bootstrap.js'], function(){
 
     window.user = new User(random_user_specs[Math.floor(Math.random() * random_user_specs.length)]);
 
+    window.Games = new GameCollection();
 
 
     RemoteUser = Backbone.RelationalModel.extend({
@@ -38,19 +39,20 @@ define(['scripts/client/bootstrap.js'], function(){
 
     window.Lobby = new LobbyView();
 
-    Games.create({
-      players: [
-        {power:"Eng", user: user},
-        {power:"Aus", user: remote_users.create()},
-        {power:"Fra", user: remote_users.create()},
-        {power:"Ger", user: remote_users.create()},
-        {power:"Ita", user: remote_users.create()},
-        {power:"Rus", user: remote_users.create()},
-        {power:"Tur", user: remote_users.create()}
-      ]
-    });
-    
 
+
+    g = Games.create({});
+
+    // {power:"Eng", user: user},
+    
+    _.each(
+      ["Aus","Fra","Ger","Ita","Rus","Tur"], 
+      function(_power){
+        g.get('players').create({power: _power});
+        ru = remote_users.create()
+        g.get('players').last().set({user:ru});
+      }
+    );
 
     
   }

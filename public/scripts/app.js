@@ -7,14 +7,22 @@ require(
 },
 [
   "jquery"
+  
   ,"scripts/client/bootstrap.js"
-  ,"scripts/client/model/game_init.js"
-  ,"scripts/client/model/player.js"
+
+  ,"scripts/client/helper/game_init.js"
+
+  ,"scripts/client/model/chatroom.js"
   ,"scripts/client/model/game.js"
+  ,"scripts/client/model/order.js"
+  ,"scripts/client/model/player.js"
+  ,"scripts/client/model/turn.js"
   ,"scripts/client/model/unit.js"
   ,"scripts/client/model/user.js"
+
   ,"scripts/client/view/lobby.js"
   ,"scripts/client/view/board.js"
+
   ,"scripts/client/chat.js"
   ,"scripts/client/initialize.js"
 ], function($) {
@@ -33,9 +41,7 @@ require(
     window.DataDump = function(){
       console.log(user.toJSON());
 
-      _.each(Games, function(game){
-        console.log(game.toJSON());
-      });
+      console.log(Games.toJSON());
 
     };
 

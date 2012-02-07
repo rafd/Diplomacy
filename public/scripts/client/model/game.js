@@ -7,15 +7,23 @@ define(['scripts/client/bootstrap.js'], function(){
         type: 'HasMany',
         key: 'chatrooms',
         relatedModel: 'ChatRoom',
-        collectionType: 'ChatRooms',
-        includeInJSON: 'id'
+        collectionType: 'ChatRoomCollection',
+        includeInJSON: 'id',
+        reverseRelation: {
+          type: Backbone.HasOne,
+          key: 'game'
+        }
       },
       {
         type: 'HasMany',
         key: 'players',
         relatedModel: 'Player',
         collectionType: 'PlayerCollection',
-        includeInJSON: 'id'
+        includeInJSON: 'id',
+        reverseRelation: {
+          type: Backbone.HasOne,
+          key: 'game'
+        }
       },
       {
         type: 'HasMany',
@@ -23,6 +31,17 @@ define(['scripts/client/bootstrap.js'], function(){
         relatedModel: 'Unit',
         collectionType: 'UnitCollection',
         includeInJSON: true
+      },
+      {
+        type: 'HasMany',
+        key: 'turns',
+        relatedModel: 'Turn',
+        collectionType: 'TurnCollection',
+        includeInJSON: 'id',
+        reverseRelation: {
+          type: Backbone.HasOne,
+          key: 'game'
+        }
       }
     ],
     initialize: function(spec){
@@ -33,12 +52,11 @@ define(['scripts/client/bootstrap.js'], function(){
           created_at: new Date().getTime()
         });
 
-        console.log("new game, creating associations...")
+        //console.log("new game, creating associations...")
         this.get('chatrooms').create();
         this.get('chatrooms').create();
 
         // create units for each player
-
 
         this.get('units').add(starting_locations);
 
@@ -58,14 +76,10 @@ define(['scripts/client/bootstrap.js'], function(){
     }
   });
 
-
-  window.GameCollection = Backbone.Collection.extend({
-    url: 'games',
-    model: Game
+  GameCollection = Backbone.Collection.extend({
+    model: Game,
+    url: "games"
   });
-
-  window.Games = new GameCollection();
-
 
 
 });
