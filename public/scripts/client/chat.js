@@ -27,38 +27,6 @@ define(['scripts/client/bootstrap.js'], function(){
 
   // Chat Room
 
-  window.ChatRoom = Backbone.RelationalModel.extend({
-    urlRoot: "chatroom",
-    relations: [
-      {
-        type: 'HasMany',
-        key: 'messages',
-        relatedModel: 'Message',
-        collectionType: 'Messages',
-        reverseRelation: {
-          key: 'chatroom',
-          includeInJSON: false
-        }
-      }
-    ],
-    initialize: function(spec){
-      this.get('messages').url = "chatrooms/"+this.id+'/messages';
-      if(spec.messages){
-        _.each(spec.messages, function(msg) {
-          this.get('messages').create(msg);
-        }, this);
-      } else {
-        this.get('messages').create({content:"Welcome",username:"000"});
-      }
-      
-      //this.get('messages').url = this.urlRoot + '/' + this.id + '/';
-    }
-  });
-
-  window.ChatRooms = Backbone.Collection.extend({
-    model: ChatRoom,
-    url: 'chatroom'
-  });
 
   window.ChatRoomView = Backbone.View.extend({
     className: 'chatroom',
