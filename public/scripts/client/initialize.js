@@ -40,7 +40,7 @@ define(['scripts/client/bootstrap.js'], function(){
 
     Games.create({
       players: [
-        {power:"Eng", user: remote_users.create()},
+        {power:"Eng", user: user},
         {power:"Aus", user: remote_users.create()},
         {power:"Fra", user: remote_users.create()},
         {power:"Ger", user: remote_users.create()},

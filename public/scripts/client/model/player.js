@@ -6,7 +6,7 @@ define(['scripts/client/bootstrap.js'], function(){
       {
         type: 'HasOne',
         key: 'user',
-        relatedModel: 'RemoteUser',
+        relatedModel: 'User',
         includeInJSON: true
       },
       {
