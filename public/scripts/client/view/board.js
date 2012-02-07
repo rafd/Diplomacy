@@ -56,11 +56,28 @@ define(['scripts/client/bootstrap.js'], function(){
   });
 
   OrderSubmit = Backbone.View.extend({
+    className: 'order_submit',
     template: T['order_submit'],
     initialize: function(units){
       $(this.el).html(this.template.r({units:units.toJSON()}));
 
       $('#side').append(this.el);
+    },
+    events: {
+      "click .submit" : "parseOrders"
+    },
+    parseOrders: function(e){
+      e.preventDefault();
+      var data = $(this.el).find("form").serializeArray();
+      var orders=[];
+      for(var x=0;x<data.length/4;x+=1)
+      {
+        orders[x]={};
+        orders[x].prov=data[x*4].value;
+        orders[x].move=data[x*4+1].value;
+        orders[x].from=data[x*4+2].value;
+        orders[x].to=data[x*4+3].value;
+      }
     }
   })
 
