@@ -1,6 +1,6 @@
 exports.create = function(mongoose) {
 
-  return mongoose.model('Game', new mongoose.Schema({}));
+  return mongoose.model('Player', new mongoose.Schema({}));
 
 }
 

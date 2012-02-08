@@ -1,7 +1,6 @@
 define(['scripts/client/bootstrap.js'], function(){
   
   window.Game = Backbone.RelationalModel.extend({
-    urlRoot: 'games',
     relations: [
       {
         type: 'HasMany',
@@ -78,7 +77,7 @@ define(['scripts/client/bootstrap.js'], function(){
 
   GameCollection = Backbone.Collection.extend({
     model: Game,
-    url: "games"
+    url: 'game'
   });
 
 

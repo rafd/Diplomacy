@@ -2,7 +2,7 @@ define([
   "order!scripts/vendor/underscore.min.js"
   , "order!scripts/vendor/backbone.min.js"
   , "order!scripts/vendor/backbone-relational.js"
-  , "order!scripts/vendor/dropsync.js"
+  , "order!scripts/vendor/sync.js"
   //, "order!scripts/vendor/sync.js"
   //, "order!scripts/vendor/localstorage.js"
   , "order!scripts/vendor/hogan.js"

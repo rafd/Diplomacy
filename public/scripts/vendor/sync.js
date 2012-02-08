@@ -1,138 +1,50 @@
 (function(){
 
-  function H4(){
+  getValue = function getValue(object, prop) {
+    if (!(object && object[prop])) return null;
+    return _.isFunction(object[prop]) ? object[prop]() : object[prop];
+  };
+
+  function S4() {
     return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
-  }
+  };
 
   function guid() {
-    return (Math.floor(new Date().getTime()/1000).toString(16)+H4()+H4()+H4()+H4());
+    return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+  };
+
+  dropsync = {
+    create: function(model){
+      if (!model.id) model.id = model.attributes.id = guid();
+
+      socket.emit('db',{action:'POST', collection:url, data:model}, function(err,data){ return data; })
+
+      return model;
+    },
+    getAll: function(model,url){
+      return socket.emit('db',{action:'GET', collection:url}, function(err,data){ return data; })
+    },
+    get: function(model,url){
+      return socket.emit('db',{action:'GET', collection:url, data:model.id}, function(err,data){ return data; })
+    }
   }
 
-
-  /*
-  var Store = function(name) {
-    this.name = name;
-
-
-
-  };
-
-  _.extend(Store.prototype, {
-    find: function(options,model){
-      data = {
-        class: url.split('/')[0],
-        model: model.toJSON() || {}
-      }
-
-      window.socket.emit('read', data, function(err, data){
-        if(err){
-          options.error(err);
-        } else {
-          options.success(JSON.parse(data));
-        }
-      });
-    },
-    findAll: function(model){
-      model
-    },
-    create: function(options,model){
-      model.set({_id:guid()}, {silent:true});
-
-      data = {
-        class: url.split('/')[0],
-        model: model.toJSON() || {}
-      }
-
-      window.socket.emit('create', data, function(err, data){
-        if(err){
-          //
-        } else {
-          console.log("save succesfull")
-        }
-      });
-
-      //immediately return
-      return options.success(model);
-    },
-    update: function(model){
-      model
-    },
-    destroy: function(model){
-      model
-    }
-  });
-  */
-
-  var getUrl = function(object) {
-    if (!(object && object.url)) return null;
-    return _.isFunction(object.url) ? object.url() : object.url;
-  };
-
-
   Backbone.sync = function(method, model, options) {
-
-    url = options.url || getUrl(model) || urlError();
-    //store = new Store();
-
+    url = getValue(model, 'url');
     console.log(method+":"+url)
 
-    /*
     switch (method) {
-      case "read":    resp = model.id ? store.find(options,model) : store.findAll(); break;
-      case "create":  resp = store.create(options,model);                            break;
-      case "update":  resp = store.update(model);                            break;
-      case "delete":  resp = store.destroy(model);                           break;
-    }*/
-
-      if(method=="create") model.set({_id:guid()}, {silent:true});
-
-      data = {
-        class: url.split('/')[0],
-        model: model.toJSON() || {},
-        nested: model.nested
-      }
-
-      if(url.split('/').slice(-1)[0] == "messages"){ //TODO: make this generic
-        //console.log(model);
-
-        //window.current_game.get('chatrooms').get(url.split('/').slice(1)[0]).save();
-
-        options.success(model);
-      } else {
-        window.socket.emit(method, data, function(err, data){
-          if(err){
-            //TODO
-          } else {
-            console.log('response:'+method+':'+data)
-            if(method == "create"){
-              //TODO
-            }
-            else {
-              options.success(JSON.parse(data));
-            }
-          }
-        });
-
-        //immediately return
-        if(method=="create") {options.success(model);}
-      }
-    /*
-    var resp;
-    var store = model.sync_collection || model.collection.sync_collection;
-
-    switch (method) {
-      case "read":    resp = model.id ? store.find(model) : store.findAll(); break;
-      case "create":  resp = store.create(model);                            break;
-      case "update":  resp = store.update(model);                            break;
-      case "delete":  resp = store.destroy(model);                           break;
+      case "read":    resp = model.id ? dropsync.get(model,url) : dropsync.getAll(model,url); break;
+      case "create":  resp = dropsync.create(model,url);                                      break;
+      case "update":  resp = dropsync.update(model,url);                                      break;
+      case "delete":  resp = dropsync.destroy(model,url);                                     break;
     }
 
     if (resp) {
       options.success(resp);
     } else {
       options.error("Record not found");
-    } */
-
+    }
 
   };
 })();

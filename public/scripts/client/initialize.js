@@ -1,5 +1,16 @@
 define(['scripts/client/bootstrap.js'], function(){
   initialize = function(){
+
+    socket_defaults = {
+      'reconnect':true,
+      'reconnection delay': 1000,
+      'max reconnection attempts':10
+    };
+
+  
+    window.socket = io.connect('/', socket_defaults);
+
+    
     random_user_specs = [
       {
         name: "Cliff",
@@ -26,6 +37,7 @@ define(['scripts/client/bootstrap.js'], function(){
 
 
     RemoteUser = Backbone.RelationalModel.extend({
+      urlRoot: 'remote_user',
       initialize: function(){
         this.set({name: Helpers.random_from(USER_NAMES)});
       }

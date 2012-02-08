@@ -22,7 +22,7 @@ define(['scripts/client/bootstrap.js'], function(){
       }
     ],
     initialize: function(spec){
-      this.get('messages').url = "chatrooms/"+this.id+'/messages';
+      //this.get('messages').url = "chatrooms/"+this.id+'/messages';
       if(spec.messages){
         _.each(spec.messages, function(msg) {
           this.get('messages').create(msg);
@@ -36,8 +36,7 @@ define(['scripts/client/bootstrap.js'], function(){
   });
 
   ChatRoomCollection = Backbone.Collection.extend({
-    model: ChatRoom,
-    url: 'chatroom'
+    model: ChatRoom
   });
 
 });

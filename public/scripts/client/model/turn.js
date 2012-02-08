@@ -1,7 +1,7 @@
 define(['scripts/client/bootstrap.js'], function(){
   
   window.Turn = Backbone.RelationalModel.extend({
-    urlRoot: 'turns',
+    urlRoot: 'turn',
     relations: [
       {
         type: 'HasMany',
@@ -20,8 +20,7 @@ define(['scripts/client/bootstrap.js'], function(){
   });
 
   TurnCollection = Backbone.Collection.extend({
-    model: Turn,
-    url: "turns"
+    model: Turn
   });
 
 

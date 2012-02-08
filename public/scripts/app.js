@@ -14,6 +14,7 @@ require(
 
   ,"scripts/client/model/chatroom.js"
   ,"scripts/client/model/game.js"
+  ,"scripts/client/model/message.js"
   ,"scripts/client/model/order.js"
   ,"scripts/client/model/player.js"
   ,"scripts/client/model/turn.js"
@@ -70,14 +71,7 @@ require(
  
     //user.join_chat();
 
-    socket_defaults = {
-      'reconnect':true,
-      'reconnection delay': 1000,
-      'max reconnection attempts':10
-    };
-
-  
-    window.socket = io.connect('/', socket_defaults);
+    
 
 /*
     if(typeof localStorage.user_id == "undefined"){
