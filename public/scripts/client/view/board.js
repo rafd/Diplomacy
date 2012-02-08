@@ -60,11 +60,13 @@ define(['scripts/client/bootstrap.js'], function(){
     template: T['order_submit'],
     initialize: function(units){
       $(this.el).html(this.template.r({units:units.toJSON()}));
-
+      this.units=units;
       $('#side').append(this.el);
     },
     events: {
-      "click .submit" : "parseOrders"
+      "click .submit" : "parseOrders",
+      "click .move option" : "clickedMove",
+      "click .from option" : "clickedMove"
     },
     parseOrders: function(e){
       e.preventDefault();
@@ -78,9 +80,68 @@ define(['scripts/client/bootstrap.js'], function(){
         orders[x].from=data[x*4+2].value;
         orders[x].to=data[x*4+3].value;
       }
-    }
+    },
+    clickedMove: function(e){
+      prov = $(e.target).parent().parent().find("[name='prov']").val();
+      var u= _.select(this.units.toJSON(), function(unit) { return unit.province == prov});
+      //var m=_.clone(window.MAP[prov]);
+      switch($(e.currentTarget).val())
+      {
+        case "h":
+          console.log("h");
+          u.move_h = true;
+          u.from = u.province;
+          u.to = u.province;
+          break;
+
+        case "m":
+          console.log("m");
+          u.move_m = true;
+          u["to?"] = true
+          u.to = possible_moves(u[0]);
+          break;
+
+        case "s":
+          console.log("s");
+          u.move_s = true;
+          u["from?"] = true;
+          u["to?"] = true;
+          var m=possible_moves(u[0]);
+          u.from = _.without(possible_support(m),prov); //possible_moves(u);
+          //var f = $(e.target).parent().parent().find("[name='from'] option:selected");//.val();
+          //var funit= _.select(this.units.toJSON(), function(unit) { return unit.province == f});
+          //u.to = _.intersection(m,possible_moves(funit))
+          u.to=m;
+          break;
+        
+        default:
+          
+      }
+      console.log({units:u})
+      $(e.target).parent().parent().replaceWith(T['order_submit_unit'].r({units:u}));
+      
+    },
   })
 
+  function possible_support(to)
+  {
+    var ret=[];
+    for(var x in to)
+    {
+      var a = window.MAP[to[x]].army_moves;
+      var f = window.MAP[to[x]].fleet_moves;
+      ret = _.union(ret,a,f);
+    }
+    return ret;
+  }
 
+
+  function possible_moves(unit)
+  {
+    if (unit.utype=="a" || unit.utype=="A")
+      return window.MAP[unit.province].army_moves;
+    else if(unit.utype=="f" || unit.utype=="F")
+      return window.MAP[unit.province].fleet_moves;
+  }
 
 });

@@ -52,9 +52,8 @@ var GAME5={
     {owner: "Fra", province: "Nrg", utype: "F", order: {move: "h", from: "Nrg", to: "Nrg", tag: "", support: 0} },
   ]
 }
-
 //constants.
-var MAP = {
+window.MAP = {
   NAt : {fullname: "North Atlantic",
         army_moves: [],
         fleet_moves: ["Cly","Lvp","Iri","Mid","Nrg"],
@@ -123,13 +122,13 @@ var MAP = {
       },
   Mid:  {fullname: "Mid-Atlantic Ocean",
         army_moves: [],
-        fleet_moves: ["NAt","Eng","Iri","Bre","Gas","Spa-N","Por"],
+        fleet_moves: ["NAt","Eng","Iri","Bre","Gas","SpaN","Por"],
         belongsto: "",
         supply: 0
       },
   Por:  {fullname: "Portugal",
         army_moves: ["Spa"],
-        fleet_moves: ["Mid","Spa-N","Spa-S"],
+        fleet_moves: ["Mid","SpaN","SpaS"],
         belongsto: "",
         supply: 0
       },
@@ -181,13 +180,13 @@ var MAP = {
         belongsto: "",
         supply: 0
       },
-  Spa-N:  {fullname: "Spain-North Coast",
+  SpaN:  {fullname: "Spain North Coast",
         army_moves: ["Por","Gas","Mar"],
         fleet_moves: ["Mid","Por","Gas"],
         belongsto: "",
         supply: 1
       },
-  Spa-S:  {fullname: "Spain-South Coast",
+  SpaS:  {fullname: "Spain South Coast",
         army_moves: ["Por","Gas","Mar"],
         fleet_moves: ["Mid","Wes","GoL","Mar","Por"],
         belongsto: "",
@@ -201,13 +200,13 @@ var MAP = {
       },
   Gas:  {fullname: "Gascony",
         army_moves: ["Spa","Mar","Bur","Par","Bre"],
-        fleet_moves: ["Mid","Spa-N","Bre"],
+        fleet_moves: ["Mid","SpaN","Bre"],
         belongsto: "Fra",
         supply: 0
       },
   Mar:  {fullname: "Marsellilles",
         army_moves: ["Spa","Gas","Bur","Par","Pie"],
-        fleet_moves: ["GoL","Spa-S","Pie"],
+        fleet_moves: ["GoL","SpaS","Pie"],
         belongsto: "Fra",
         supply: 1
       },
@@ -225,13 +224,13 @@ var MAP = {
       },
   GoL:  {fullname: "Gulf of Lyon",
         army_moves: [],
-        fleet_moves: ["Spa-S","Wes","Tyn","Tus","Pie","Mar"],
+        fleet_moves: ["SpaS","Wes","Tyn","Tus","Pie","Mar"],
         belongsto: "",
         supply: 0
       },
   Wes:  {fullname: "Western Mediterranean",
         army_moves: [],
-        fleet_moves: ["Spa-S","GoL","Mid","NAf","Tun","Tyn"],
+        fleet_moves: ["SpaS","GoL","Mid","NAf","Tun","Tyn"],
         belongsto: "",
         supply: 0
       },
@@ -375,19 +374,19 @@ var MAP = {
       },
   Bot:  {fullname: "Gulf of Botnia",
         army_moves: [],
-        fleet_moves: ["Swe","Fin","StP-S","Lvn","Bal"],
+        fleet_moves: ["Swe","Fin","StPS","Lvn","Bal"],
         belongsto: "",
         supply: 0
       },
   Fin:  {fullname: "Finland",
         army_moves: ["StP","Nwy","Swe"],
-        fleet_moves: ["StP-S","Swe","Bot"],
+        fleet_moves: ["StPS","Swe","Bot"],
         belongsto: "Rus",
         supply: 0
       },
   Bar:  {fullname: "Barents Sea",
         army_moves: [],
-        fleet_moves: ["StP-N","Nwy","Nrg"],
+        fleet_moves: ["StPN","Nwy","Nrg"],
         belongsto: "",
         supply: 0
       },
@@ -397,13 +396,13 @@ var MAP = {
         belongsto: "Rus",
         supply: 1
       },
-  StP-N:  {fullname: "St. Petersburg-North Coast",
+  StPN:  {fullname: "St. Petersburg North Coast",
         army_moves: [],
         fleet_moves: ["Bar","Nwy"],
         belongsto: "Rus",
         supply: 1
       },
-  StP-S:  {fullname: "St. Petersburg-South Coast",
+  StPS:  {fullname: "St. Petersburg South Coast",
         army_moves: [],
         fleet_moves: ["Lvn","Fin","Bot"],
         belongsto: "Rus",
@@ -475,13 +474,13 @@ var MAP = {
         belongsto: "",
         supply: 1
       },
-  Bul-N:  {fullname: "Bulgaria-North Coast",
+  BulN:  {fullname: "Bulgaria North Coast",
         army_moves: [],
         fleet_moves: ["Rum","Con","Bla"],
         belongsto: "",
         supply: 1
       },
-  Bul-S:  {fullname: "Bulgaria-South Coast",
+  BulS:  {fullname: "Bulgaria South Coast",
         army_moves: [],
         fleet_moves: ["Con","Aeg","Gre"],
         belongsto: "",
@@ -489,13 +488,13 @@ var MAP = {
       },
   Gre:  {fullname: "Greece",
         army_moves: ["Bul","Ser","Alb"],
-        fleet_moves: ["Aeg","Ion","Bul-S","Alb"],
+        fleet_moves: ["Aeg","Ion","BulS","Alb"],
         belongsto: "",
         supply: 0
       },
   Aeg:  {fullname: "Aegean Sea",
         army_moves: [],
-        fleet_moves: ["Ion","Eas","Con","Bul-S","Gre"],
+        fleet_moves: ["Ion","Eas","Con","BulS","Gre"],
         belongsto: "",
         supply: 0
       },
@@ -513,7 +512,7 @@ var MAP = {
       },
   Con:  {fullname: "Constantinople",
         army_moves: ["Bul","Smy","Ank"],
-        fleet_moves: ["Aeg","Bul-N","Bul-S","Bla","Ank","Smy"],
+        fleet_moves: ["Aeg","BulN","BulS","Bla","Ank","Smy"],
         belongsto: "Tur",
         supply: 1
       },
@@ -543,12 +542,7 @@ var MAP = {
       }
 };
 
-var COUNTRY = ["Aus","Eng","Fra","Ger","Ita","Rus","Tur"];
-
-
-
-
-
+window.COUNTRY = ["Aus","Eng","Fra","Ger","Ita","Rus","Tur"];
 
 
 

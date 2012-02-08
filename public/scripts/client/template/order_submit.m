@@ -5,9 +5,11 @@
     <li>
       {{province}}
       <input name="prov" type="hidden" value="{{province}}"/>
-      <input name="move" type="text" size=3   />
-      <input name="from" type="text" size=3   />
-      <input name="to" type="text" size=3   />
+      <select class="move" name="move">
+       <option>h</option>
+       <option>m</option>
+       <option>s</option>
+      </select>
     </li>
   {{/units}}
   </ul>
