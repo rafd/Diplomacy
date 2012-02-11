@@ -72,13 +72,30 @@ define(['scripts/client/bootstrap.js'], function(){
       e.preventDefault();
       var data = $(this.el).find("form").serializeArray();
       var orders=[];
+      var sum=0;
       for(var x=0;x<data.length/4;x+=1)
       {
         orders[x]={};
-        orders[x].prov=data[x*4].value;
-        orders[x].move=data[x*4+1].value;
-        orders[x].from=data[x*4+2].value;
-        orders[x].to=data[x*4+3].value;
+        orders[x].prov=data[sum].value;
+        orders[x].move=data[sum+1].value;
+        if(orders[x].move=="s")
+        {
+          orders[x].from=data[sum+2].value;
+          orders[x].to=data[sum+3].value;
+          sum+=4;
+        }
+        else if(orders[x].move=="m")
+        {
+          orders[x].from=orders[x].prov;
+          orders[x].to=data[sum+2].value;
+          sum+=3;
+        }
+        else if(orders[x].move=="h")
+        {
+          orders[x].from=orders[x].prov;
+          orders[x].to=orders[x].prov;
+          sum+=2;
+        }
       }
     },
     clickedMove: function(e){
@@ -88,36 +105,29 @@ define(['scripts/client/bootstrap.js'], function(){
       switch($(e.currentTarget).val())
       {
         case "h":
-          console.log("h");
           u.move_h = true;
           u.from = u.province;
           u.to = u.province;
           break;
 
         case "m":
-          console.log("m");
           u.move_m = true;
           u["to?"] = true
           u.to = possible_moves(u[0]);
           break;
 
         case "s":
-          console.log("s");
           u.move_s = true;
           u["from?"] = true;
           u["to?"] = true;
           var m=possible_moves(u[0]);
-          u.from = _.without(possible_support(m),prov); //possible_moves(u);
-          //var f = $(e.target).parent().parent().find("[name='from'] option:selected");//.val();
-          //var funit= _.select(this.units.toJSON(), function(unit) { return unit.province == f});
-          //u.to = _.intersection(m,possible_moves(funit))
+          u.from = _.without(possible_support(m),prov);
           u.to=m;
           break;
         
         default:
           
       }
-      console.log({units:u})
       $(e.target).parent().parent().replaceWith(T['order_submit_unit'].r({units:u}));
       
     },

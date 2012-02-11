@@ -5,7 +5,7 @@ window.T["board"].r = function(cx,p){var c = [cx];var b = "";var _ = this;b += "
 window.T["chat"] = new HoganTemplate();
 window.T["chat"].r = function(cx,p){var c = [cx];var b = "";var _ = this;b += "<li>";b += "\n";b += "  <p>Hi I&apos;m <a href=\"http://twitter.com/";b += (_.v(_.f("twitter",c,p,0)));b += "\">@";b += (_.v(_.f("twitter",c,p,0)));b += "</a></p>";b += "\n";b += "  <p>I work for ";b += (_.v(_.f("employer",c,p,0)));b += " as a ";b += (_.v(_.f("job_title",c,p,0)));b += ".</p>";b += "\n";b += "</li>";return b;;}
 window.T["chatroom"] = new HoganTemplate();
-window.T["chatroom"].r = function(cx,p){var c = [cx];var b = "";var _ = this;b += "<div class='messages'>";b += "\n";b += "</div>";b += "\n";b += "<form>";b += "\n";b += "  <input placeholder='chat here' type='text' />";b += "\n";b += "  <input type='submit' class=\"submit\"/>";b += "\n";b += "</form>";return b;;}
+window.T["chatroom"].r = function(cx,p){var c = [cx];var b = "";var _ = this;b += "<div class='messages'>";b += "\n";b += "</div>";b += "\n";b += "<form>";b += "\n";b += "  <input placeholder='chat here' type='text' />";b += "\n";b += "  <input type='submit' class=\"submit\" value = \"Send\"/>";b += "\n";b += "</form>";return b;;}
 window.T["game"] = new HoganTemplate();
 window.T["game"].r = function(cx,p){var c = [cx];var b = "";var _ = this;b += "<a href='#' class='game-link'>";b += (_.v(_.f("name",c,p,0)));b += "</a>";return b;;}
 window.T["lobby"] = new HoganTemplate();
