@@ -40,9 +40,12 @@ define(['scripts/client/bootstrap.js'], function(){
 
     window.RemoteUsers = new RemoteUserCollection();
 
-    RemoteUsers.fetch();
+    RemoteUsers.fetch({success:function(){ 
+      if(RemoteUsers.length == 0){
+        RemoteUsers.mock();
+      }
+    }});
 
-    //remote_users.mock(); // creates 11 random users
 
     window.Lobby = new LobbyView();
 
