@@ -7,15 +7,25 @@ require(
 },
 [
   "jquery"
+  
   ,"scripts/client/bootstrap.js"
-  ,"scripts/client/model/game_init.js"
-  ,"scripts/client/model/player.js"
+
+  ,"scripts/client/helper/game_init.js"
+
+  ,"scripts/client/model/chatroom.js"
   ,"scripts/client/model/game.js"
+  ,"scripts/client/model/message.js"
+  ,"scripts/client/model/order.js"
+  ,"scripts/client/model/player.js"
+  ,"scripts/client/model/remote_user.js"
+  ,"scripts/client/model/turn.js"
   ,"scripts/client/model/unit.js"
   ,"scripts/client/model/user.js"
-  ,"scripts/client/view/lobby.js"
+
   ,"scripts/client/view/board.js"
-  ,"scripts/client/chat.js"
+  ,"scripts/client/view/chatroom.js"
+  ,"scripts/client/view/lobby.js"
+
   ,"scripts/client/initialize.js"
 ], function($) {
 
@@ -33,9 +43,7 @@ require(
     window.DataDump = function(){
       console.log(user.toJSON());
 
-      _.each(Games, function(game){
-        console.log(game.toJSON());
-      });
+      console.log(Games.toJSON());
 
     };
 
@@ -64,14 +72,7 @@ require(
  
     //user.join_chat();
 
-    socket_defaults = {
-      'reconnect':true,
-      'reconnection delay': 1000,
-      'max reconnection attempts':10
-    };
-
-  
-    window.socket = io.connect('/', socket_defaults);
+    
 
 /*
     if(typeof localStorage.user_id == "undefined"){

@@ -1,5 +1,18 @@
 define(['scripts/client/bootstrap.js'], function(){
   initialize = function(){
+
+    socket_defaults = {
+      'reconnect':true,
+      'reconnection delay': 1000,
+      'max reconnection attempts':10
+    };
+
+  
+    window.socket = io.connect('/', socket_defaults);
+
+
+    window.sign_in = function() { }
+    
     random_user_specs = [
       {
         name: "Cliff",
@@ -17,39 +30,24 @@ define(['scripts/client/bootstrap.js'], function(){
 
     PLAYERS = ["Eng","Aus","Fra","Ger"];
     PROVINCES = ["NAt","Nrg","Nth","Cly","Edi","Lvp","Yor","Wal","Lon","Iri"];
-    USER_NAMES = ["Joe","Evert","Bob","George","Bruce","Milly","Sam","Evan","Jane","Jess","Ryan"];
 
 
     window.user = new User(random_user_specs[Math.floor(Math.random() * random_user_specs.length)]);
 
+    window.Games = new GameCollection();
 
+    Games.fetch();
 
-    RemoteUser = Backbone.RelationalModel.extend({
-      initialize: function(){
-        this.set({name: Helpers.random_from(USER_NAMES)});
+    window.RemoteUsers = new RemoteUserCollection();
+
+    RemoteUsers.fetch({success:function(){ 
+      if(RemoteUsers.length == 0){
+        RemoteUsers.mock();
       }
-    });
+    }});
 
-    RemoteUsers = Backbone.Collection.extend({
-      model:RemoteUser
-    });
-
-    window.remote_users = new RemoteUsers();
 
     window.Lobby = new LobbyView();
-
-    Games.create({
-      players: [
-        {power:"Eng", user: user},
-        {power:"Aus", user: remote_users.create()},
-        {power:"Fra", user: remote_users.create()},
-        {power:"Ger", user: remote_users.create()},
-        {power:"Ita", user: remote_users.create()},
-        {power:"Rus", user: remote_users.create()},
-        {power:"Tur", user: remote_users.create()}
-      ]
-    });
-    
 
 
     

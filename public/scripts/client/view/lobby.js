@@ -21,7 +21,6 @@ define(['scripts/client/bootstrap.js'], function(){
       var name = this.input.val();
 
       g = Games.create({name:name});
-      //Socket.emit('game:create', g.toJSON());
 
       this.input.val('');
       return false;
@@ -103,12 +102,14 @@ define(['scripts/client/bootstrap.js'], function(){
   RemoteUserList = Backbone.View.extend({
     template: T['users'],
     initialize: function(target){
-      remote_users.bind('add', this.render, this);
+      RemoteUsers.bind('add', this.render, this);
+      RemoteUsers.bind('reset', this.render, this);
+
       target.append(this.el);
       this.render();
     },
     render: function(){
-      $(this.el).html(this.template.r({users:remote_users.toJSON()}));
+      $(this.el).html(this.template.r({users:RemoteUsers.toJSON()}));
     }
 
   });

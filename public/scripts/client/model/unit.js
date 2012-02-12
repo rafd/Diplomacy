@@ -1,6 +1,7 @@
 define(['scripts/client/bootstrap.js'], function(){
 
   window.Unit = Backbone.RelationalModel.extend({
+    urlRoot: "unit",
     initialize: function(spec){
     }
   });

@@ -15,11 +15,17 @@
     },
     findAll: function(){
       return [];
+    },
+    find: function(model){
+      
     }
 
   }
 
   Backbone.sync = function(method, model, options) {
+
+    console.log(method)
+    console.log(model)
 
     switch (method) {
       case "read":    resp = model.id ? dropsync.find(model) : dropsync.findAll(); break;

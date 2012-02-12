@@ -1,7 +1,7 @@
 define(['scripts/client/bootstrap.js'], function(){
 
   window.User = Backbone.RelationalModel.extend({
-    urlRoot: 'users',
+    urlRoot: 'user',
     /*relations: [
       {
         type: 'HasMany',

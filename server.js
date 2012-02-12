@@ -67,17 +67,16 @@ mongoose.connect(db_uri, function(err) {
 
 // Load and instantiate models
 
-var Game = require(MODEL_PATH + 'game.js').create(mongoose);
-var Chatroom = require(MODEL_PATH + 'chatroom.js').create(mongoose);
-
-//Used for db recall
-var model = new Array()
-model['game'] = Game
-model['chatroom'] = Chatroom
+var model = [];
+model['game'] = require(MODEL_PATH + 'game.js').create(mongoose);
+model['chatroom'] = require(MODEL_PATH + 'chatroom.js').create(mongoose);
+model['message'] = require(MODEL_PATH + 'message.js').create(mongoose);
+model['player'] = require(MODEL_PATH + 'player.js').create(mongoose);
+model['remote_user'] = require(MODEL_PATH + 'remote_user.js').create(mongoose);
 
 //remove later
-var ch = new Chatroom();
-var gm = new Game();
+//var ch = new Chatroom();
+//var gm = new Game();
 
 // Template Compiler
 
@@ -100,9 +99,6 @@ app.get('/test', function(req, res) {
 });
 
 io.sockets.on('connection', function (socket) {
-  //
-
-  //
 
   socket.on('chat:message', function (data) {
     delete data.id //mongoose requires specific userid type. removed for now.
@@ -147,9 +143,15 @@ io.sockets.on('connection', function (socket) {
 
   socket.on('db', function(args, callback){
 
-    console.log(args)
+    console.log(args);
 
-    //expected args hash: args{action, collection, data}
+    /* 
+      args = {
+          action: "",
+          collection: "",
+          data: {}
+      }
+    */
     
     //load schema based on collection specified
 
@@ -164,12 +166,12 @@ io.sockets.on('connection', function (socket) {
       case 'GET':
         if (!args.data){
           //Getall
-          _model.find({}, function(err, docs){callback(docs);});
+          _model.find({}, function(err, docs){callback(err,docs);});
         }
         else {
           //Get one
           //do we use findById instead? Not sure if using mongo ids or our own.
-          _model.findOne({'id':args.data}, function(err, docs){callback(docs);});
+          _model.findOne({'_id':args.data}, function(err, docs){callback(err,docs);});
         }
         break;
       
@@ -179,15 +181,25 @@ io.sockets.on('connection', function (socket) {
       case 'POST':
         if (args.data){
           //create new post in collection
+          args.data._id =  mongoose.Types.ObjectId.fromString(args.data._id);
           newEntry = new _model(args.data);
           newEntry.save();
         }
+        break;
+
+      case 'update':
+        if(args.data){
+          id = mongoose.Types.ObjectId.fromString(args.data._id);
+          delete args.data["_id"];
+          _model.update({_id: id}, args.data, {}, function(e,num){console.log(num)})
+        }
+
         break;
       
       case 'DELETE':
         if (args.data){
           console.log(args);
-          _model.remove({'id':args.data}, function(err, docs){callback(docs);});
+          _model.remove({_id:args.data}, function(err, docs){callback(err,docs);});
         }
         break;
     }

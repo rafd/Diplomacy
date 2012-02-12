@@ -1,138 +1,51 @@
 (function(){
 
+  getValue = function getValue(object, prop) {
+    if (!(object && object[prop])) return null;
+    return _.isFunction(object[prop]) ? object[prop]() : object[prop];
+  };
+
   function H4(){
     return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
   }
-
+ 
   function guid() {
     return (Math.floor(new Date().getTime()/1000).toString(16)+H4()+H4()+H4()+H4());
   }
 
+  dropsync = {
+    create: function(model,url,options){
+      if (!model[Backbone.Model.prototype.idAttribute]) model[Backbone.Model.prototype.idAttribute] = model.attributes[Backbone.Model.prototype.idAttribute] = guid();
 
-  /*
-  var Store = function(name) {
-    this.name = name;
+      socket.emit('db',{action:'POST', collection:url, data:model}, function(err,data){ })
 
-
-
-  };
-
-  _.extend(Store.prototype, {
-    find: function(options,model){
-      data = {
-        class: url.split('/')[0],
-        model: model.toJSON() || {}
-      }
-
-      window.socket.emit('read', data, function(err, data){
-        if(err){
-          options.error(err);
-        } else {
-          options.success(JSON.parse(data));
-        }
-      });
+      options.success(model);
     },
-    findAll: function(model){
-      model
-    },
-    create: function(options,model){
-      model.set({_id:guid()}, {silent:true});
+    update: function(model,url,options){
+      socket.emit('db',{action:'update', collection:url, data:model}, function(err,data){ })
 
-      data = {
-        class: url.split('/')[0],
-        model: model.toJSON() || {}
-      }
-
-      window.socket.emit('create', data, function(err, data){
-        if(err){
-          //
-        } else {
-          console.log("save succesfull")
-        }
-      });
-
-      //immediately return
-      return options.success(model);
+      options.success(model);
     },
-    update: function(model){
-      model
+    getAll: function(model,url,options){
+      socket.emit('db',{action:'GET', collection:url}, function(err,data){ console.log(data); options.success(data); })
     },
-    destroy: function(model){
-      model
+    get: function(model,url,options){
+      socket.emit('db',{action:'GET', collection:url, data:model.id}, function(err,data){ console.log(data); options.success(data); })
     }
-  });
-  */
-
-  var getUrl = function(object) {
-    if (!(object && object.url)) return null;
-    return _.isFunction(object.url) ? object.url() : object.url;
-  };
-
+  }
 
   Backbone.sync = function(method, model, options) {
+    url = getValue(model, 'urlRoot') || getValue(model, 'url');
 
-    url = options.url || getUrl(model) || urlError();
-    //store = new Store();
 
-    console.log(method+":"+url)
-
-    /*
-    switch (method) {
-      case "read":    resp = model.id ? store.find(options,model) : store.findAll(); break;
-      case "create":  resp = store.create(options,model);                            break;
-      case "update":  resp = store.update(model);                            break;
-      case "delete":  resp = store.destroy(model);                           break;
-    }*/
-
-      if(method=="create") model.set({_id:guid()}, {silent:true});
-
-      data = {
-        class: url.split('/')[0],
-        model: model.toJSON() || {},
-        nested: model.nested
-      }
-
-      if(url.split('/').slice(-1)[0] == "messages"){ //TODO: make this generic
-        //console.log(model);
-
-        //window.current_game.get('chatrooms').get(url.split('/').slice(1)[0]).save();
-
-        options.success(model);
-      } else {
-        window.socket.emit(method, data, function(err, data){
-          if(err){
-            //TODO
-          } else {
-            console.log('response:'+method+':'+data)
-            if(method == "create"){
-              //TODO
-            }
-            else {
-              options.success(JSON.parse(data));
-            }
-          }
-        });
-
-        //immediately return
-        if(method=="create") {options.success(model);}
-      }
-    /*
-    var resp;
-    var store = model.sync_collection || model.collection.sync_collection;
+    console.log(method+((method=="read" && !model.id) ? "(all)" : "")+":"+url)
 
     switch (method) {
-      case "read":    resp = model.id ? store.find(model) : store.findAll(); break;
-      case "create":  resp = store.create(model);                            break;
-      case "update":  resp = store.update(model);                            break;
-      case "delete":  resp = store.destroy(model);                           break;
+      case "read":    resp = model.id ? dropsync.get(model,url,options) : dropsync.getAll(model,url,options); break;
+      case "create":  resp = dropsync.create(model,url,options);                                      break;
+      case "update":  resp = dropsync.update(model,url,options);                                      break;
+      case "delete":  resp = dropsync.destroy(model,url,options);                                     break;
     }
-
-    if (resp) {
-      options.success(resp);
-    } else {
-      options.error("Record not found");
-    } */
-
 
   };
 })();
