@@ -3,7 +3,7 @@ define(['scripts/client/bootstrap.js'], function(){
   window.BoardView = Backbone.View.extend({
     template: T['board'],
     className: 'board',
-    id: this.id,
+    id: this._id,
     events: {
       "click a": "goToLobby"
     },
@@ -39,7 +39,9 @@ define(['scripts/client/bootstrap.js'], function(){
   PlayerList = Backbone.View.extend({
     template: T['players'],
     initialize: function(players){
-      $(this.el).html(this.template.r({players:players.toJSON()}));
+      $(this.el).html(this.template.r({
+        players: players.toData()
+      }));
 
       $('#side').append(this.el);
     }

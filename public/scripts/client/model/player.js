@@ -2,22 +2,22 @@ define(['scripts/client/bootstrap.js'], function(){
 
   window.Player = Backbone.RelationalModel.extend({
     urlRoot: 'player',
+    initialize: function(){
+
+    },
     relations: [
       {
         type: 'HasOne',
         key: 'user',
-        relatedModel: 'User',
-        includeInJSON: 'id',
-        reverseRelation: {
-          type: Backbone.HasOne,
-          key: 'player'
-        }
+        relatedModel: 'RemoteUser',
+        collectionType: 'RemoteUserCollection',
+        includeInJSON: Backbone.Model.prototype.idAttribute
       },
       {
         type: 'HasMany',
         key: 'units',
         relatedModel: 'Unit',
-        includeInJSON: 'id',
+        includeInJSON: Backbone.Model.prototype.idAttribute,
         reverseRelation: {
           type: Backbone.HasOne,
           key: 'player'
@@ -27,7 +27,7 @@ define(['scripts/client/bootstrap.js'], function(){
         type: 'HasMany',
         key: 'orders',
         relatedModel: 'Order',
-        includeInJSON: 'id',
+        includeInJSON: Backbone.Model.prototype.idAttribute,
         reverseRelation: {
           type: Backbone.HasOne,
           key: 'player'
@@ -37,13 +37,13 @@ define(['scripts/client/bootstrap.js'], function(){
         type: 'HasMany',
         key: 'chatrooms',
         relatedModel: 'ChatRoom',
-        includeInJSON: 'id'
+        includeInJSON: Backbone.Model.prototype.idAttribute
       },
       {
         type: 'HasMany',
         key: 'messages',
         relatedModel: 'Message',
-        includeInJSON: 'id',
+        includeInJSON: Backbone.Model.prototype.idAttribute,
         reverseRelation: {
           type: Backbone.HasOne,
           key: 'player'
@@ -53,7 +53,8 @@ define(['scripts/client/bootstrap.js'], function(){
   });
 
   window.PlayerCollection = Backbone.Collection.extend({
-    model: Player
+    model: Player,
+    url: 'player'
   });  
 
 

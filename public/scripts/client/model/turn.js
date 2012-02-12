@@ -7,7 +7,7 @@ define(['scripts/client/bootstrap.js'], function(){
         type: 'HasMany',
         key: 'orders',
         relatedModel: 'Order',
-        includeInJSON: 'id',
+        includeInJSON: Backbone.Model.prototype.idAttribute,
         reverseRelation: {
           type: Backbone.HasOne,
           key: 'turn'

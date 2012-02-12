@@ -7,35 +7,28 @@ define(['scripts/client/bootstrap.js'], function(){
         type: 'HasMany',
         key: 'messages',
         relatedModel: 'Message',
-        collectionType: 'Messages',
-        includeInJSON: 'id',
-        reverseRelation: {
-          type: Backbone.HasOne,
-          key: 'chatroom'
-        }
+        collectionType: 'MessageCollection',
+        includeInJSON: Backbone.Model.prototype.idAttribute
       },
       {
         type: 'HasMany',
         key: 'players',
         relatedModel: 'Player',
-        includeInJSON: 'id'
+        includeInJSON: Backbone.Model.prototype.idAttribute
       }
     ],
     initialize: function(spec){
-      //this.get('messages').url = "chatrooms/"+this.id+'/messages';
-      if(spec.messages){
-        _.each(spec.messages, function(msg) {
-          this.get('messages').create(msg);
-        }, this);
-      } else {
+      if(spec['_id'] == undefined) {
         this.get('messages').create({content:"Welcome",username:"000"});
-      }
-      
-      //this.get('messages').url = this.urlRoot + '/' + this.id + '/';
+      } 
+
+      this.bind("change:messages", function(){this.fetchRelated('messages')}, this);
+      this.bind("add:messages", function(){this.save()}, this);
     }
   });
 
   ChatRoomCollection = Backbone.Collection.extend({
+    url: 'chatroom',
     model: ChatRoom
   });
 

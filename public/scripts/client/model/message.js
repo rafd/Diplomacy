@@ -2,7 +2,6 @@ define(['scripts/client/bootstrap.js'], function(){
 
   window.Message = Backbone.RelationalModel.extend({
     urlRoot: "message",
-    nested: true,
     initialize: function(spec){
       this.set({
         htmlId: 'message_' + this.cid,
@@ -11,7 +10,8 @@ define(['scripts/client/bootstrap.js'], function(){
     }
   });
 
-  window.Messages = Backbone.Collection.extend({
+  window.MessageCollection = Backbone.Collection.extend({
+    url: 'message',
     model: Message
   });
 

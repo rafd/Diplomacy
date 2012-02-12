@@ -17,14 +17,15 @@ require(
   ,"scripts/client/model/message.js"
   ,"scripts/client/model/order.js"
   ,"scripts/client/model/player.js"
+  ,"scripts/client/model/remote_user.js"
   ,"scripts/client/model/turn.js"
   ,"scripts/client/model/unit.js"
   ,"scripts/client/model/user.js"
 
-  ,"scripts/client/view/lobby.js"
   ,"scripts/client/view/board.js"
+  ,"scripts/client/view/chatroom.js"
+  ,"scripts/client/view/lobby.js"
 
-  ,"scripts/client/chat.js"
   ,"scripts/client/initialize.js"
 ], function($) {
 

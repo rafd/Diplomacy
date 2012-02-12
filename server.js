@@ -171,7 +171,7 @@ io.sockets.on('connection', function (socket) {
         else {
           //Get one
           //do we use findById instead? Not sure if using mongo ids or our own.
-          _model.findOne({'id':args.data}, function(err, docs){callback(err,docs);});
+          _model.findOne({'_id':args.data}, function(err, docs){callback(err,docs);});
         }
         break;
       
@@ -181,15 +181,25 @@ io.sockets.on('connection', function (socket) {
       case 'POST':
         if (args.data){
           //create new post in collection
+          args.data._id =  mongoose.Types.ObjectId.fromString(args.data._id);
           newEntry = new _model(args.data);
           newEntry.save();
         }
+        break;
+
+      case 'update':
+        if(args.data){
+          id = mongoose.Types.ObjectId.fromString(args.data._id);
+          delete args.data["_id"];
+          _model.update({_id: id}, args.data, {}, function(e,num){console.log(num)})
+        }
+
         break;
       
       case 'DELETE':
         if (args.data){
           console.log(args);
-          _model.remove({'id':args.data}, function(err, docs){callback(err,docs);});
+          _model.remove({_id:args.data}, function(err, docs){callback(err,docs);});
         }
         break;
     }
