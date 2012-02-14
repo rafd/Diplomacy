@@ -7,6 +7,20 @@ define(['scripts/client/bootstrap.js'], function(){
       "click #create-game": "createGame"
     },
     initialize: function(){
+      window.RemoteUsers = new RemoteUserCollection();
+
+      RemoteUsers.fetch({success:function(){ 
+        if(RemoteUsers.length == 0){
+          RemoteUsers.mock();
+        }
+      }});
+
+      window.Games = new GameCollection();
+      Games.fetch();
+
+      this.render();
+    },
+    render: function(){
       $(this.el).html(this.template.r({}));
 
       this.input = $(this.el).find("form #new-game-input");
@@ -32,7 +46,7 @@ define(['scripts/client/bootstrap.js'], function(){
     className: 'user',
     template: T['user'],
     initialize: function(target){
-      $(this.el).html(T['user'].r(user.toJSON()));
+      $(this.el).html(T['user'].r(window.user.toData()));
       target.append(this.el);
     }
   });
@@ -52,7 +66,7 @@ define(['scripts/client/bootstrap.js'], function(){
       $(".lobby").hide();
     },
     render: function(){
-      $(this.el).html(this.template.r(this.model.toJSON()));
+      $(this.el).html(this.template.r(this.model.toData()));
       return this;
     }
   });

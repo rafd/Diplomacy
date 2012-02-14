@@ -73,6 +73,7 @@ model['chatroom'] = require(MODEL_PATH + 'chatroom.js').create(mongoose);
 model['message'] = require(MODEL_PATH + 'message.js').create(mongoose);
 model['player'] = require(MODEL_PATH + 'player.js').create(mongoose);
 model['remote_user'] = require(MODEL_PATH + 'remote_user.js').create(mongoose);
+model['user'] = require(MODEL_PATH + 'user.js').create(mongoose);
 
 //remove later
 //var ch = new Chatroom();
@@ -138,6 +139,38 @@ io.sockets.on('connection', function (socket) {
     console.log(users);
     socket.emit('chat:users',users);
     socket.broadcast.emit('chat:users',users);
+  });
+
+  socket.on('user:login', function(args, cb){
+    var _model = model['user'];
+
+    _model.findOne({email: args.email}, function(err, doc){ 
+
+      // if username exists
+      if(doc){
+        // if passphrase correct
+        if(args.passphrase == doc.passphrase){
+          // return user id 
+          cb(null, doc);
+        }
+        // else (passphrase incorrect)
+        else {
+          // return error
+          // TODO
+        }
+      } 
+      // else (username does not exist)
+      else {
+        // create user
+        doc = new _model(args);
+        doc.save();
+
+        // return user id
+        cb(null, doc);
+      }
+
+    });
+    
   });
 
 

@@ -1,4 +1,4 @@
-Users:
+Other Users:
 <ul>
 {{#users}}
 <li>{{name}}</li>

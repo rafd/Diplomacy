@@ -32,22 +32,9 @@ define(['scripts/client/bootstrap.js'], function(){
     PROVINCES = ["NAt","Nrg","Nth","Cly","Edi","Lvp","Yor","Wal","Lon","Iri"];
 
 
-    window.user = new User(random_user_specs[Math.floor(Math.random() * random_user_specs.length)]);
+    //window.user = new User(random_user_specs[Math.floor(Math.random() * random_user_specs.length)]);
 
-    window.Games = new GameCollection();
-
-    Games.fetch();
-
-    window.RemoteUsers = new RemoteUserCollection();
-
-    RemoteUsers.fetch({success:function(){ 
-      if(RemoteUsers.length == 0){
-        RemoteUsers.mock();
-      }
-    }});
-
-
-    window.Lobby = new LobbyView();
+    Splash = new SplashView();
 
 
     

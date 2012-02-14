@@ -9,7 +9,7 @@ window.T["chatroom"].r = function(cx,p){var c = [cx];var b = "";var _ = this;b +
 window.T["game"] = new HoganTemplate();
 window.T["game"].r = function(cx,p){var c = [cx];var b = "";var _ = this;b += "<a href='#' class='game-link'>";b += (_.v(_.f("name",c,p,0)));b += "</a>";return b;;}
 window.T["lobby"] = new HoganTemplate();
-window.T["lobby"].r = function(cx,p){var c = [cx];var b = "";var _ = this;b += "<p>This is the lobby.</p>";b += "\n";b += "<form id=\"new-game\">";b += "\n";b += "  <input id=\"new-game-input\" placeholder=\"new game name\" type=\"text\" />";b += "\n";b += "  <input id=\"create-game\" type=\"submit\" />";b += "\n";b += "</form>";return b;;}
+window.T["lobby"].r = function(cx,p){var c = [cx];var b = "";var _ = this;b += "<form id=\"new-game\">";b += "\n";b += "  <input id=\"new-game-input\" placeholder=\"new game name\" type=\"text\" />";b += "\n";b += "  <input id=\"create-game\" type=\"submit\" />";b += "\n";b += "</form>";return b;;}
 window.T["map"] = new HoganTemplate();
 window.T["map"].r = function(cx,p){var c = [cx];var b = "";var _ = this;if(_.s(_.f("units",c,p,1),c,p,0,10,61)){b += _.rs(c,p,function(c,p){ var b = "";b += "<li>";b += "\n";b += "  ";b += (_.v(_.f("owner",c,p,0)));b += "\n";b += "  ";b += (_.v(_.f("utype",c,p,0)));b += "\n";b += "  ";b += (_.v(_.f("province",c,p,0)));b += "\n";b += "</li>";b += "\n";return b;});c.pop();}else{b += _.b; _.b = ""};return b;;}
 window.T["message"] = new HoganTemplate();
@@ -18,9 +18,11 @@ window.T["order_submit"] = new HoganTemplate();
 window.T["order_submit"].r = function(cx,p){var c = [cx];var b = "";var _ = this;b += "<ul>";b += "\n";if(_.s(_.f("units",c,p,1),c,p,0,15,231)){b += _.rs(c,p,function(c,p){ var b = "";b += "  <li>";b += "\n";b += "    ";b += (_.v(_.f("province",c,p,0)));b += "\n";b += "    <select>";b += "\n";b += "      <option>hold</option>";b += "\n";b += "      <option>move</option>";b += "\n";b += "      <option>support</option>";b += "\n";b += "    </select>";b += "\n";b += "\n";b += "    to:";b += "\n";b += "    ";b += "\n";b += "    <select>";b += "\n";b += "      <option>TODO</option>";b += "\n";b += "    </select>";b += "\n";b += "  </li>";b += "\n";return b;});c.pop();}else{b += _.b; _.b = ""};b += "</ul>";return b;;}
 window.T["players"] = new HoganTemplate();
 window.T["players"].r = function(cx,p){var c = [cx];var b = "";var _ = this;b += "Players:";b += "\n";b += "<ul>";b += "\n";if(_.s(_.f("players",c,p,1),c,p,0,26,75)){b += _.rs(c,p,function(c,p){ var b = "";b += "<li>";b += (_.v(_.f("power",c,p,0)));b += " (";if(_.s(_.f("user",c,p,1),c,p,0,51,59)){b += _.rs(c,p,function(c,p){ var b = "";b += (_.v(_.f("name",c,p,0)));return b;});c.pop();}else{b += _.b; _.b = ""};b += ")</li>";b += "\n";return b;});c.pop();}else{b += _.b; _.b = ""};b += "</ul>";return b;;}
+window.T["splash"] = new HoganTemplate();
+window.T["splash"].r = function(cx,p){var c = [cx];var b = "";var _ = this;b += "<form id=\"user-login\">";b += "\n";b += "  <input class=\"email\" placeholder=\"email\" type=\"text\" /> <br />";b += "\n";b += "  <input class=\"name\" placeholder=\"name\" type=\"text\" /> <br />";b += "\n";b += "  <!--<input class=\"password\" type=\"password\" placeholder=\"passphrase\"/> <br /> -->";b += "\n";b += "  <input id=\"logIn\" type=\"submit\" value=\"start playing\"/>";b += "\n";b += "</form>";return b;;}
 window.T["user"] = new HoganTemplate();
 window.T["user"].r = function(cx,p){var c = [cx];var b = "";var _ = this;b += (_.v(_.f("name",c,p,0)));b += "\n";b += "<img src=\"";b += (_.v(_.f("avatar",c,p,0)));b += "\"/>";return b;;}
 window.T["users"] = new HoganTemplate();
-window.T["users"].r = function(cx,p){var c = [cx];var b = "";var _ = this;b += "Users:";b += "\n";b += "<ul>";b += "\n";if(_.s(_.f("users",c,p,1),c,p,0,22,41)){b += _.rs(c,p,function(c,p){ var b = "";b += "<li>";b += (_.v(_.f("name",c,p,0)));b += "</li>";b += "\n";return b;});c.pop();}else{b += _.b; _.b = ""};b += "</ul>";return b;;}
+window.T["users"].r = function(cx,p){var c = [cx];var b = "";var _ = this;b += "Other Users:";b += "\n";b += "<ul>";b += "\n";if(_.s(_.f("users",c,p,1),c,p,0,28,47)){b += _.rs(c,p,function(c,p){ var b = "";b += "<li>";b += (_.v(_.f("name",c,p,0)));b += "</li>";b += "\n";return b;});c.pop();}else{b += _.b; _.b = ""};b += "</ul>";return b;;}
 
 })();
