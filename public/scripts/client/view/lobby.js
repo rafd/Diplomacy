@@ -57,6 +57,9 @@ define(['scripts/client/bootstrap.js'], function(){
     events: {
       "click a": "switchToGame"
     },
+    initialize: function() {
+      this.model.get('players').bind("change", this.render, this);
+    },
     switchToGame: function(){
       this.hideLobby();
 
@@ -81,8 +84,6 @@ define(['scripts/client/bootstrap.js'], function(){
 
       Games.bind('reset', this.addAll, this);
       Games.bind('add', this.addOne, this);
-
-      //Games.fetch();
     },
     render: function(target){
       target.append(this.el);
@@ -95,21 +96,6 @@ define(['scripts/client/bootstrap.js'], function(){
     addAll: function(){
       $(this.el).html('');
       Games.each(this.addOne);
-    },
-    update_from_server: function(){
-      Socket.emit('game:getAll', function(data){
-        if(data.length == 0 || Games.length == 0 || (_.last(data).created_at != Games.last().get('created_at'))){
-          l = Games.models.length
-          for(i=0;i<l;i++){
-            Games.models[0].destroy();
-        }
-        Games.reset();
-
-        _.each(data, function(d){Games.create(d)});
-        } else {
-          console.log('up to date')
-        }
-      });
     }
   });
 

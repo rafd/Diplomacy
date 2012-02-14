@@ -7,7 +7,7 @@ window.T["chat"].r = function(cx,p){var c = [cx];var b = "";var _ = this;b += "<
 window.T["chatroom"] = new HoganTemplate();
 window.T["chatroom"].r = function(cx,p){var c = [cx];var b = "";var _ = this;b += "<div class='messages'>";b += "\n";b += "</div>";b += "\n";b += "<form>";b += "\n";b += "  <input placeholder='chat here' type='text' />";b += "\n";b += "  <input type='submit' class=\"submit\"/>";b += "\n";b += "</form>";return b;;}
 window.T["game"] = new HoganTemplate();
-window.T["game"].r = function(cx,p){var c = [cx];var b = "";var _ = this;b += "<a href='#' class='game-link'>";b += (_.v(_.f("name",c,p,0)));b += "</a>";return b;;}
+window.T["game"].r = function(cx,p){var c = [cx];var b = "";var _ = this;b += "<a href='#' class='game-link'>";b += (_.v(_.f("name",c,p,0)));b += "</a>";b += "\n";if(_.s(_.f("players",c,p,1),c,p,0,57,85)){b += _.rs(c,p,function(c,p){ var b = "";if(_.s(_.f("user",c,p,1),c,p,0,67,75)){b += _.rs(c,p,function(c,p){ var b = "";b += (_.v(_.f("name",c,p,0)));return b;});c.pop();}else{b += _.b; _.b = ""};b += "\n";return b;});c.pop();}else{b += _.b; _.b = ""};return b;;}
 window.T["lobby"] = new HoganTemplate();
 window.T["lobby"].r = function(cx,p){var c = [cx];var b = "";var _ = this;b += "<form id=\"new-game\">";b += "\n";b += "  <input id=\"new-game-input\" placeholder=\"new game name\" type=\"text\" />";b += "\n";b += "  <input id=\"create-game\" type=\"submit\" />";b += "\n";b += "</form>";return b;;}
 window.T["map"] = new HoganTemplate();

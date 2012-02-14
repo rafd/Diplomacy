@@ -36,14 +36,14 @@ define([
           var value = json[ rel.key ];
 
           if (value && _.isFunction( value.toJSON ) ) {
-            json[ rel.key ] = value.toJSON();
+            json[ rel.key ] = value.toData();
           }
           else if ( _.isString( rel.options.includeInJSON ) ) {
             if ( value instanceof Backbone.Collection ) {
-              json[ rel.key ] = value.pluck( rel.options.includeInJSON );
+              json[ rel.key ] = value.toData();
             }
             else if ( value instanceof Backbone.Model ) {
-              json[ rel.key ] = value.get( rel.options.includeInJSON );
+              json[ rel.key ] = value.toData();
             }
           }
           else {
