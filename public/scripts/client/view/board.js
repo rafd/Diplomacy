@@ -24,7 +24,10 @@ define(['scripts/client/bootstrap.js'], function(){
       chatroomview = new ChatRoomView(this.model.get('chatrooms').at(0));
       playerlist = new PlayerList(this.model.get('players'));
       unitlist = new UnitList(this.model.get('units'));
-      ordersubmit = new OrderSubmit(this.model.get('units'));
+
+      current_player = this.model.get('players').ownedBy(window.user);
+
+      ordersubmit = new OrderSubmit(this.model.get('units').ownedBy(current_player.get('power')));
 
       return this;
     },
@@ -51,6 +54,8 @@ define(['scripts/client/bootstrap.js'], function(){
   UnitList = Backbone.View.extend({
     template: T['map'],
     initialize: function(units){
+
+
       $(this.el).html(this.template.r({units:units.toJSON()}));
 
       $('#map').append(this.el);
@@ -60,7 +65,11 @@ define(['scripts/client/bootstrap.js'], function(){
   OrderSubmit = Backbone.View.extend({
     template: T['order_submit'],
     initialize: function(units){
-      $(this.el).html(this.template.r({units:units.toJSON()}));
+      //TODO: we should find a way to do this without creating a new unitcollection
+      units = new UnitCollection(units);
+
+
+      $(this.el).html(this.template.r({units:units.toData()}));
 
       $('#side').append(this.el);
     }

@@ -4,7 +4,7 @@ define(['scripts/client/bootstrap.js'], function(){
     urlRoot: 'player',
     initialize: function(){
       this.attributes.units = function() {
-        this.get('game');
+        //TODO; issue: player has no ref to game
       }
     },
     relations: [
@@ -46,7 +46,12 @@ define(['scripts/client/bootstrap.js'], function(){
 
   window.PlayerCollection = Backbone.Collection.extend({
     model: Player,
-    url: 'player'
+    url: 'player',
+    ownedBy: function(user){
+      return this.find(function(player){
+        return player.get('user') == user;
+      });
+    }
   });  
 
 

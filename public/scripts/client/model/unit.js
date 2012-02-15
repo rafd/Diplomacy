@@ -10,6 +10,11 @@ define(['scripts/client/bootstrap.js'], function(){
     model: Unit,
     initialize: function(){
 
+    },
+    ownedBy: function(owner){
+      return this.select(function(unit){
+        return unit.get('owner') == owner;
+      });
     }
   });
 
