@@ -26,7 +26,9 @@ define(['scripts/client/bootstrap.js'], function(){
       current_player = this.model.get('players').ownedBy(window.user);
       
       chatroomlist = new ChatRoomList(this.model.get('chatrooms').ownedBy(current_player));
-      chatroomview = new ChatRoomView(this.model.get('chatrooms').at(0));
+      
+      new ChatRoomsView(this.model.get('chatrooms').ownedBy(current_player));
+
       playerlist = new PlayerList(this.model.get('players'));
       unitlist = new UnitList(this.model.get('units'));
 
@@ -85,7 +87,6 @@ define(['scripts/client/bootstrap.js'], function(){
       chatrooms = new ChatRoomCollection(chatrooms);
 
       $(this.el).html(this.template.r({chatrooms:chatrooms.toData()}));
-      console.log(chatrooms.toData())
 
       $('#side').append(this.el);
     }

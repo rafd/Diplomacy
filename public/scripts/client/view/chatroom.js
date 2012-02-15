@@ -1,6 +1,22 @@
 define(['scripts/client/bootstrap.js'], function(){
 
-  window.ChatRoomView = Backbone.View.extend({
+
+  ChatRoomsView = Backbone.View.extend({
+    initialize: function(chatrooms){
+      this.chatrooms = chatrooms;
+
+      this.addAll();
+    },
+    addAll: function() {
+      _.each(this.chatrooms, function(chatroom){console.log(chatroom); this.addOne(chatroom)}, this);
+    },
+    addOne: function(chatroom){
+      //TODO: should be passing target to attach to
+      new ChatRoomView(chatroom);
+    }
+  });
+
+  ChatRoomView = Backbone.View.extend({
     events: {
       "click .submit": "send"
     },
