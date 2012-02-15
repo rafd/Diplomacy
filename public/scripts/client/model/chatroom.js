@@ -29,7 +29,12 @@ define(['scripts/client/bootstrap.js'], function(){
 
   ChatRoomCollection = Backbone.Collection.extend({
     url: 'chatroom',
-    model: ChatRoom
+    model: ChatRoom,
+    ownedBy: function(player){
+      return this.select(function(chatroom){
+        return _.include(chatroom.get('players').pluck('_id'), player.id);
+      });
+    }
   });
 
 });

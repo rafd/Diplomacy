@@ -27,16 +27,15 @@
       options.success(model);
     },
     getAll: function(model,url,options){
-      socket.emit('db',{action:'GET', collection:url}, function(err,data){ console.log(data); options.success(data); })
+      socket.emit('db',{action:'GET', collection:url}, function(err,data){ options.success(data); })
     },
     get: function(model,url,options){
-      socket.emit('db',{action:'GET', collection:url, data:model.id}, function(err,data){ console.log(data); options.success(data); })
+      socket.emit('db',{action:'GET', collection:url, data:model.id}, function(err,data){ options.success(data); })
     }
   }
 
   Backbone.sync = function(method, model, options) {
     url = getValue(model, 'urlRoot') || getValue(model, 'url');
-
 
     console.log(method+((method=="read" && !model.id) ? "(all)" : "")+":"+url)
 

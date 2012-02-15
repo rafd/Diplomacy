@@ -20,13 +20,17 @@ define(['scripts/client/bootstrap.js'], function(){
       } else {
         $('#diplomacy .board').replaceWith(this.el);
       }
+
+
+
+      current_player = this.model.get('players').ownedBy(window.user);
       
+      chatroomlist = new ChatRoomList(this.model.get('chatrooms').ownedBy(current_player));
       chatroomview = new ChatRoomView(this.model.get('chatrooms').at(0));
       playerlist = new PlayerList(this.model.get('players'));
       unitlist = new UnitList(this.model.get('units'));
 
-      current_player = this.model.get('players').ownedBy(window.user);
-
+      // TODO: units.ownedBy should take (player) not ("power")
       ordersubmit = new OrderSubmit(this.model.get('units').ownedBy(current_player.get('power')));
 
       return this;
@@ -73,7 +77,19 @@ define(['scripts/client/bootstrap.js'], function(){
 
       $('#side').append(this.el);
     }
-  })
+  });
+
+  ChatRoomList = Backbone.View.extend({
+    template: T['chatrooms'],
+    initialize: function(chatrooms){
+      chatrooms = new ChatRoomCollection(chatrooms);
+
+      $(this.el).html(this.template.r({chatrooms:chatrooms.toData()}));
+      console.log(chatrooms.toData())
+
+      $('#side').append(this.el);
+    }
+  });
 
 
 

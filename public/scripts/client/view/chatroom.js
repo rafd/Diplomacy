@@ -43,10 +43,7 @@ define(['scripts/client/bootstrap.js'], function(){
       this.bind('change', function(){this.render()}, this);
     },
     render: function(){
-      console.log("MESSSAGE")
-      console.log(this.model.toData())
       $(this.el).html(this.template.r(this.model.toData()));
-
       
       return this;
     }

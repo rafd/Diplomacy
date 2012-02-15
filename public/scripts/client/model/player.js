@@ -51,6 +51,20 @@ define(['scripts/client/bootstrap.js'], function(){
       return this.find(function(player){
         return player.get('user') == user;
       });
+    },
+    permutations: function(){
+      // for every item 1..x as i
+        // for every item 1..i-1 as j
+          // output << [item i, item j]
+
+      output = []
+
+      for(i=0; i < this.length; i++){
+        for(j=0; j < i; j++){
+          output.push([this.at(i), this.at(j)])
+        }
+      }
+      return output;
     }
   });  
 

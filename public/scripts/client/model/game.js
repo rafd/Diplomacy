@@ -43,15 +43,10 @@ define(['scripts/client/bootstrap.js'], function(){
           created_at: new Date().getTime()
         });
 
-        //console.log("new game, creating associations...")
-        this.get('chatrooms').create();
-        this.get('chatrooms').create();
 
         // create units for each player
 
         this.get('units').add(starting_locations);
-
-        // TODO: create local user
 
         // TODO: should loop through this
         this.get('players').create({power:"Aus", user: window.user});
@@ -62,8 +57,17 @@ define(['scripts/client/bootstrap.js'], function(){
         this.get('players').create({power:"Tur", user: RemoteUsers.at(5)});
         this.get('players').create({power:"Eng", user: RemoteUsers.at(6)});
 
+        // create chatrooms using player permutations 
+        _.each(this.get('players').permutations(), function(pair){
+          this.get('chatrooms').create({players: [pair[0].id, pair[1].id]})
+        }, this);
+
+        // create global chatroom
+        this.get('chatrooms').create({players: this.get('players').pluck('_id')});
+
+      } 
       // else, generate from spec
-      } else {
+      else {
         console.log("existing game")
 
         this.fetchRelated('chatrooms');
