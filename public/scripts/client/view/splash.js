@@ -19,9 +19,12 @@ define(['scripts/client/bootstrap.js'], function(){
       $('#diplomacy').append(this.el);
     },
     logIn: function(e){
+      e.preventDefault(); //TODO: this shouldn't be necessary
+
       info = {email: this.email.val(), name: this.name.val()};
       // TODO: passphrase needs to be sent securely
       // TODO: check the passphrase
+    
       socket.emit('user:login',info, function(err,data){ 
         // create local user object
         window.user = new User(data);
