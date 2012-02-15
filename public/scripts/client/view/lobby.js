@@ -7,10 +7,10 @@ define(['scripts/client/bootstrap.js'], function(){
       "click #create-game": "createGame"
     },
     initialize: function(){
-      window.RemoteUsers = new RemoteUserCollection();
+      window.RemoteUsers = new UserCollection();
 
       RemoteUsers.fetch({success:function(){ 
-        if(RemoteUsers.length == 0){
+        if(RemoteUsers.length < 10){
           RemoteUsers.mock();
         }
       }});

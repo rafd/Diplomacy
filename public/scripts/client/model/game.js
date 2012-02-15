@@ -54,7 +54,7 @@ define(['scripts/client/bootstrap.js'], function(){
         // TODO: create local user
 
         // TODO: should loop through this
-        this.get('players').create({power:"Aus", user: RemoteUsers.at(0)});
+        this.get('players').create({power:"Aus", user: window.user});
         this.get('players').create({power:"Fra", user: RemoteUsers.at(1)});
         this.get('players').create({power:"Ger", user: RemoteUsers.at(2)});
         this.get('players').create({power:"Ita", user: RemoteUsers.at(3)});

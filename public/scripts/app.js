@@ -17,7 +17,6 @@ require(
   ,"scripts/client/model/message.js"
   ,"scripts/client/model/order.js"
   ,"scripts/client/model/player.js"
-  ,"scripts/client/model/remote_user.js"
   ,"scripts/client/model/turn.js"
   ,"scripts/client/model/unit.js"
   ,"scripts/client/model/user.js"

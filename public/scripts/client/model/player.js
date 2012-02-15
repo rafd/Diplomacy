@@ -3,25 +3,17 @@ define(['scripts/client/bootstrap.js'], function(){
   window.Player = Backbone.RelationalModel.extend({
     urlRoot: 'player',
     initialize: function(){
-
+      this.attributes.units = function() {
+        this.get('game');
+      }
     },
     relations: [
       {
         type: 'HasOne',
         key: 'user',
-        relatedModel: 'RemoteUser',
-        collectionType: 'RemoteUserCollection',
+        relatedModel: 'User',
+        collectionType: 'UserCollection',
         includeInJSON: Backbone.Model.prototype.idAttribute
-      },
-      {
-        type: 'HasMany',
-        key: 'units',
-        relatedModel: 'Unit',
-        includeInJSON: Backbone.Model.prototype.idAttribute,
-        reverseRelation: {
-          type: Backbone.HasOne,
-          key: 'player'
-        }
       },
       {
         type: 'HasMany',
