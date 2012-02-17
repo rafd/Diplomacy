@@ -1,8 +1,9 @@
 <ul>
 {{#chatrooms}}
-<li>{{#players}}
+<li data-id="{{id}}">
 {{power}}
-{{/players}}
+({{#user}}{{name}}{{/user}})
+[{{#online}}x{{/online}}{{^online}}o{{/online}}]
 </li>
 {{/chatrooms}}
 </ul>

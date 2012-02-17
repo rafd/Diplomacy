@@ -2,31 +2,46 @@ define(['scripts/client/bootstrap.js'], function(){
 
 
   ChatRoomsView = Backbone.View.extend({
+    className: "chatrooms",
     initialize: function(chatrooms){
       this.chatrooms = chatrooms;
+
+      $('#side').append(this.el);
 
       this.addAll();
     },
     addAll: function() {
-      _.each(this.chatrooms, function(chatroom){console.log(chatroom); this.addOne(chatroom)}, this);
+      _.each(this.chatrooms, function(chatroom){this.addOne(chatroom)}, this);
     },
     addOne: function(chatroom){
       //TODO: should be passing target to attach to
-      new ChatRoomView(chatroom);
+      new ChatRoomView(chatroom, this.el);
     }
   });
 
   ChatRoomView = Backbone.View.extend({
+    className: "chatroom",
     events: {
       "click .submit": "send"
     },
     template: T['chatroom'],
-    initialize: function(chatroom){
+    initialize: function(chatroom, target){
       this.model = chatroom;
       this.messages = this.model.get('messages');
 
-      $(this.el).html(this.template.r({}));
-      $('#side').append(this.el);
+      console.log(chatroom)
+
+      player = chatroom.get('players').reject(function(p){ p == current_player})[0];
+
+      $(this.el).html(this.template.r({
+        power: player.get('power'),
+        user: player.get('user').toData(),
+        online: false
+      }));
+
+      $(this.el).hide();
+
+      $(target).append(this.el);
 
       this.input = $(this.el).find("form input[type=text]");
       this.output = $(this.el).find(".messages");
