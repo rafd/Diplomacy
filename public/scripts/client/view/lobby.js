@@ -20,7 +20,8 @@ define(['scripts/client/bootstrap.js'], function(){
     createGame: function(e){
       var name = this.input.val();
 
-      g = Games.create({name:name});
+      g = Games.create({name:name})
+      //Games.create is not initializing players for new models
       //Socket.emit('game:create', g.toJSON());
 
       this.input.val('');
@@ -44,10 +45,15 @@ define(['scripts/client/bootstrap.js'], function(){
     events: {
       "click a": "switchToGame"
     },
+    initialize: function(){
+      var gameView =  new PreGameView({model:this.model, parentView: this})
+    },
     switchToGame: function(){
       this.hideLobby();
-
-      window.currentGameView = new BoardView({model:this.model});
+      window.currentGameView = this.model.get('gameView') //remove from model
+      $(this.gameView.el).show()
+      // window.currentGameView = new PreGameView({model:this.model});
+      // window.currentGameView = new BoardView({model:this.model});
     },
     hideLobby: function() {
       $(".lobby").hide();

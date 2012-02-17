@@ -5,7 +5,8 @@ var express = require('express')
   , io = require('socket.io').listen(app)
   , _und = require('underscore')
   , mongoose = require('mongoose')
-  , hedgehog = require('./server/lib/hedgehog');
+  , hedgehog = require('./server/lib/hedgehog')
+  , fs = require('fs');
 
 var 
     MODEL_PATH  = './server/model/'
@@ -67,17 +68,35 @@ mongoose.connect(db_uri, function(err) {
 
 // Load and instantiate models
 
-var Game = require(MODEL_PATH + 'game.js').create(mongoose);
-var Chatroom = require(MODEL_PATH + 'chatroom.js').create(mongoose);
+//var Game = require(MODEL_PATH + 'game.js').create(mongoose);
+//var Chatroom = require(MODEL_PATH + 'chatroom.js').create(mongoose);
 
 //Used for db recall
+
 var model = new Array()
-model['game'] = Game
-model['chatroom'] = Chatroom
+//model['game'] = Game
+//model['chatroom'] = Chatroom
+
+fs.readdir('./server/model',function(err,files){
+  if (err){
+    //error
+    callback(error);
+  }
+  files.forEach(function(file){
+    //filter and trim .js
+    var filename = file
+    if (file.substr(-3) == '.js'){
+      filename = file.replace('.js', '');
+      model[filename] = require(MODEL_PATH + file).create(mongoose);
+    }
+  })
+})
+
+
 
 //remove later
-var ch = new Chatroom();
-var gm = new Game();
+// var ch = new Chatroom();
+// var gm = new Game();
 
 // Template Compiler
 
@@ -104,50 +123,49 @@ io.sockets.on('connection', function (socket) {
 
   //
 
-  socket.on('chat:message', function (data) {
-    delete data.id //mongoose requires specific userid type. removed for now.
-    ch.messages.push(data);
-    ch.save();
-    // broadcast the message
-    console.log('message received');
-    socket.broadcast.emit('chat:message', data);
-  });
+  // socket.on('chat:message', function (data) {
+  //   delete data.id //mongoose requires specific userid type. removed for now.
+  //   ch.messages.push(data);
+  //   ch.save();
+  //   // broadcast the message
+  //   console.log('message received');
+  //   socket.broadcast.emit('chat:message', data);
+  // });
 
-  socket.on('chat:connect', function(user){
-    console.log('welcome '+user.name);
-    socket.user_id = user.id;
-    users[user.id] = user;
-    //TODO: send updates, based on when last online
-    //socket.emit('game:updates',data)
-    socket.emit('chat:users',users);
-    socket.broadcast.emit('chat:users',users);
-  });
+  // socket.on('chat:connect', function(user){
+  //   console.log('welcome '+user.name);
+  //   socket.user_id = user.id;
+  //   users[user.id] = user;
+  //   //TODO: send updates, based on when last online
+  //   //socket.emit('game:updates',data)
+  //   socket.emit('chat:users',users);
+  //   socket.broadcast.emit('chat:users',users);
+  // });
 
-  socket.on('chat:getAll',function(callback){
-    callback(ch.messages);
-  });
+  // socket.on('chat:getAll',function(callback){
+  //   callback(ch.messages);
+  // });
 
-  socket.on('game:create', function(data){
-    newGame = new Game(data);
-    newGame.save();
-  })
+  // socket.on('game:create', function(data){
+  //   newGame = new Game(data);
+  //   newGame.save();
+  // })
 
-  //socket.on('game:getAll', function(callback){
-  //  Game.find({}, function(err, docs){callback(docs);});
-  //})
+  // //socket.on('game:getAll', function(callback){
+  // //  Game.find({}, function(err, docs){callback(docs);});
+  // //})
 
-  socket.on('disconnect', function(){
-    console.log('bye bye '+socket.user_id);
-    delete users[socket.user_id];
-    console.log(users);
-    socket.emit('chat:users',users);
-    socket.broadcast.emit('chat:users',users);
-  });
+  // socket.on('disconnect', function(){
+  //   console.log('bye bye '+socket.user_id);
+  //   delete users[socket.user_id];
+  //   console.log(users);
+  //   socket.emit('chat:users',users);
+  //   socket.broadcast.emit('chat:users',users);
+  // });
 
 
   socket.on('db', function(args, callback){
 
-    console.log(args)
 
     //expected args hash: args{action, collection, data}
     

@@ -15,6 +15,7 @@ require(
   ,"scripts/client/model/user.js"
   ,"scripts/client/view/lobby.js"
   ,"scripts/client/view/board.js"
+  ,"scripts/client/view/pregame.js"
   ,"scripts/client/chat.js"
   ,"scripts/client/initialize.js"
 ], function($) {

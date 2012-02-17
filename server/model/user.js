@@ -1,11 +1,17 @@
-function user(Schema, mongoose) {
+var create = function(mongoose) {
+  
+  var Schema = mongoose.Schema
+
   var user_schema = new Schema({
     name: String
   });
 
-  var User = new mongoose.Model('User', user_schema);
+  return mongoose.model('User', user_schema)
+
 }
-module.exports.user = user;
+
+exports.create = create
+
 /*
 
 User

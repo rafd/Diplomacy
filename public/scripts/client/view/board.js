@@ -12,7 +12,6 @@ define(['scripts/client/bootstrap.js'], function(){
     },
     render: function(){
       console.log('rendering board...');
-      
       $(this.el).html(this.template.r(this.model.toJSON()));
 
       if($("#diplomacy .board").length == 0){
