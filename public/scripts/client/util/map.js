@@ -1,40 +1,4 @@
-define([], function(){
-
-  powers = { 
-    Aus: 'Austria',
-    Eng: 'England',
-    Fra: 'France',
-    Ger: 'Germany',
-    Ita: 'Italy',
-    Rus: 'Russia',
-    Tur: 'Turkey' 
-  }
-
-  starting_locations = [ 
-    { owner: 'Aus', province: 'Vie', utype: 'a' },
-    { owner: 'Aus', province: 'Bud', utype: 'a' },
-    { owner: 'Aus', province: 'Tri', utype: 'f' },
-    { owner: 'Eng', province: 'Lon', utype: 'f' },
-    { owner: 'Eng', province: 'Edi', utype: 'f' },
-    { owner: 'Eng', province: 'Lvp', utype: 'a' },
-    { owner: 'Fra', province: 'Par', utype: 'a' },
-    { owner: 'Fra', province: 'Mar', utype: 'a' },
-    { owner: 'Fra', province: 'Bre', utype: 'f' },
-    { owner: 'Ger', province: 'Ber', utype: 'a' },
-    { owner: 'Ger', province: 'Mun', utype: 'a' },
-    { owner: 'Ger', province: 'Kie', utype: 'f' },
-    { owner: 'Ita', province: 'Rom', utype: 'a' },
-    { owner: 'Ita', province: 'Ven', utype: 'a' },
-    { owner: 'Ita', province: 'Nap', utype: 'f' },
-    { owner: 'Rus', province: 'Mos', utype: 'a' },
-    { owner: 'Rus', province: 'Sev', utype: 'f' },
-    { owner: 'Rus', province: 'War', utype: 'a' },
-    { owner: 'Rus', province: 'StP', utype: 'f' },
-    { owner: 'Tur', province: 'Ank', utype: 'f' },
-    { owner: 'Tur', province: 'Con', utype: 'a' },
-    { owner: 'Tur', province: 'Smy', utype: 'a' }
-  ]
-
+//constants.
 window.MAP = {
   NAt : {fullname: "North Atlantic",
         army_moves: [],
@@ -525,6 +489,3 @@ window.MAP = {
 };
 
 window.COUNTRY = ["Aus","Eng","Fra","Ger","Ita","Rus","Tur"];
-
-
-});

@@ -2,5 +2,5 @@
 </div>
 <form>
   <input placeholder='chat here' type='text' />
-  <input type='submit' class="submit"/>
+  <input type='submit' class="submit" value = "Send"/>
 </form>

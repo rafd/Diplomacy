@@ -6,7 +6,8 @@ var express = require('express')
   , _und = require('underscore')
   , mongoose = require('mongoose')
   , hedgehog = require('./server/lib/hedgehog')
-  , fs = require('fs');
+  , fs = require('fs')
+  , dipresolve = require('./server/lib/dipresolve')
 
 var 
     MODEL_PATH  = './server/model/'
@@ -146,6 +147,17 @@ io.sockets.on('connection', function (socket) {
   //   socket.emit('chat:users',users);
   //   socket.broadcast.emit('chat:users',users);
   // });
+
+  socket.on('game:submit', function(args,cb){
+
+
+  });
+
+  socket.on('game:resolve', function(args, cb){
+    var blah = dipresolve(args);
+
+    cb(null, blah);
+  });
 
   socket.on('user:login', function(args, cb){
     var _model = model['user'];

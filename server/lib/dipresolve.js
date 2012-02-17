@@ -52,77 +52,497 @@ var GAME5={
     {owner: "Fra", province: "Nrg", utype: "F", order: {move: "h", from: "Nrg", to: "Nrg", tag: "", support: 0} },
   ]
 }
-
 //constants.
-var MAP = {
+MAP = {
   NAt : {fullname: "North Atlantic",
         army_moves: [],
         fleet_moves: ["Cly","Lvp","Iri","Mid","Nrg"],
         belongsto: "",
         supply: 0,
-        combatlist: []},
+      },
   Nrg : {fullname: "Norwegian Sea",
         army_moves: [],
         fleet_moves: ["Edi","Nth","Nwy","Bar","NAt","Cly"],
         belongsto: "",
-        supply: 0,
-        combatlist: []},
+        supply: 0
+      },
   Nth : {fullname: "North Sea",
         army_moves: [],
         fleet_moves: ["Edi","Nrg","Nwy","Ska","Den","Hel","Hol","Bel","Eng","Lon","Yor"],
         belongsto: "",
-        supply: 0,
-        combatlist: []},
+        supply: 0
+      },
   Cly : {fullname: "Clyde",
         army_moves: ["Edi","Lvp"],
         fleet_moves: ["Edi","Lvp","Nrg","NAt"],
         belongsto: "Eng",
-        supply: 0,
-        combatlist: []},
+        supply: 0
+      },
   Edi : {fullname: "Edinburgh",
         army_moves: ["Cly","Lvp","Yor",],
         fleet_moves: ["Cly","Nth","Yor","Nrg"],
         belongsto: "Eng",
-        supply: 1,
-        combatlist: []},
-  Lvp : {fullname: "Liverpool",
+        supply: 1
+      },
+  Lvp: {fullname: "Liverpool",
         army_moves: ["Edi","Cly","Yor","Wal"],
         fleet_moves: ["Cly","Atl","Wal","Iri"],
         belongsto: "Eng",
-        supply: 1,
-        combatlist: []},
+        supply: 1
+      },
   Yor:  {fullname: "York",
         army_moves: ["Edi","Lvp","Lon","Wal"],
         fleet_moves: ["Edi","Lon","Nth"],
         belongsto: "Eng",
-        supply: 0,
-        combatlist: []},
+        supply: 0
+      },
   Wal:  {fullname: "Wales",
         army_moves: ["Yor","Lvp","Lon"],
         fleet_moves: ["Lvp","Lon","Iri","Eng"],
         belongsto: "Eng",
-        supply: 0,
-        combatlist: []},
+        supply: 0
+      },
   Lon:  {fullname: "London",
         army_moves: ["Yor","Wal"],
         fleet_moves: ["Yor","Wal","Nth","Eng"],
         belongsto: "Eng",
-        supply: 1,
-        combatlist: []},
+        supply: 1
+      },
   Iri:  {fullname: "Irish Sea",
         army_moves: [],
         fleet_moves: ["NAt","Eng","Wal","Lvp"],
         belongsto: "",
-        supply: 0,
-        combatlist: []}
+        supply: 0
+      },
+  Eng:  {fullname: "English Channel",
+        army_moves: [],
+        fleet_moves: ["Iri","Mid","Bre","Pic","Bel","Nth","Lon","Wal"],
+        belongsto: "",
+        supply: 0
+      },
+  Mid:  {fullname: "Mid-Atlantic Ocean",
+        army_moves: [],
+        fleet_moves: ["NAt","Eng","Iri","Bre","Gas","SpaN","Por"],
+        belongsto: "",
+        supply: 0
+      },
+  Por:  {fullname: "Portugal",
+        army_moves: ["Spa"],
+        fleet_moves: ["Mid","SpaN","SpaS"],
+        belongsto: "",
+        supply: 0
+      },
+  Bre:  {fullname: "Brest",
+        army_moves: ["Pic","Par","Gas"],
+        fleet_moves: ["Pic","Gas","Mid","Eng"],
+        belongsto: "Fra",
+        supply: 0
+      },
+  Pic:  {fullname: "Picardy",
+        army_moves: ["Bel","Par","Bur","Bre"],
+        fleet_moves: ["Bel","Bre","Eng"],
+        belongsto: "Fra",
+        supply: 0
+      },
+  Bel:  {fullname: "Belguim",
+        army_moves: ["Hol","Ruh","Bur","Pic"],
+        fleet_moves: ["Nth","Eng","Hol","Pic"],
+        belongsto: "",
+        supply: 1
+      },
+  Hol:  {fullname: "Holland",
+        army_moves: ["Bel","Ruh","Kie"],
+        fleet_moves: ["Nth","Hel","Bel","Kie"],
+        belongsto: "",
+        supply: 1
+      },
+  Hel:  {fullname: "Helgoland Bight",
+        army_moves: [],
+        fleet_moves: ["Nth","Den","Hol","Kie"],
+        belongsto: "",
+        supply: 0
+      },
+  Den:  {fullname: "Denmark",
+        army_moves: ["Kie","Swe"],
+        fleet_moves: ["Swe","Kie","Hel","Nth","Ska","Bal"],
+        belongsto: "",
+        supply: 1
+      },
+  Ska:  {fullname: "Skagerrak",
+        army_moves: [],
+        fleet_moves: ["Nwy","Nth","Den","Swe"],
+        belongsto: "",
+        supply: 0
+      },
+  Nwy:  {fullname: "Norway",
+        army_moves: ["Swe","Fin","StP"],
+        fleet_moves: ["StP","Bar","Nrg","Nth","Ska","Swe"],
+        belongsto: "",
+        supply: 0
+      },
+  SpaN:  {fullname: "Spain North Coast",
+        army_moves: ["Por","Gas","Mar"],
+        fleet_moves: ["Mid","Por","Gas"],
+        belongsto: "",
+        supply: 1
+      },
+  SpaS:  {fullname: "Spain South Coast",
+        army_moves: ["Por","Gas","Mar"],
+        fleet_moves: ["Mid","Wes","GoL","Mar","Por"],
+        belongsto: "",
+        supply: 1
+      },
+  Spa:  {fullname: "Spain",
+        army_moves: ["Por","Gas","Mar"],
+        fleet_moves: ["Mid","Por","Gas"],
+        belongsto: "",
+        supply: 1
+      },
+  Gas:  {fullname: "Gascony",
+        army_moves: ["Spa","Mar","Bur","Par","Bre"],
+        fleet_moves: ["Mid","SpaN","Bre"],
+        belongsto: "Fra",
+        supply: 0
+      },
+  Mar:  {fullname: "Marsellilles",
+        army_moves: ["Spa","Gas","Bur","Par","Pie"],
+        fleet_moves: ["GoL","SpaS","Pie"],
+        belongsto: "Fra",
+        supply: 1
+      },
+  Pie:  {fullname: "Piedmont",
+        army_moves: ["Mar","Tyr","Ven","Tus"],
+        fleet_moves: ["Tus","Mar","GoL"],
+        belongsto: "Fra",
+        supply: 0
+      },
+  Par:  {fullname: "Paris",
+        army_moves: ["Pic","Bre","Gas","Bur"],
+        fleet_moves: [],
+        belongsto: "Fra",
+        supply: 1
+      },
+  GoL:  {fullname: "Gulf of Lyon",
+        army_moves: [],
+        fleet_moves: ["SpaS","Wes","Tyn","Tus","Pie","Mar"],
+        belongsto: "",
+        supply: 0
+      },
+  Wes:  {fullname: "Western Mediterranean",
+        army_moves: [],
+        fleet_moves: ["SpaS","GoL","Mid","NAf","Tun","Tyn"],
+        belongsto: "",
+        supply: 0
+      },
+  NAf:  {fullname: "North Africa",
+        army_moves: ["Tun"],
+        fleet_moves: ["Wes","Mid","Tun"],
+        belongsto: "",
+        supply: 0
+      },
+  Tun:  {fullname: "Tunis",
+        army_moves: ["NAf"],
+        fleet_moves: ["NAf","Wes","Tyn","Ion"],
+        belongsto: "",
+        supply: 1
+      },
+  Tyn:  {fullname: "Tyrrhenian Sea",
+        army_moves: [],
+        fleet_moves: ["Tun","Wes","GoL","Tus","Rom","Nap","Ion"],
+        belongsto: "",
+        supply: 0
+      },
+  Ion:  {fullname: "Ionian Sea",
+        army_moves: [],
+        fleet_moves: ["Tun","Tyn","Nap","Apu","Adr","Alb","Gre","Aeg","Eas"],
+        belongsto: "",
+        supply: 0
+      },
+  Bur:  {fullname: "Burgundy",
+        army_moves: ["Par","Gas","Mar","Mun","Ruh","Bel","Pic"],
+        fleet_moves: [],
+        belongsto: "Fra",
+        supply: 0
+      },
+  Kie:  {fullname: "Kiel",
+        army_moves: ["Hol","Ruh","Mun","Kie","Den"],
+        fleet_moves: ["Hol","Ber","Hel","Bal"],
+        belongsto: "Ger",
+        supply: 1
+      },
+  Ruh:  {fullname: "Ruhr",
+        army_moves: ["Hol","Bel","Bur","Mun","Kie"],
+        fleet_moves: [],
+        belongsto: "Ger",
+        supply: 0
+      },
+  Swe:  {fullname: "Sweden",
+        army_moves: ["Nwy","Fin","Den"],
+        fleet_moves: ["Nwy","Fin","Bot","Bal","Den","Ska"],
+        belongsto: "",
+        supply: 1
+      },
+  Bal:  {fullname: "Baltic Sea",
+        army_moves: [],
+        fleet_moves: ["Bot","Lvn","Swe","Den","Kie","Ber","Pru"],
+        belongsto: "",
+        supply: 0
+      },
+  Ber:  {fullname: "Berlin",
+        army_moves: ["Kie","Pru","Sil","Mun"],
+        fleet_moves: ["Kie","Pru","Bal"],
+        belongsto: "Ger",
+        supply: 1
+      },
+  Mun:  {fullname: "Munich",
+        army_moves: ["Sil","Ber","Kie","Ruh","Bur","Tyr","Boh"],
+        fleet_moves: [],
+        belongsto: "Ger",
+        supply: 1
+      },
+  Tyr:  {fullname: "Tyrolia",
+        army_moves: ["Pie","Ven","Tri","Vie","Boh","Mun"],
+        fleet_moves: [],
+        belongsto: "Aus",
+        supply: 0
+      },
+  Ven:  {fullname: "Venice",
+        army_moves: ["Tri","Tyr","Pie","Tus","Rom","Apu"],
+        fleet_moves: ["Tri","Apu","Adr"],
+        belongsto: "Ita",
+        supply: 1
+      },
+  Tus:  {fullname: "Tuscany",
+        army_moves: ["Pie","Ven","Rom"],
+        fleet_moves: ["Pie","Rom","GoL","Tyn"],
+        belongsto: "Ita",
+        supply: 0
+      },
+  Rom:  {fullname: "Rome",
+        army_moves: ["Tus","Ven","Apu","Nap"],
+        fleet_moves: ["Tus","Nap","Tyn"],
+        belongsto: "Ita",
+        supply: 1
+      },
+  Nap:  {fullname: "Naples",
+        army_moves: ["Rom","Apu"],
+        fleet_moves: ["Rom","Apu","Tyn","Ion"],
+        belongsto: "Ita",
+        supply: 0
+      },
+  Apu:  {fullname: "Apulia",
+        army_moves: ["Nap","Rom","Ven"],
+        fleet_moves: ["Adr","Ven","Ion","Nap"],
+        belongsto: "Ita",
+        supply: 0
+      },
+  Adr:  {fullname: "Adriatic Sea",
+        army_moves: [],
+        fleet_moves: ["Alb","Tri","Ven","Apu","Ion"],
+        belongsto: "",
+        supply: 0
+      },
+  Tri:  {fullname: "Trieste",
+        army_moves: ["Alb","Ser","Bud","Vie","Tyr","Ven"],
+        fleet_moves: ["Ven","Adr","Alb"],
+        belongsto: "Aus",
+        supply: 1
+      },
+  Vie:  {fullname: "Vienna",
+        army_moves: ["Boh","Gal","Bud","Tri","Tyr"],
+        fleet_moves: [],
+        belongsto: "Aus",
+        supply: 1
+      },
+  Boh:  {fullname: "Bohemia",
+        army_moves: ["Mun","Tyr","Vie","Gal","Sil"],
+        fleet_moves: [],
+        belongsto: "Aus",
+        supply: 0
+      },
+  Sil:  {fullname: "Silesia",
+        army_moves: ["Ber","Pru","Mun","Boh","Gal","War"],
+        fleet_moves: [],
+        belongsto: "Ger",
+        supply: 0
+      },
+  Pru:  {fullname: "Prussia",
+        army_moves: ["Ber","Sil","War","Lvn"],
+        fleet_moves: ["Ber","Lvn","Bal"],
+        belongsto: "Ger",
+        supply: 0
+      },
+  Bot:  {fullname: "Gulf of Botnia",
+        army_moves: [],
+        fleet_moves: ["Swe","Fin","StPS","Lvn","Bal"],
+        belongsto: "",
+        supply: 0
+      },
+  Fin:  {fullname: "Finland",
+        army_moves: ["StP","Nwy","Swe"],
+        fleet_moves: ["StPS","Swe","Bot"],
+        belongsto: "Rus",
+        supply: 0
+      },
+  Bar:  {fullname: "Barents Sea",
+        army_moves: [],
+        fleet_moves: ["StPN","Nwy","Nrg"],
+        belongsto: "",
+        supply: 0
+      },
+  StP:  {fullname: "St. Petersburg",
+        army_moves: ["Nwy","Fin","Lvn","Mos"],
+        fleet_moves: [],
+        belongsto: "Rus",
+        supply: 1
+      },
+  StPN:  {fullname: "St. Petersburg North Coast",
+        army_moves: [],
+        fleet_moves: ["Bar","Nwy"],
+        belongsto: "Rus",
+        supply: 1
+      },
+  StPS:  {fullname: "St. Petersburg South Coast",
+        army_moves: [],
+        fleet_moves: ["Lvn","Fin","Bot"],
+        belongsto: "Rus",
+        supply: 1
+      },
+  Lvn:  {fullname: "Livonia",
+        army_moves: ["StP","Mos","War","Pru"],
+        fleet_moves: ["Pru","StP","Bot","Bal"],
+        belongsto: "Rus",
+        supply: 0
+      },
+  Mos:  {fullname: "Moscow",
+        army_moves: ["StP","Lvn","War","Ukr","Sev"],
+        fleet_moves: [],
+        belongsto: "Rus",
+        supply: 1
+      },
+  War:  {fullname: "Warsaw",
+        army_moves: ["Lvn","Pru","Sil","Gal","Ukr","Mos"],
+        fleet_moves: [],
+        belongsto: "Rus",
+        supply: 1
+      },
+  Ukr:  {fullname: "Ukraine",
+        army_moves: ["Mos","Sev","Rum","Gal","War"],
+        fleet_moves: [],
+        belongsto: "Rus",
+        supply: 0
+      },
+  Sev:  {fullname: "Sevastopol",
+        army_moves: ["Mos","Ukr","Rum","Arm"],
+        fleet_moves: ["Bla","Rum","Arm"],
+        belongsto: "Rus",
+        supply: 0
+      },
+  Gal:  {fullname: "Galicia",
+        army_moves: ["War","Sil","Boh","Vie","Bud","Rum","Ukr"],
+        fleet_moves: [],
+        belongsto: "Aus",
+        supply: 0
+      },
+  Bud:  {fullname: "Budapest",
+        army_moves: ["Gal","Rum","Ser","Tri","Vie"],
+        fleet_moves: [],
+        belongsto: "xxx",
+        supply: 1
+      },
+  Rum:  {fullname: "Rumania",
+        army_moves: ["Sev","Ukr","Gal","Bud","Ser","Bul"],
+        fleet_moves: ["Sev","Bul","Bla"],
+        belongsto: "",
+        supply: 1
+      },
+  Ser:  {fullname: "Serbia",
+        army_moves: ["Tri","Bud","Rum","Bul","Gre","Alb"],
+        fleet_moves: [],
+        belongsto: "",
+        supply: 1
+      },
+  Alb:  {fullname: "Albania",
+        army_moves: ["Tri","Ser","Gre"],
+        fleet_moves: ["Adr","Tri","Gre","Ion"],
+        belongsto: "",
+        supply: 0
+      },
+  Bul:  {fullname: "Bulgaria",
+        army_moves: ["Con","Rum","Ser","Gre"],
+        fleet_moves: [],
+        belongsto: "",
+        supply: 1
+      },
+  BulN:  {fullname: "Bulgaria North Coast",
+        army_moves: [],
+        fleet_moves: ["Rum","Con","Bla"],
+        belongsto: "",
+        supply: 1
+      },
+  BulS:  {fullname: "Bulgaria South Coast",
+        army_moves: [],
+        fleet_moves: ["Con","Aeg","Gre"],
+        belongsto: "",
+        supply: 1
+      },
+  Gre:  {fullname: "Greece",
+        army_moves: ["Bul","Ser","Alb"],
+        fleet_moves: ["Aeg","Ion","BulS","Alb"],
+        belongsto: "",
+        supply: 0
+      },
+  Aeg:  {fullname: "Aegean Sea",
+        army_moves: [],
+        fleet_moves: ["Ion","Eas","Con","BulS","Gre"],
+        belongsto: "",
+        supply: 0
+      },
+  Eas:  {fullname: "Eastern Mediterranean",
+        army_moves: [],
+        fleet_moves: ["Aeg","Ion","Smy","Syr"],
+        belongsto: "",
+        supply: 0
+      },
+  Bla:  {fullname: "Black Sea",
+        army_moves: [],
+        fleet_moves: ["Sev","Arm","Ank","Con","Bul","Rum"],
+        belongsto: "",
+        supply: 0
+      },
+  Con:  {fullname: "Constantinople",
+        army_moves: ["Bul","Smy","Ank"],
+        fleet_moves: ["Aeg","BulN","BulS","Bla","Ank","Smy"],
+        belongsto: "Tur",
+        supply: 1
+      },
+  Ank:  {fullname: "Ankara",
+        army_moves: ["Con","Smy","Arm"],
+        fleet_moves: ["Con","Bla","Arm"],
+        belongsto: "Tur",
+        supply: 1
+      },
+  Smy:  {fullname: "Smyrna",
+        army_moves: ["Con","Ank","Arm","Syr"],
+        fleet_moves: ["Aeg","Eas","Con","Syr"],
+        belongsto: "Tur",
+        supply: 1
+      },
+  Arm:  {fullname: "Armenia",
+        army_moves: ["Sev","Ank","Smy","Syr"],
+        fleet_moves: ["Bla","Ank","Sev"],
+        belongsto: "Tur",
+        supply: 0
+      },
+  Syr:  {fullname: "Syria",
+        army_moves: ["Arm","Smy"],
+        fleet_moves: ["Smy","Eas"],
+        belongsto: "Tur",
+        supply: 0
+      }
 };
 
-var COUNTRY = ["Aus","Eng","Fra","Ger","Ita","Rus","Tur"];
-
-
-
-
-
+COUNTRY = ["Aus","Eng","Fra","Ger","Ita","Rus","Tur"];
 
 
 
@@ -444,8 +864,10 @@ function resetVars()
   
 }
 
-function resolve(game)
+function DipResolve(units)
 {
+
+  return "RESOLVED"
 
   var units = game.units;//TODO: magic
 
@@ -480,7 +902,11 @@ function resolve(game)
 //resolve(GAME1);
 //resolve(GAME2);
 //resolve(GAME3);
-resolve(GAME4);
+//resolve(GAME4);
 
 
-
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = DipResolve;
+} else if (typeof exports !== 'undefined') {
+  exports.DipResolve = DipResolve;
+}
