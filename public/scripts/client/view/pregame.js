@@ -13,7 +13,7 @@ define(['scripts/client/bootstrap.js'], function(){
     initialize: function(){
 
       //for testing purposes, lets arbitrarily assign the last player to be the local player.
-      this.local_id = this.model.get('players').last().get('user').get('id')
+      //this.local_id = this.model.get('players').last().get('user').get('id')
       console.log(this.local_id)
 
       console.log('assigning self to parent gameview..')
