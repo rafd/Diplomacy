@@ -72,36 +72,36 @@ define(['scripts/client/bootstrap.js'], function(){
       e.preventDefault();
       var data = $(this.el).find("form").serializeArray();
       var orders=[];
-      var sum=0;
-      for(var x=0;x<data.length/4;x+=1)
+      console.log(data.length)
+      console.log(sum);
+      for(var x=0,sum=0; sum!=data.length; x+=1,sum+=2)
       {
-        orders[x]={};
+        orders[x]={ order: {} };
         orders[x].prov=data[sum].value;
-        orders[x].move=data[sum+1].value;
-        if(orders[x].move=="s")
+        orders[x].order.move=data[sum+1].value;
+        if(orders[x].order.move=="s")
         {
-          orders[x].from=data[sum+2].value;
-          orders[x].to=data[sum+3].value;
-          sum+=4;
-        }
-        else if(orders[x].move=="m")
-        {
-          orders[x].from=orders[x].prov;
-          orders[x].to=data[sum+2].value;
-          sum+=3;
-        }
-        else if(orders[x].move=="h")
-        {
-          orders[x].from=orders[x].prov;
-          orders[x].to=orders[x].prov;
+          orders[x].order.from=data[sum+2].value;
+          orders[x].order.to=data[sum+3].value;
           sum+=2;
         }
+        else if(orders[x].order.move=="m")
+        {
+          orders[x].order.from=orders[x].prov;
+          orders[x].order.to=data[sum+2].value;
+          sum+=1;
+        }
+        else if(orders[x].order.move=="h")
+        {
+          orders[x].order.from=orders[x].prov;
+          orders[x].order.to=orders[x].prov;
+        }
       }
+      console.log(orders);
     },
     clickedMove: function(e){
       prov = $(e.target).parent().parent().find("[name='prov']").val();
       var u= _.select(this.units.toJSON(), function(unit) { return unit.province == prov});
-      //var m=_.clone(window.MAP[prov]);
       switch($(e.currentTarget).val())
       {
         case "h":
@@ -120,9 +120,13 @@ define(['scripts/client/bootstrap.js'], function(){
           u.move_s = true;
           u["from?"] = true;
           u["to?"] = true;
+
           var m=possible_moves(u[0]);
-          u.from = _.without(possible_support(m),prov);
-          u.to=m;
+          var twoaway = _.without(possible_support(m),prov);
+
+          //TODO for more filtering
+          u.from=twoaway; //twoaway intersect unitlist
+          u.to=m; //m intersect possible_moves(twoaway.selectedvalue)
           break;
         
         default:
@@ -137,11 +141,7 @@ define(['scripts/client/bootstrap.js'], function(){
   {
     var ret=[];
     for(var x in to)
-    {
-      var a = window.MAP[to[x]].army_moves;
-      var f = window.MAP[to[x]].fleet_moves;
-      ret = _.union(ret,a,f);
-    }
+      ret = _.union(ret,window.MAP[to[x]].army_moves,window.MAP[to[x]].fleet_moves);
     return ret;
   }
 
