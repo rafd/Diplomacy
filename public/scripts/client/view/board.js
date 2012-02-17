@@ -51,6 +51,9 @@ define(['scripts/client/bootstrap.js'], function(){
 
   ChatRoomList = Backbone.View.extend({
     template: T['chatrooms'],
+    events: {
+      "click li": "selectChatRoom"
+    },
     initialize: function(chatrooms){
 
       _chatrooms = _.map(chatrooms, function(cr){
@@ -77,6 +80,14 @@ define(['scripts/client/bootstrap.js'], function(){
       $(this.el).html(this.template.r({chatrooms:_chatrooms}));
 
       $('#side').append(this.el);
+    },
+    selectChatRoom: function(e){
+      // hide all chatrooms
+      $("#side .chatrooms .chatroom").hide();
+
+      // show the selected
+      $("#side .chatrooms .chatroom#"+$(e.target).attr("data-id")).show();
+
     }
   });
 

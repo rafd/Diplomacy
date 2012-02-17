@@ -1,3 +1,6 @@
+{{power}}
+({{#user}}{{name}}{{/user}})
+[{{#online}}x{{/online}}{{^online}}o{{/online}}]
 <div class='messages'>
 </div>
 <form>
