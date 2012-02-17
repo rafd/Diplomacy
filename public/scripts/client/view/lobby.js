@@ -59,11 +59,14 @@ define(['scripts/client/bootstrap.js'], function(){
     },
     initialize: function() {
       this.model.get('players').bind("change", this.render, this);
+      var gameView =  new PreGameView({model:this.model, parentView: this});
     },
     switchToGame: function(){
       this.hideLobby();
-
-      window.currentGameView = new BoardView({model:this.model});
+      window.currentGameView = this.model.get('gameView') //remove from model
+      $(this.gameView.el).show()
+      // window.currentGameView = new PreGameView({model:this.model});
+      // window.currentGameView = new BoardView({model:this.model});
     },
     hideLobby: function() {
       $(".lobby").hide();

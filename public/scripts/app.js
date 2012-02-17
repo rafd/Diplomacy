@@ -24,8 +24,9 @@ require(
   ,"scripts/client/view/board.js"
   ,"scripts/client/view/chatroom.js"
   ,"scripts/client/view/lobby.js"
+  ,"scripts/client/view/pregame.js"
   ,"scripts/client/view/splash.js"
-
+  
   ,"scripts/client/initialize.js"
 ], function($) {
 

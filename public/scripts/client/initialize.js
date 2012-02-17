@@ -28,7 +28,7 @@ define(['scripts/client/bootstrap.js'], function(){
       }
     ]
 
-    PLAYERS = ["Eng","Aus","Fra","Ger"];
+    PLAYERS = ["Eng","Aus","Fra","Ger", "Ita", "Rus", "Tur"];
     PROVINCES = ["NAt","Nrg","Nth","Cly","Edi","Lvp","Yor","Wal","Lon","Iri"];
 
 
