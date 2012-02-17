@@ -35,7 +35,7 @@ define(['scripts/client/bootstrap.js'], function(){
       var name = this.input.val();
 
       g = Games.create({name:name});
-
+      console.log(g.toData())
       this.input.val('');
       return false;
     },

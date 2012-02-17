@@ -12,9 +12,11 @@ define(['scripts/client/bootstrap.js'], function(){
     },
     initialize: function(){
 
-      //for testing purposes, lets arbitrarily assign the last player to be the local player.
-      this.local_id = this.model.get('players').last().get('user').get('id')
-      console.log(this.local_id)
+      this.playerlist = new PlayerList(this.model.get('players'));
+      this.powerlist = new PowerList(this.model.get('players'));
+
+      this.model.get('players').bind("change", function(){this.playerlist.render(this.model.get('players'))}, this)
+      this.model.get('players').bind("change", function(){this.powerlist.render(this.model.get('players'))}, this)
 
       console.log('assigning self to parent gameview..')
       this.parentView = this.options['parentView']
@@ -32,8 +34,8 @@ define(['scripts/client/bootstrap.js'], function(){
         $('#diplomacy .pregame').replaceWith(this.el);
       }
 
-      var playerlist = new PlayerList(this.model.get('players'));
-      var powerlist = new PowerList(this.model.get('players')); 
+      // var playerlist = new PlayerList(this.model.get('players'));
+      // var powerlist = new PowerList(this.model.get('players')); 
     },
     goToLobby: function(){
       $(this.el).hide()
@@ -44,42 +46,17 @@ define(['scripts/client/bootstrap.js'], function(){
       console.log('booting: ', boot_id)
       var player_list = this.model.get('players');
 
-      //filter, _.find give me problems. using for loop for now.
-
-      for (var i=0;i<player_list.length;i++){
-        if (player_list.at(i).get('user').get('id') == boot_id){
-          //Remove player for list
-          player_list.at(i).destroy(); 
-        }
-      }
-      // console.log(JSON.stringify(this.model.get('players')));
-      //Probably not best implementation.
-      //updates player list and power list views
-      var playerlist = new PlayerList(this.model.get('players'));
-      var powerlist = new PowerList(this.model.get('players'));
+      //delete not yet implemented
+      player_list.find(function(player){return player.id == boot_id}).delete
     },
     selectPower: function(ev){
       //user_selected, other_selected, selectable
       var power = $(ev.target).attr('class').split(' ').filter(function(element){return ($.inArray(element,PLAYERS)!=-1)})[0]
       console.log('player select: ', power);
-
-      //ASSIGN LOCAL USER POWER HERE
-      // this.model.get('players').find()
-      // var atemp = _.find(this.model.get('players'), function(player){return player['user']['id'] = this.local_id})
-      // console.log(JSON.stringify(atemp))
-      // atemp['power'] = power
-
       var player_list = this.model.get('players');
-      for (var i=0;i<player_list.length;i++){
-        if (player_list.at(i).get('user').get('id') == this.local_id){
-          player_list.at(i).set({'power': power})
-        }
-      }
 
+      player_list.find(function(player){return player.get('user').id == window.user.id}).set({'power':power});
 
-      //re-render power list
-      var powerlist = new PowerList(this.model.get('players'))
-      var playerlist = new PlayerList(this.model.get('players'))
     },
     startGame: function(ev){
       $(this.el).hide()
@@ -91,21 +68,26 @@ define(['scripts/client/bootstrap.js'], function(){
 
   var PlayerList = Backbone.View.extend({
     template: T['players_pregame'],
-    initialize: function(players){
+    anchor: '#player-list-ul',
+    initialize: function(){
 
-      console.log('rendering playerlist')
-      $(this.el).html(this.template.r({players:players.toJSON()}));
-      //I don't like this setup. fix later. template creates an empty div I may want to get rid of.
-      $('#player-list').empty();
-      $('#player-list').append(this.el);
+    },
+    render: function(players){
+      $(this.anchor).empty();
+      players.forEach(function(player){this.addOne(player)}, this);
 
-
+    },
+    addOne: function(player){
+      // console.log(player.toData())
+      // console.log(this.template.r(player.toData()))
+      $(this.anchor).append(this.template.r(player.toData()))
     }
 
   });
 
   PowerList = Backbone.View.extend({
     template: T['powers_pregame'],
+    anchor: '#power-list',
     initialize: function(players){
 
       this.render(players);
@@ -126,13 +108,14 @@ define(['scripts/client/bootstrap.js'], function(){
 
 
 
-      console.log('rendering powerlist')
+      // console.log('rendering powerlist')
 
 
 
       $(this.el).html(this.template.r({powers:powerdict}))
-      $('#power-list').empty();
-      $('#power-list').append(this.el);
+
+      $(this.anchor).empty();
+      $(this.anchor).append(this.el);
     }
 
   });
