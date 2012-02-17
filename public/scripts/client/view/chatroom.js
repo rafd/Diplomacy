@@ -8,7 +8,7 @@ define(['scripts/client/bootstrap.js'], function(){
       this.addAll();
     },
     addAll: function() {
-      _.each(this.chatrooms, function(chatroom){console.log(chatroom); this.addOne(chatroom)}, this);
+      _.each(this.chatrooms, function(chatroom){this.addOne(chatroom)}, this);
     },
     addOne: function(chatroom){
       //TODO: should be passing target to attach to

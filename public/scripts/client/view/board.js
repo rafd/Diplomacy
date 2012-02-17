@@ -20,19 +20,14 @@ define(['scripts/client/bootstrap.js'], function(){
         $('#diplomacy .board').replaceWith(this.el);
       }
 
-
-
       current_player = this.model.get('players').ownedBy(window.user);
       
-      chatroomlist = new ChatRoomList(this.model.get('chatrooms').ownedBy(current_player));
-      
-      //new ChatRoomsView(this.model.get('chatrooms').ownedBy(current_player));
+      new ChatRoomList(this.model.get('chatrooms').ownedBy(current_player));
 
-      playerlist = new PlayerList(this.model.get('players'));
-      unitlist = new UnitList(this.model.get('units'));
-
+      new ChatRoomsView(this.model.get('chatrooms').ownedBy(current_player));
+      new UnitList(this.model.get('units'));
       // TODO: units.ownedBy should take (player) not ("power")
-      ordersubmit = new OrderSubmit(this.model.get('units').ownedBy(current_player.get('power')));
+      new OrderSubmit(this.model.get('units').ownedBy(current_player.get('power')));
 
       return this;
     },
@@ -41,19 +36,6 @@ define(['scripts/client/bootstrap.js'], function(){
       $(this.el).hide();
       $(".lobby").show();
     }
-  });
-
-
-  PlayerList = Backbone.View.extend({
-    template: T['players'],
-    initialize: function(players){
-      $(this.el).html(this.template.r({
-        players: players.toData()
-      }));
-
-      $('#side').append(this.el);
-    }
-
   });
 
   UnitList = Backbone.View.extend({
@@ -70,9 +52,29 @@ define(['scripts/client/bootstrap.js'], function(){
   ChatRoomList = Backbone.View.extend({
     template: T['chatrooms'],
     initialize: function(chatrooms){
-      chatrooms = new ChatRoomCollection(chatrooms);
 
-      $(this.el).html(this.template.r({chatrooms:chatrooms.toData()}));
+      _chatrooms = _.map(chatrooms, function(cr){
+        if(cr.get('players').length == 2){
+          player = cr.get('players').reject(function(p){ p == current_player})[0]
+        
+          return {
+            id: cr.id,
+            power: player.get('power'),
+            user: player.get('user').toData(),
+            online: false
+           }
+        }
+        else {
+          return {
+            id: cr.id,
+            power: "Global",
+            user: {name: "All"},
+            online: true
+          }
+        }
+      });
+
+      $(this.el).html(this.template.r({chatrooms:_chatrooms}));
 
       $('#side').append(this.el);
     }
