@@ -35,9 +35,9 @@ var GAME3={
     {owner: "Eng", province: "Wal", utype: "A", order: {move: "m", from: "Wal", to: "Lvp", tag: "", support: 0} },
     {owner: "Ger", province: "Iri", utype: "F", order: {move: "m", from: "Iri", to: "Cly", tag: "", support: 0} }
   ]
-var
+}
 
-} GAME4={
+var GAME4={
   units : [  
     {owner: "Eng", province: "NAt", utype: "F", order: {move: "m", from: "NAt", to: "Nrg", tag: "", support: 0} },
     {owner: "Fra", province: "Nth", utype: "F", order: {move: "s", from: "NAt", to: "Nrg", tag: "", support: 0} },
@@ -53,7 +53,7 @@ var GAME5={
   ]
 }
 //constants.
-window.MAP = {
+MAP = {
   NAt : {fullname: "North Atlantic",
         army_moves: [],
         fleet_moves: ["Cly","Lvp","Iri","Mid","Nrg"],
@@ -542,7 +542,7 @@ window.MAP = {
       }
 };
 
-window.COUNTRY = ["Aus","Eng","Fra","Ger","Ita","Rus","Tur"];
+COUNTRY = ["Aus","Eng","Fra","Ger","Ita","Rus","Tur"];
 
 
 
@@ -864,8 +864,10 @@ function resetVars()
   
 }
 
-function resolve(game)
+function DipResolve(units)
 {
+
+  return "RESOLVED"
 
   var units = game.units;//TODO: magic
 
@@ -900,7 +902,11 @@ function resolve(game)
 //resolve(GAME1);
 //resolve(GAME2);
 //resolve(GAME3);
-resolve(GAME4);
+//resolve(GAME4);
 
 
-
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = DipResolve;
+} else if (typeof exports !== 'undefined') {
+  exports.DipResolve = DipResolve;
+}

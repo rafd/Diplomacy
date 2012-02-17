@@ -123,6 +123,12 @@ define(['scripts/client/bootstrap.js'], function(){
           sum+=2;
         }
       }
+
+      console.log("SENDING ORDERS TO RESOLVE:");
+      console.log(orders);
+      socket.emit('game:resolve',orders, function(err,data){ 
+        console.log(data);
+      });
     },
     clickedMove: function(e){
       prov = $(e.target).parent().find("[name='prov']").val();
