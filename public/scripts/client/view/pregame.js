@@ -12,30 +12,29 @@ define(['scripts/client/bootstrap.js'], function(){
     },
     initialize: function(){
 
+      console.log('initializing pregame')
+
       this.playerlist = new PlayerList(this.model.get('players'));
       this.powerlist = new PowerList(this.model.get('players'));
 
       this.model.get('players').bind("change", function(){this.playerlist.render(this.model.get('players'))}, this)
       this.model.get('players').bind("change", function(){this.powerlist.render(this.model.get('players'))}, this)
 
-      console.log('assigning self to parent gameview..')
       this.parentView = this.options['parentView']
-      this.parentView.gameView = this
-      this.render();
+
+      return this;
     },
     render: function(){
 
       console.log('rendering pregame')
+      if($("#diplomacy .pregame").length == 0)
+        $('#diplomacy').append(this.el);
+
       $(this.el).html(this.template.r({}));
 
-      if($("#diplomacy .pregame").length == 0){
-        $('#diplomacy').append(this.el);
-      } else {
-        $('#diplomacy .pregame').replaceWith(this.el);
-      }
+      this.playerlist.render(this.model.get('players'));
+      this.powerlist.render(this.model.get('players'));
 
-      // var playerlist = new PlayerList(this.model.get('players'));
-      // var powerlist = new PowerList(this.model.get('players')); 
     },
     goToLobby: function(){
       $(this.el).hide()
@@ -60,8 +59,8 @@ define(['scripts/client/bootstrap.js'], function(){
     },
     startGame: function(ev){
       $(this.el).hide()
-      this.parentView.gameView = new BoardView({model:this.model})
-      window.currentGameView = this.parentView.gameView
+      this.parentView.dest = new BoardView({model:this.model})
+      window.currentGameView = this.parentView.dest
     }
 
   });
