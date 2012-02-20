@@ -22,9 +22,9 @@ define(['scripts/client/bootstrap.js'], function(){
 
 
 
-      current_player = this.model.get('players').ownedBy(window.user);
+      this.current_player = this.model.get('players').ownedBy(window.user);
       
-      chatroomlist = new ChatRoomList(this.model.get('chatrooms').ownedBy(current_player));
+      chatroomlist = new ChatRoomList(this.model.get('chatrooms').ownedBy(this.current_player));
       
       //new ChatRoomsView(this.model.get('chatrooms').ownedBy(current_player));
 
@@ -32,7 +32,7 @@ define(['scripts/client/bootstrap.js'], function(){
       unitlist = new UnitList(this.model.get('units'));
 
       // TODO: units.ownedBy should take (player) not ("power")
-      ordersubmit = new OrderSubmit(this.model.get('units').ownedBy(current_player.get('power')));
+      ordersubmit = new OrderSubmit(this.model, this.current_player);
 
       return this;
     },
@@ -59,11 +59,16 @@ define(['scripts/client/bootstrap.js'], function(){
   UnitList = Backbone.View.extend({
     template: T['map'],
     initialize: function(units){
-
-
-      $(this.el).html(this.template.r({units:units.toJSON()}));
+      this.units = units;
+      
+      this.units.bind("reset", function(){this.render()}, this);
 
       $('#map').append(this.el);
+
+      this.render();
+    },
+    render: function(){
+      $(this.el).html(this.template.r({units:this.units.toData()}));
     }
   });
 
@@ -81,13 +86,17 @@ define(['scripts/client/bootstrap.js'], function(){
   OrderSubmit = Backbone.View.extend({
     className: 'order_submit',
     template: T['order_submit'],
-    initialize: function(units){
-      //TODO: we should find a way to do this without creating a new unitcollection
-      this.units = new UnitCollection(units);
+    initialize: function(game, player){
+      this.game = game;
+      this.player = player;
 
-      $(this.el).html(this.template.r({units:this.units.toData()}));
+      this.render();
       
       $('#side').append(this.el);
+    },
+    render: function(){
+      this.units = new UnitCollection(this.game.get('units').ownedBy(this.player.get('power')));
+      $(this.el).html(this.template.r({units:this.units.toData()}));
     },
     events: {
       "click .submit" : "parseOrders",
@@ -98,37 +107,45 @@ define(['scripts/client/bootstrap.js'], function(){
       e.preventDefault();
       var data = $(this.el).find("form").serializeArray();
       var orders=[];
-      console.log(data.length)
-      console.log(sum);
-      for(var x=0,sum=0; sum!=data.length; x+=1,sum+=2)
+      console.log(data);
+      for(var x=0,sum=0; sum!=data.length; x+=1,sum+=4)
       {
         orders[x]={ order: {} };
-        orders[x].prov=data[sum].value;
-        orders[x].order.move=data[sum+1].value;
+        orders[x].owner=data[sum].value;
+        orders[x].utype=data[sum+1].value;
+        orders[x].province=data[sum+2].value;
+        orders[x].order.move=data[sum+3].value;
+        console.log(orders[x].order.move);
         if(orders[x].order.move=="s")
         {
-          orders[x].order.from=data[sum+2].value;
-          orders[x].order.to=data[sum+3].value;
+          orders[x].order.from=data[sum+4].value;
+          orders[x].order.to=data[sum+5].value;
           sum+=2;
         }
         else if(orders[x].order.move=="m")
         {
-          orders[x].order.from=orders[x].prov;
-          orders[x].order.to=data[sum+2].value;
+          orders[x].order.from=orders[x].province;
+          orders[x].order.to=data[sum+4].value;
           sum+=1;
         }
         else if(orders[x].order.move=="h")
         {
-          orders[x].order.from=orders[x].prov;
-          orders[x].order.to=orders[x].prov;
+          orders[x].order.from=orders[x].province;
+          orders[x].order.to=orders[x].province;
         }
       }
 
       console.log("SENDING ORDERS TO RESOLVE:");
       console.log(orders);
-      socket.emit('game:resolve',orders, function(err,data){ 
-        console.log(data);
-      });
+
+      socket.emit('game:resolve',orders, _.bind(function(err,data){ 
+        console.log(data)
+        this.game.set({units:data});
+        this.render();
+        //update UI
+
+        //$(e.target).parent().replaceWith(T['order_submit_unit'].r({units:data}));
+      },this));
     },
     clickedMove: function(e){
       prov = $(e.target).parent().find("[name='prov']").val();
