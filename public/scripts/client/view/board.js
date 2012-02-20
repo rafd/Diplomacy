@@ -107,7 +107,6 @@ define(['scripts/client/bootstrap.js'], function(){
       e.preventDefault();
       var data = $(this.el).find("form").serializeArray();
       var orders=[];
-      console.log(data);
       for(var x=0,sum=0; sum!=data.length; x+=1,sum+=4)
       {
         orders[x]={ order: {} };
@@ -115,7 +114,6 @@ define(['scripts/client/bootstrap.js'], function(){
         orders[x].utype=data[sum+1].value;
         orders[x].province=data[sum+2].value;
         orders[x].order.move=data[sum+3].value;
-        console.log(orders[x].order.move);
         if(orders[x].order.move=="s")
         {
           orders[x].order.from=data[sum+4].value;
@@ -134,12 +132,10 @@ define(['scripts/client/bootstrap.js'], function(){
           orders[x].order.to=orders[x].province;
         }
       }
-
+      this.player.orders=orders;
       console.log("SENDING ORDERS TO RESOLVE:");
-      console.log(orders);
 
-      socket.emit('game:resolve',orders, _.bind(function(err,data){ 
-        console.log(data)
+      socket.emit('game:submit',this.game.id,this.player.id,orders, _.bind(function(err,data){ 
         this.game.set({units:data});
         this.render();
         //update UI

@@ -148,9 +148,12 @@ io.sockets.on('connection', function (socket) {
   //   socket.broadcast.emit('chat:users',users);
   // });
 
-  socket.on('game:submit', function(args,cb){
-
-
+  socket.on('game:submit', function(game,player,orders,cb){
+    //one person has pressed submit, queue their moves
+    console.log(game)
+    console.log(player)
+    console.log(orders)
+    var gameID = game.id;
   });
 
   socket.on('game:resolve', function(args, cb){
