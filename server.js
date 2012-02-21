@@ -153,7 +153,30 @@ io.sockets.on('connection', function (socket) {
     console.log(game)
     console.log(player)
     console.log(orders)
-    var gameID = game.id;
+
+    var _model = model["order_set"];
+    _model.findOne({'_id':game}, function(err, doc){ 
+      if (doc==undefined)
+      {
+        newEntry = new _model({
+          _id: mongoose.Types.ObjectId.fromString(game),
+          orders: [{
+            player: player,
+            orders: orders
+          }]
+        });
+        newEntry.save();
+      }
+      else {
+        _model.update(
+          { '_id': mongoose.Types.ObjectId.fromString(game)}, 
+          { $addToSet : { orders : {player: player, orders: orders} } }, 
+          {}, 
+          function(e,num){}
+        );
+
+      }
+    });
   });
 
   socket.on('game:resolve', function(args, cb){
