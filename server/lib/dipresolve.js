@@ -1,6 +1,7 @@
 _=require("../../public/scripts/vendor/underscore.min");
 
 
+
 var GAME1={
   units : [  
     {owner: "Eng", province: "NAt", utype: "F", order: {move: "m", from: "NAt", to: "Nrg", tag: "", support: 0} },
@@ -91,7 +92,7 @@ MAP = {
       },
   Lvp: {fullname: "Liverpool",
         army_moves: ["Edi","Cly","Yor","Wal"],
-        fleet_moves: ["Cly","Atl","Wal","Iri"],
+        fleet_moves: ["Cly","NAt","Wal","Iri"],
         belongsto: "Eng",
         supply: 1,
         combatlist: []
@@ -119,7 +120,7 @@ MAP = {
       },
   Iri:  {fullname: "Irish Sea",
         army_moves: [],
-        fleet_moves: ["NAt","Eng","Wal","Lvp"],
+        fleet_moves: ["NAt","Eng","Wal","Lvp","Mid"],
         belongsto: "",
         supply: 0,
         combatlist: []
@@ -1008,6 +1009,55 @@ function DipResolve(units)
 //resolve(GAME2);
 //resolve(GAME3);
 //resolve(GAME4);
+
+
+
+
+//Tests for map validity
+//For both army and fleet,
+  //if A goes to B, B must go to A ***
+function testUndirectedMap()
+{
+  console.log("The following countries are conflicting:")
+  for (var x in MAP)//for each location
+  {
+    var am = MAP[x].army_moves;
+    if(am.length>0)
+    {
+      for (var y in am)//for all of the army moves
+      {
+        if(MAP[am[y]]==undefined)
+        {
+          console.log("a " + x + " " + fm[y] + " does not exist")
+        }
+        var moves = MAP[am[y]].army_moves;
+        if(moves.length > 0 && !_.contains(moves,x))//check if it points back
+          console.log("a " + x + " " + am[y]);
+      }
+    }
+    var fm = MAP[x].fleet_moves;
+    if(fm.length>0)
+    {  
+      for (var y in fm)//for all of the fleet moves
+      {
+        if(MAP[fm[y]]==undefined)
+        {
+          console.log("f " + x + " " + fm[y] + " does not exist")
+        }
+        var moves = MAP[fm[y]].fleet_moves;
+        if(moves.length > 0 && !_.contains(moves,x))//check if it points back
+          console.log("f " + x + " " + fm[y]);
+      }
+    }
+  }
+}
+
+testUndirectedMap();
+
+  //count how many countries are bordering it
+//Supply centers should be 3 per country, and Russia has 4 ***
+//Count how many ocean, inland, and coast provinces there are
+
 
 
 if (typeof module !== 'undefined' && module.exports) {

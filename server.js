@@ -150,10 +150,7 @@ io.sockets.on('connection', function (socket) {
 
   socket.on('game:submit', function(game,player,orders,cb){
     //one person has pressed submit, queue their moves
-    console.log(game)
-    console.log(player)
-    console.log(orders)
-
+    console.log("Game submit")
     var _model = model["order_set"];
     _model.findOne({'_id':game}, function(err, doc){ 
       if (doc==undefined)
@@ -179,10 +176,26 @@ io.sockets.on('connection', function (socket) {
     });
   });
 
-  socket.on('game:resolve', function(args, cb){
-    var blah = dipresolve(args);
+  socket.on('game:resolve', function(gameID, cb){
+    console.log("Game resolve")
+    //get units for gameID from mongoose
+    var _model = model["order_set"];
+    _model.findOne({'_id':gameID}, function(err, doc){ 
+      if (doc==undefined)
+      {
+        //everyone holds
+      }
+      else {
+        //dipresolve()
+      }
+    });
+    //dipresolve that gameID
+    
+    //var blah = dipresolve(null);//fix
 
-    cb(null, blah);
+    //broadcast game state to all relevant clients
+    //what happens if client is offline?
+    //cb(null, blah);
   });
 
   socket.on('user:login', function(args, cb){

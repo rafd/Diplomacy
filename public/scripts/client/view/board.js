@@ -100,6 +100,7 @@ define(['scripts/client/bootstrap.js'], function(){
     },
     events: {
       "click .submit" : "parseOrders",
+      "click .resolve" : "resolveMoves",
       "change select.move" : "clickedMove",
       "change select.from" : "clickedMove"
     },
@@ -133,14 +134,19 @@ define(['scripts/client/bootstrap.js'], function(){
         }
       }
       this.player.orders=orders;
-      console.log("SENDING ORDERS TO RESOLVE:");
 
       socket.emit('game:submit',this.game.id,this.player.id,orders, _.bind(function(err,data){ 
+        //$(e.target).parent().replaceWith(T['order_submit_unit'].r({units:data}));
+      },this));
+    },
+    resolveMoves: function(e)
+    {
+      e.preventDefault();
+      socket.emit('game:resolve',this.game.id, _.bind(function(err,data){
+        //update board with returned state
         this.game.set({units:data});
         this.render();
-        //update UI
-
-        //$(e.target).parent().replaceWith(T['order_submit_unit'].r({units:data}));
+        $(e.target).parent().replaceWith(T['order_submit_unit'].r({units:data}));
       },this));
     },
     clickedMove: function(e){
@@ -176,6 +182,7 @@ define(['scripts/client/bootstrap.js'], function(){
           break;
         
         default:
+          console.log("move is not understood in clickedMove");
           
       }
       $(e.target).parent().replaceWith(T['order_submit_unit'].r({units:u}));
