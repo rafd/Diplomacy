@@ -134,7 +134,7 @@ MAP = {
       },
   Mid:  {fullname: "Mid-Atlantic Ocean",
         army_moves: [],
-        fleet_moves: ["NAt","Eng","Iri","Bre","Gas","SpaN","Por"],
+        fleet_moves: ["NAt","Eng","Iri","Bre","Gas","SpaN","SpaS","Por","Wes","NAf"],
         belongsto: "",
         supply: 0,
         combatlist: []
@@ -197,20 +197,20 @@ MAP = {
       },
   Nwy:  {fullname: "Norway",
         army_moves: ["Swe","Fin","StP"],
-        fleet_moves: ["StP","Bar","Nrg","Nth","Ska","Swe"],
+        fleet_moves: ["StPN","Bar","Nrg","Nth","Ska","Swe"],
         belongsto: "",
         supply: 0,
         combatlist: []
       },
   SpaN:  {fullname: "Spain North Coast",
-        army_moves: ["Por","Gas","Mar"],
+        army_moves: [],
         fleet_moves: ["Mid","Por","Gas"],
         belongsto: "",
         supply: 1,
         combatlist: []
       },
   SpaS:  {fullname: "Spain South Coast",
-        army_moves: ["Por","Gas","Mar"],
+        army_moves: [],
         fleet_moves: ["Mid","Wes","GoL","Mar","Por"],
         belongsto: "",
         supply: 1,
@@ -218,7 +218,7 @@ MAP = {
       },
   Spa:  {fullname: "Spain",
         army_moves: ["Por","Gas","Mar"],
-        fleet_moves: ["Mid","Por","Gas"],
+        fleet_moves: [],
         belongsto: "",
         supply: 1,
         combatlist: []
@@ -231,7 +231,7 @@ MAP = {
         combatlist: []
       },
   Mar:  {fullname: "Marsellilles",
-        army_moves: ["Spa","Gas","Bur","Par","Pie"],
+        army_moves: ["Spa","Gas","Bur","Pie"],
         fleet_moves: ["GoL","SpaS","Pie"],
         belongsto: "Fra",
         supply: 1,
@@ -301,8 +301,8 @@ MAP = {
         combatlist: []
       },
   Kie:  {fullname: "Kiel",
-        army_moves: ["Hol","Ruh","Mun","Kie","Den"],
-        fleet_moves: ["Hol","Ber","Hel","Bal"],
+        army_moves: ["Hol","Ruh","Mun","Ber","Den"],
+        fleet_moves: ["Hol","Ber","Hel","Bal","Den"],
         belongsto: "Ger",
         supply: 1,
         combatlist: []
@@ -470,7 +470,7 @@ MAP = {
       },
   Lvn:  {fullname: "Livonia",
         army_moves: ["StP","Mos","War","Pru"],
-        fleet_moves: ["Pru","StP","Bot","Bal"],
+        fleet_moves: ["Pru","StPS","Bot","Bal"],
         belongsto: "Rus",
         supply: 0,
         combatlist: []
@@ -519,7 +519,7 @@ MAP = {
       },
   Rum:  {fullname: "Rumania",
         army_moves: ["Sev","Ukr","Gal","Bud","Ser","Bul"],
-        fleet_moves: ["Sev","Bul","Bla"],
+        fleet_moves: ["Sev","BulN","Bla"],
         belongsto: "",
         supply: 1,
         combatlist: []
@@ -568,7 +568,7 @@ MAP = {
       },
   Aeg:  {fullname: "Aegean Sea",
         army_moves: [],
-        fleet_moves: ["Ion","Eas","Con","BulS","Gre"],
+        fleet_moves: ["Ion","Eas","Con","BulS","Gre","Smy"],
         belongsto: "",
         supply: 0,
         combatlist: []
@@ -582,7 +582,7 @@ MAP = {
       },
   Bla:  {fullname: "Black Sea",
         army_moves: [],
-        fleet_moves: ["Sev","Arm","Ank","Con","Bul","Rum"],
+        fleet_moves: ["Sev","Arm","Ank","Con","BulN","Rum"],
         belongsto: "",
         supply: 0,
         combatlist: []
@@ -1052,7 +1052,7 @@ function testUndirectedMap()
   }
 }
 
-testUndirectedMap();
+//testUndirectedMap();
 
   //count how many countries are bordering it
 //Supply centers should be 3 per country, and Russia has 4 ***
