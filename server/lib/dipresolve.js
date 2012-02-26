@@ -1,58 +1,5 @@
 _=require("../../public/scripts/vendor/underscore.min");
 
-
-
-var GAME1={
-  units : [  
-    {owner: "Eng", province: "NAt", utype: "F", order: {move: "m", from: "NAt", to: "Nrg", tag: "", support: 0} },
-    {owner: "Aus", province: "Cly", utype: "F", order: {move: "s", from: "NAt", to: "Nrg", tag: "", support: 0} },
-    {owner: "Fra", province: "Nth", utype: "F", order: {move: "m", from: "Nth", to: "Nrg", tag: "", support: 0} },
-    {owner: "Eng", province: "Edi", utype: "A", order: {move: "m", from: "Edi", to: "Lvp", tag: "", support: 0} },
-    {owner: "Ger", province: "Wal", utype: "A", order: {move: "m", from: "Wal", to: "Lvp", tag: "", support: 0} }
-  ]
-}
-
-var GAME2={
-  units : [  
-    {owner: "Eng", province: "NAt", utype: "F", order: {move: "m", from: "NAt", to: "Nrg", tag: "", support: 0} },
-    {owner: "Aus", province: "Edi", utype: "F", order: {move: "s", from: "NAt", to: "Nrg", tag: "", support: 0} },
-    {owner: "Fra", province: "Nth", utype: "F", order: {move: "m", from: "Nth", to: "Nrg", tag: "", support: 0} },
-    {owner: "Eng", province: "Cly", utype: "F", order: {move: "m", from: "Cly", to: "NAt", tag: "", support: 0} },
-    {owner: "Ger", province: "Lvp", utype: "A", order: {move: "m", from: "Lvp", to: "Cly", tag: "", support: 0} },
-    {owner: "Ger", province: "Yor", utype: "A", order: {move: "m", from: "Yor", to: "Lvp", tag: "", support: 0} },
-    {owner: "Eng", province: "Wal", utype: "A", order: {move: "m", from: "Wal", to: "Lvp", tag: "", support: 0} },
-    {owner: "Ger", province: "Iri", utype: "F", order: {move: "m", from: "Iri", to: "Wal", tag: "", support: 0} }
-  ]
-}
-
-var GAME3={
-  units : [  
-    {owner: "Eng", province: "NAt", utype: "F", order: {move: "m", from: "NAt", to: "Nrg", tag: "", support: 0} },
-    {owner: "Aus", province: "Edi", utype: "F", order: {move: "s", from: "NAt", to: "Nrg", tag: "", support: 0} },
-    {owner: "Fra", province: "Nth", utype: "F", order: {move: "s", from: "Nrg", to: "Nrg", tag: "", support: 0} },
-    {owner: "Fra", province: "Nrg", utype: "F", order: {move: "h", from: "Nrg", to: "Nrg", tag: "", support: 0} },
-    {owner: "Ger", province: "Lvp", utype: "A", order: {move: "h", from: "Lvp", to: "Lvp", tag: "", support: 0} },
-    {owner: "Ger", province: "Lon", utype: "A", order: {move: "s", from: "Wal", to: "Lvp", tag: "", support: 0} },
-    {owner: "Eng", province: "Wal", utype: "A", order: {move: "m", from: "Wal", to: "Lvp", tag: "", support: 0} },
-    {owner: "Ger", province: "Iri", utype: "F", order: {move: "m", from: "Iri", to: "Cly", tag: "", support: 0} }
-  ]
-}
-
-var GAME4={
-  units : [  
-    {owner: "Eng", province: "NAt", utype: "F", order: {move: "m", from: "NAt", to: "Nrg", tag: "", support: 0} },
-    {owner: "Fra", province: "Nth", utype: "F", order: {move: "s", from: "NAt", to: "Nrg", tag: "", support: 0} },
-    {owner: "Aus", province: "Nrg", utype: "F", order: {move: "h", from: "Nrg", to: "Nrg", tag: "", support: 0} },
-  ]
-}
-
-var GAME5={
-  units : [  
-    {owner: "Eng", province: "NAt", utype: "F", order: {move: "m", from: "NAt", to: "Nrg", tag: "", support: 0} },
-    {owner: "Fra", province: "Nth", utype: "F", order: {move: "s", from: "NAt", to: "Nrg", tag: "", support: 0} },
-    {owner: "Fra", province: "Nrg", utype: "F", order: {move: "h", from: "Nrg", to: "Nrg", tag: "", support: 0} },
-  ]
-}
 //constants.
 MAP = {
   NAt : {fullname: "North Atlantic",
@@ -150,7 +97,7 @@ MAP = {
         army_moves: ["Pic","Par","Gas"],
         fleet_moves: ["Pic","Gas","Mid","Eng"],
         belongsto: "Fra",
-        supply: 0,
+        supply: 1,
         combatlist: []
       },
   Pic:  {fullname: "Picardy",
@@ -240,7 +187,7 @@ MAP = {
   Pie:  {fullname: "Piedmont",
         army_moves: ["Mar","Tyr","Ven","Tus"],
         fleet_moves: ["Tus","Mar","GoL"],
-        belongsto: "Fra",
+        belongsto: "Ita",
         supply: 0,
         combatlist: []
       },
@@ -374,7 +321,7 @@ MAP = {
         army_moves: ["Rom","Apu"],
         fleet_moves: ["Rom","Apu","Tyn","Ion"],
         belongsto: "Ita",
-        supply: 0,
+        supply: 1,
         combatlist: []
       },
   Apu:  {fullname: "Apulia",
@@ -436,7 +383,7 @@ MAP = {
   Fin:  {fullname: "Finland",
         army_moves: ["StP","Nwy","Swe"],
         fleet_moves: ["StPS","Swe","Bot"],
-        belongsto: "Rus",
+        belongsto: "",
         supply: 0,
         combatlist: []
       },
@@ -513,7 +460,7 @@ MAP = {
   Bud:  {fullname: "Budapest",
         army_moves: ["Gal","Rum","Ser","Tri","Vie"],
         fleet_moves: [],
-        belongsto: "xxx",
+        belongsto: "Aus",
         supply: 1,
         combatlist: []
       },
@@ -1003,60 +950,6 @@ function DipResolve(units)
 }
 
 
-
-
-//resolve(GAME1);
-//resolve(GAME2);
-//resolve(GAME3);
-//resolve(GAME4);
-
-
-
-
-//Tests for map validity
-//For both army and fleet,
-  //if A goes to B, B must go to A ***
-function testUndirectedMap()
-{
-  console.log("The following countries are conflicting:")
-  for (var x in MAP)//for each location
-  {
-    var am = MAP[x].army_moves;
-    if(am.length>0)
-    {
-      for (var y in am)//for all of the army moves
-      {
-        if(MAP[am[y]]==undefined)
-        {
-          console.log("a " + x + " " + fm[y] + " does not exist")
-        }
-        var moves = MAP[am[y]].army_moves;
-        if(moves.length > 0 && !_.contains(moves,x))//check if it points back
-          console.log("a " + x + " " + am[y]);
-      }
-    }
-    var fm = MAP[x].fleet_moves;
-    if(fm.length>0)
-    {  
-      for (var y in fm)//for all of the fleet moves
-      {
-        if(MAP[fm[y]]==undefined)
-        {
-          console.log("f " + x + " " + fm[y] + " does not exist")
-        }
-        var moves = MAP[fm[y]].fleet_moves;
-        if(moves.length > 0 && !_.contains(moves,x))//check if it points back
-          console.log("f " + x + " " + fm[y]);
-      }
-    }
-  }
-}
-
-//testUndirectedMap();
-
-  //count how many countries are bordering it
-//Supply centers should be 3 per country, and Russia has 4 ***
-//Count how many ocean, inland, and coast provinces there are
 
 
 

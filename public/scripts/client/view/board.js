@@ -177,8 +177,8 @@ define(['scripts/client/bootstrap.js'], function(){
           var twoaway = _.without(possible_support(m),prov);
 
           //TODO for more filtering
-          u.from=twoaway; //twoaway intersect unitlist
-          u.to=m; //m intersect possible_moves(twoaway.selectedvalue)
+          u.from=twoaway; //u.from = twoaway intersect unitlist
+          u.to=m; //u.to = m intersect possible_moves(twoaway.selectedvalue)
           break;
         
         default:
@@ -187,7 +187,7 @@ define(['scripts/client/bootstrap.js'], function(){
       }
       $(e.target).parent().replaceWith(T['order_submit_unit'].r({units:u}));
       
-    },
+    }
   });
 
   function possible_support(to)
