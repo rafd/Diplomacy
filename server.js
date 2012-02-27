@@ -171,48 +171,26 @@ io.sockets.on('connection', function (socket) {
                 order: { to: unit.province, from: unit.province, move: 'h' } 
               }
             }
-            else {
-              //return null
-            }
           })
         );
+        var end = _.uniq(holds.concat(combined),false,function(u){ return u.province });
+        var ret = dipresolve(end);
+
+
+        //remove orders from players
+        model["player"].update({"_id": {$in:game.players}}, {orders:[]}, { multi: true }, function(err,num){});
+        //TODO: update game state on server
+        //broadcast updated game state to all clients
+
+        //informing client that called us
+        cb(null,ret);
 
         
-        console.log('combined')
-        console.log(combined);
-        console.log('provinces_with_orders')
-        console.log(provinces_with_orders)
-        console.log('holds');
-        console.log(holds)
-        var end = _.uniq(holds.concat(combined),false,function(u){ return u.province });
-        console.log('end')
-        console.log(end)
-        /*
-        for(var x in data)
-        {
-          if(data[x].orders.length==0)
-          {  
-            //default all to hold
-            var currPower = data[x].power;
-            var powersUnits = _.select(u,function(u){return u.owner==currPower});
-            //find units
-            //create hold order for units
-            ;
-          }
-          else//orders exist
-          {
-            console.log(data[x])
-            console.log(data[x].orders);
-            for(var y in data[x].orders)
-            {
-              orders.push((data[x].orders)[y]);
-            }
-        console.log(orders)
-          }
-        }*/
 
       });
+    
     });
+
       //console.log(orders)
 
       /*model["game"].findOne({'_id':gameID},function(err,game){
