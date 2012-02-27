@@ -1,6 +1,8 @@
 exports.create = function(mongoose) {
 
-  return mongoose.model('Player', new mongoose.Schema({}));
+  return mongoose.model('Player', new mongoose.Schema({
+    orders:[]
+  }));
 
 }
 

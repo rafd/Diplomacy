@@ -133,18 +133,19 @@ define(['scripts/client/bootstrap.js'], function(){
           orders[x].order.to=orders[x].province;
         }
       }
-      this.player.orders=orders;
-
-      socket.emit('game:submit',this.game.id,this.player.id,orders, _.bind(function(err,data){ 
+      //this.player.get('orders').add(orders);
+      this.player.set({orders:orders});
+      this.player.save();
+      //socket.emit('game:submit',this.game.id,this.player.id,orders, _.bind(function(err,data){ 
         //$(e.target).parent().replaceWith(T['order_submit_unit'].r({units:data}));
-      },this));
+      //},this));
     },
     resolveMoves: function(e)
     {
       e.preventDefault();
       socket.emit('game:resolve',this.game.id, _.bind(function(err,data){
         //update board with returned state
-        this.game.set({units:data});
+        this.game.set({units:data});//owner, utype, prov, move
         this.render();
         $(e.target).parent().replaceWith(T['order_submit_unit'].r({units:data}));
       },this));

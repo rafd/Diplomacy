@@ -148,47 +148,88 @@ io.sockets.on('connection', function (socket) {
   //   socket.broadcast.emit('chat:users',users);
   // });
 
-  socket.on('game:submit', function(game,player,orders,cb){
-    //one person has pressed submit, queue their moves
-    console.log("Game submit")
-    var _model = model["order_set"];
-    _model.findOne({'_id':game}, function(err, doc){ 
-      if (doc==undefined)
-      {
-        newEntry = new _model({
-          _id: mongoose.Types.ObjectId.fromString(game),
-          orders: [{
-            player: player,
-            orders: orders
-          }]
-        });
-        newEntry.save();
-      }
-      else {
-        _model.update(
-          { '_id': mongoose.Types.ObjectId.fromString(game)}, 
-          { $addToSet : { orders : {player: player, orders: orders} } }, 
-          {}, 
-          function(e,num){}
-        );
-
-      }
-    });
-  });
 
   socket.on('game:resolve', function(gameID, cb){
-    console.log("Game resolve")
+    console.log("Game resolving");
     //get units for gameID from mongoose
-    var _model = model["order_set"];
-    _model.findOne({'_id':gameID}, function(err, doc){ 
-      if (doc==undefined)
-      {
-        //everyone holds
-      }
-      else {
-        //dipresolve()
-      }
+
+    var _model = model["game"];
+
+    _model.findOne({'_id':gameID}, function(err, game){
+
+      model["player"].find({}).where("_id").in(game.players).select('orders power').exec(function(er, data){
+        //var orders=[];
+        var u = game.units;
+        var combined = _.flatten(_.map(data, function(doc){ return doc.orders }),true);
+        var provinces_with_orders = _.map(combined, function(order){return order.province});
+        var holds = _.compact(_.map(u,function(unit){ 
+            if(-1 == _.indexOf(provinces_with_orders, unit.province)){
+              return { 
+                province: unit.province,  
+                utype: unit.utype,
+                owner: unit.owner,
+                order: { to: unit.province, from: unit.province, move: 'h' } 
+              }
+            }
+            else {
+              //return null
+            }
+          })
+        );
+
+        
+        console.log('combined')
+        console.log(combined);
+        console.log('provinces_with_orders')
+        console.log(provinces_with_orders)
+        console.log('holds');
+        console.log(holds)
+        var end = _.uniq(holds.concat(combined),false,function(u){ return u.province });
+        console.log('end')
+        console.log(end)
+        /*
+        for(var x in data)
+        {
+          if(data[x].orders.length==0)
+          {  
+            //default all to hold
+            var currPower = data[x].power;
+            var powersUnits = _.select(u,function(u){return u.owner==currPower});
+            //find units
+            //create hold order for units
+            ;
+          }
+          else//orders exist
+          {
+            console.log(data[x])
+            console.log(data[x].orders);
+            for(var y in data[x].orders)
+            {
+              orders.push((data[x].orders)[y]);
+            }
+        console.log(orders)
+          }
+        }*/
+
+      });
     });
+      //console.log(orders)
+
+      /*model["game"].findOne({'_id':gameID},function(err,game){
+        u = game.units;
+        console.log(orders.orders)
+        model["player"].findOne({'_id':orders.orders[0].player},function(err,player){console.log(player)})
+        var toResolve;
+        for(var x in u)
+        {
+          
+        }
+
+        //dipresolve(toResolve);
+      });*/
+      //dipresolve() game find id.game units returns hash
+
+
     //dipresolve that gameID
     
     //var blah = dipresolve(null);//fix
@@ -196,6 +237,7 @@ io.sockets.on('connection', function (socket) {
     //broadcast game state to all relevant clients
     //what happens if client is offline?
     //cb(null, blah);
+    //model['game'].remove({_id:gameID},function(err,doc){});//remove orders
   });
 
   socket.on('user:login', function(args, cb){
