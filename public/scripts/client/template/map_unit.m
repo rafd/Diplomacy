@@ -1,2 +1,2 @@
-<div class="unit" style="position: absolute; top: {{top}}; left: {{left}}; width: 5px; height: 5px; background: {{color}};">
+<div class="unit {{utype}}" style="top: {{top}}; left: {{left}}; background-color: {{color}};">
 </div>

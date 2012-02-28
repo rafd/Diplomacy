@@ -29,7 +29,7 @@ define([], function(){
     { owner: 'Rus', province: 'Mos', utype: 'a' },
     { owner: 'Rus', province: 'Sev', utype: 'f' },
     { owner: 'Rus', province: 'War', utype: 'a' },
-    { owner: 'Rus', province: 'StP', utype: 'f' },
+    { owner: 'Rus', province: 'StPN', utype: 'f' },
     { owner: 'Tur', province: 'Ank', utype: 'f' },
     { owner: 'Tur', province: 'Con', utype: 'a' },
     { owner: 'Tur', province: 'Smy', utype: 'a' }

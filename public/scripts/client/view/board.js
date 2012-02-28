@@ -71,13 +71,13 @@ define(['scripts/client/bootstrap.js'], function(){
       var loc = window.MAP_COORDS[unit.province]
       var top, left, color;
       if(loc!=undefined)
+      {
         top= loc[1] + "px",
         left= loc[0] + "px",
         color= window.MAP_COLORS[unit.owner]
-        console.log(top + left + color)
       }
 
-      $(this.el).html(this.template.r({top:top,left:left,color:color}));
+      $(this.el).html(this.template.r({top:top,left:left,color:color,utype:unit.utype}));
 
       $(target).append(this.el);
     },
