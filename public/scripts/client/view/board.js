@@ -40,8 +40,10 @@ define(['scripts/client/bootstrap.js'], function(){
   MapView = Backbone.View.extend({
     className: "units",
     initialize: function(target, units){
-      this.units = units.toData();
+      this.units = units;
       this.target = target;
+
+      this.units.bind("reset", this.addAllUnits, this);
 
       $("#map").append(this.el); //TODO: should attach to target, not #map
 
@@ -52,7 +54,7 @@ define(['scripts/client/bootstrap.js'], function(){
     },
     addAllUnits: function(){
       $(this.el).html("");
-      _.each(this.units, function(unit){this.addUnit(unit)}, this);
+      _.each(this.units.toData(), function(unit){this.addUnit(unit)}, this);
     }
   });
 
