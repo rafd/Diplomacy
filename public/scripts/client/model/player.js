@@ -15,7 +15,7 @@ define(['scripts/client/bootstrap.js'], function(){
         collectionType: 'UserCollection',
         includeInJSON: Backbone.Model.prototype.idAttribute
       },
-      {
+      /*{
         type: 'HasMany',
         key: 'orders',
         relatedModel: 'Order',
@@ -24,7 +24,7 @@ define(['scripts/client/bootstrap.js'], function(){
           type: Backbone.HasOne,
           key: 'player'
         }
-      },
+      },*/
       {
         type: 'HasMany',
         key: 'chatrooms',

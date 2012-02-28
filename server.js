@@ -148,15 +148,74 @@ io.sockets.on('connection', function (socket) {
   //   socket.broadcast.emit('chat:users',users);
   // });
 
-  socket.on('game:submit', function(args,cb){
+
+  socket.on('game:resolve', function(gameID, cb){
+    console.log("Game resolving");
+    //get units for gameID from mongoose
+
+    var _model = model["game"];
+
+    _model.findOne({'_id':gameID}, function(err, game){
+
+      model["player"].find({}).where("_id").in(game.players).select('orders power').exec(function(er, data){
+        //var orders=[];
+        var u = game.units;
+        var combined = _.flatten(_.map(data, function(doc){ return doc.orders }),true);
+        var provinces_with_orders = _.map(combined, function(order){return order.province});
+        var holds = _.compact(_.map(u,function(unit){ 
+            if(-1 == _.indexOf(provinces_with_orders, unit.province)){
+              return { 
+                province: unit.province,  
+                utype: unit.utype,
+                owner: unit.owner,
+                order: { to: unit.province, from: unit.province, move: 'h' } 
+              }
+            }
+          })
+        );
+        var end = _.uniq(holds.concat(combined),false,function(u){ return u.province });
+        var ret = dipresolve(end);
 
 
-  });
+        //remove orders from players
+        model["player"].update({"_id": {$in:game.players}}, {orders:[]}, { multi: true }, function(err,num){});
+        //TODO: update game state on server
+        //broadcast updated game state to all clients
 
-  socket.on('game:resolve', function(args, cb){
-    var blah = dipresolve(args);
+        //informing client that called us
+        cb(null,ret);
 
-    cb(null, blah);
+        
+
+      });
+    
+    });
+
+      //console.log(orders)
+
+      /*model["game"].findOne({'_id':gameID},function(err,game){
+        u = game.units;
+        console.log(orders.orders)
+        model["player"].findOne({'_id':orders.orders[0].player},function(err,player){console.log(player)})
+        var toResolve;
+        for(var x in u)
+        {
+          
+        }
+
+        //dipresolve(toResolve);
+      });*/
+      //dipresolve() game find id.game units returns hash
+
+
+    //dipresolve that gameID
+    
+    //var blah = dipresolve(null);//fix
+
+    //broadcast game state to all relevant clients
+    //what happens if client is offline?
+    //cb(null, blah);
+    //model['game'].remove({_id:gameID},function(err,doc){});//remove orders
   });
 
   socket.on('user:login', function(args, cb){
