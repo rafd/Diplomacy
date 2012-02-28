@@ -59,19 +59,16 @@ define(['scripts/client/bootstrap.js'], function(){
     },
     initialize: function() {
       this.model.get('players').bind("change", this.render, this);
-      this.dest = new PreGameView({model:this.model, parentView: this});
     },
     switchToGame: function(){
-      this.hideLobby();
-      window.currentGameView = this.dest;
-      this.dest.render();
-      $(this.dest.el).show();
-      // window.currentGameView = new PreGameView({model:this.model});
-      // window.currentGameView = new BoardView({model:this.model});
-    },
-    hideLobby: function() {
       $(".lobby").hide();
-    },
+
+      if(this.model.get('status') == "pregame")
+        new PreGameView(this.model, this);
+      else if(this.model.get('status') == "active")
+       new BoardView(this.model)
+
+      },
     render: function(){
       $(this.el).html(this.template.r(this.model.toData()));
       return this;

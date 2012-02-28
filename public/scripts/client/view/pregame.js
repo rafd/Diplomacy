@@ -10,7 +10,10 @@ define(['scripts/client/bootstrap.js'], function(){
       "click .startGame": "startGame",
       "click .goToLobby": "goToLobby"
     },
-    initialize: function(){
+    initialize: function(game, parentView){
+
+      this.model = game;
+      this.parentView = parentView;
 
       console.log('initializing pregame')
 
@@ -22,6 +25,8 @@ define(['scripts/client/bootstrap.js'], function(){
 
       this.parentView = this.options['parentView']
 
+      this.render();
+
       return this;
     },
     render: function(){
@@ -29,11 +34,15 @@ define(['scripts/client/bootstrap.js'], function(){
       console.log('rendering pregame')
       if($("#diplomacy .pregame").length == 0)
         $('#diplomacy').append(this.el);
+      else
+        $('#diplomacy .pregame').replaceWith(this.el);
 
       $(this.el).html(this.template.r({}));
 
       this.playerlist.render(this.model.get('players'));
       this.powerlist.render(this.model.get('players'));
+
+      $(this.el).show()
 
     },
     goToLobby: function(){
@@ -58,9 +67,10 @@ define(['scripts/client/bootstrap.js'], function(){
 
     },
     startGame: function(ev){
-      $(this.el).hide()
-      this.parentView.dest = new BoardView({model:this.model})
-      window.currentGameView = this.parentView.dest
+      $(this.el).remove()
+      this.model.set({status:"active"})
+      this.model.save()
+      new BoardView(this.model)
     }
 
   });

@@ -7,7 +7,9 @@ define(['scripts/client/bootstrap.js'], function(){
     events: {
       "click a": "goToLobby"
     },
-    initialize: function(){
+    initialize: function(model){
+      this.model = model;
+
       this.render();
     },
     render: function(){
@@ -28,11 +30,13 @@ define(['scripts/client/bootstrap.js'], function(){
       new MapView($(this.el), this.model.get('units')); //passed board(html) and units(bb model reference)
       new OrderSubmit(this.model, current_player);
 
+      $(this.el).show()
+
       return this;
     },
     goToLobby: function(e){
       e.preventDefault();
-      $(this.el).hide();
+      $(this.el).remove();
       $(".lobby").show();
     }
   });
