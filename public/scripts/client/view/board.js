@@ -66,17 +66,23 @@ define(['scripts/client/bootstrap.js'], function(){
     events: {
       "click":"clicked"
     },
-    initialize: function(target){
-      $(this.el).html(this.template.r({
-        top: Math.floor(Math.random()*600)+"px", 
-        left: Math.floor(Math.random()*600)+"px",
-        color: "blue"
-        }
-      ));
+    initialize: function(target, unit){//unit: {owner: "Ger",province:"Ber",utype:"a"}
+      this.unit = unit;
+      var loc = window.MAP_COORDS[unit.province]
+      var top, left, color;
+      if(loc!=undefined)
+        top= loc[1] + "px",
+        left= loc[0] + "px",
+        color= window.MAP_COLORS[unit.owner]
+        console.log(top + left + color)
+      }
+
+      $(this.el).html(this.template.r({top:top,left:left,color:color}));
+
       $(target).append(this.el);
     },
     clicked: function(){
-      alert('i wuz clicked');
+      alert(this.unit.province +' wuz clicked');
     }
   });
 

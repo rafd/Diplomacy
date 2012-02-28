@@ -25,4 +25,13 @@ define([], function(){
     SpaS:[96,648],
     Spa:[128,584]
   }
+  window.MAP_COLORS = {
+    Aus: 'yellow',
+    Eng: 'red',
+    Fra: 'blue',
+    Ger: 'orange',
+    Ita: 'green',
+    Rus: 'white',
+    Tur: 'brown'
+  }
 });
