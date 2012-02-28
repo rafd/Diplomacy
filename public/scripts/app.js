@@ -11,6 +11,7 @@ require(
   ,"scripts/client/bootstrap.js"
 
   ,"scripts/client/helper/game_init.js"
+  ,"scripts/client/helper/map_coord.js"
 
   ,"scripts/client/model/chatroom.js"
   ,"scripts/client/model/game.js"

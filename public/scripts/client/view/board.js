@@ -26,6 +26,9 @@ define(['scripts/client/bootstrap.js'], function(){
 
       new ChatRoomsView(this.model.get('chatrooms').ownedBy(current_player));
       new UnitList(this.model.get('units'));
+
+      new MapView($(this.el), this.model.get('units')); //passed board(html) and units(bb model reference)
+
       // TODO: units.ownedBy should take (player) not ("power")
       new OrderSubmit(this.model.get('units').ownedBy(current_player.get('power')));
 
@@ -37,6 +40,46 @@ define(['scripts/client/bootstrap.js'], function(){
       $(".lobby").show();
     }
   });
+
+  MapView = Backbone.View.extend({
+    className: "units",
+    initialize: function(target, units){
+      this.units = units.toData();
+      this.target = target;
+
+      $("#map").append(this.el); //TODO: should attach to target, not #map
+
+      this.addAllUnits();
+    },
+    addUnit: function(unit){
+      new MapUnit($(this.el), unit);
+    },
+    addAllUnits: function(){
+      $(this.el).html("");
+      _.each(this.units, function(unit){this.addUnit(unit)}, this);
+    }
+  });
+
+
+  MapUnit = Backbone.View.extend({
+    template: T['map_unit'],
+    events: {
+      "click":"clicked"
+    },
+    initialize: function(target){
+      $(this.el).html(this.template.r({
+        top: Math.floor(Math.random()*600)+"px", 
+        left: Math.floor(Math.random()*600)+"px",
+        color: "blue"
+        }
+      ));
+      $(target).append(this.el);
+    },
+    clicked: function(){
+      alert('i wuz clicked');
+    }
+  });
+
 
   UnitList = Backbone.View.extend({
     template: T['map'],
