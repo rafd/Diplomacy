@@ -180,6 +180,9 @@ io.sockets.on('connection', function (socket) {
         //remove orders from players
         model["player"].update({"_id": {$in:game.players}}, {orders:[]}, { multi: true }, function(err,num){});
         //TODO: update game state on server
+        console.log(ret);
+        game.units=ret;
+        game.save();
         //broadcast updated game state to all clients
 
         //informing client that called us
