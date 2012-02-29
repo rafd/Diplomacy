@@ -63,8 +63,20 @@ define(['scripts/client/bootstrap.js'], function(){
     switchToGame: function(){
       $(".lobby").hide();
 
-      if(this.model.get('status') == "pregame")
+      if(this.model.get('status') == "pregame"){
+        //check if player existing
+        console.log(this.model.get('players').toData())
+        player_joined = this.model.get('players').any(function(player){return player.get('user').id == window.user.id})
+        console.log(player_joined)
+        if (!player_joined){
+          this.model.get('players').create({power:"Aus", user: window.user})
+          this.model.save()
+          console.log(this.model.get('players').toData())
+        }
+
+
         new PreGameView(this.model, this);
+      }
       else if(this.model.get('status') == "active")
        new BoardView(this.model)
 

@@ -10,10 +10,12 @@ define(['scripts/client/bootstrap.js'], function(){
     initialize: function(model){
       this.model = model;
 
+
       this.render();
     },
     render: function(){
       console.log('rendering board...');
+      console.log(this.model.get('players').toData())
       $(this.el).html(this.template.r(this.model.toJSON()));
 
       if($("#diplomacy .board").length == 0){

@@ -37,7 +37,7 @@
   Backbone.sync = function(method, model, options) {
     url = getValue(model, 'urlRoot') || getValue(model, 'url');
 
-    // console.log(method+((method=="read" && !model.id) ? "(all)" : "")+":"+url)
+    //console.log(method+((method=="read" && !model.id) ? "(all)" : "")+":"+url)
 
     switch (method) {
       case "read":    resp = model.id ? dropsync.get(model,url,options) : dropsync.getAll(model,url,options); break;

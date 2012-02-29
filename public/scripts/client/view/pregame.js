@@ -63,12 +63,18 @@ define(['scripts/client/bootstrap.js'], function(){
       console.log('player select: ', power);
       var player_list = this.model.get('players');
 
-      player_list.find(function(player){return player.get('user').id == window.user.id}).set({'power':power});
+      var choosing_player = this.model.get('players').find(function(player){return player.get('user').id == window.user.id})
+      choosing_player.set({'power':power});
+      choosing_player.save();
 
     },
     startGame: function(ev){
       $(this.el).remove()
       this.model.set({status:"active"})
+      //generate chatrooms
+      _.each(this.model.get('players').permutations(), function(pair){
+        this.model.get('chatrooms').create({players: [pair[0].id, pair[1].id]})
+      }, this);
       this.model.save()
       new BoardView(this.model)
     }

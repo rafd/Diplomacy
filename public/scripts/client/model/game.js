@@ -52,17 +52,17 @@ define(['scripts/client/bootstrap.js'], function(){
 
         // TODO: should loop through this
         this.get('players').create({power:"Aus", user: window.user});
-        this.get('players').create({power:"Fra", user: RemoteUsers.at(1)});
-        this.get('players').create({power:"Ger", user: RemoteUsers.at(2)});
-        this.get('players').create({power:"Ita", user: RemoteUsers.at(3)});
-        this.get('players').create({power:"Rus", user: RemoteUsers.at(4)});
-        this.get('players').create({power:"Tur", user: RemoteUsers.at(5)});
-        this.get('players').create({power:"Eng", user: RemoteUsers.at(6)});
+        // this.get('players').create({power:"Fra", user: RemoteUsers.at(1)});
+        // this.get('players').create({power:"Ger", user: RemoteUsers.at(2)});
+        // this.get('players').create({power:"Ita", user: RemoteUsers.at(3)});
+        // this.get('players').create({power:"Rus", user: RemoteUsers.at(4)});
+        // this.get('players').create({power:"Tur", user: RemoteUsers.at(5)});
+        // this.get('players').create({power:"Eng", user: RemoteUsers.at(6)});
 
         // create chatrooms using player permutations 
-        _.each(this.get('players').permutations(), function(pair){
-          this.get('chatrooms').create({players: [pair[0].id, pair[1].id]})
-        }, this);
+        // _.each(this.get('players').permutations(), function(pair){
+        //   this.get('chatrooms').create({players: [pair[0].id, pair[1].id]})
+        // }, this);
 
         // create global chatroom
         this.get('chatrooms').create({players: this.get('players').pluck('_id')});
