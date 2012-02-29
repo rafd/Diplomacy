@@ -210,6 +210,7 @@ define(['scripts/client/bootstrap.js'], function(){
     {
       e.preventDefault();
       socket.emit('game:resolve',this.game.id, _.bind(function(err,data){
+        console.log(data)
         //update board with returned state
         this.game.set({units:data});//owner, utype, prov, move
         this.render();

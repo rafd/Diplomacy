@@ -571,6 +571,7 @@ MAP = {
       }
 };
 
+
 COUNTRY = ["Aus","Eng","Fra","Ger","Ita","Rus","Tur"];
 
 
@@ -765,7 +766,7 @@ function resolveStrengths(units)
             else if (unit(p,units).order.move=="h")
             {
               //mark the unit as retreat
-              invalidateUnit(unit(p,units),units,"RETREAT");
+              invalidateUnit(unit(p,units),"RETREAT");
               unit(p,units).order.move='r';
               //TODO: Check if disband (no space to move)
               //TODO: Check if self-dislodge, no help list
@@ -803,9 +804,9 @@ function initialResolve(units)
   for(var x in units)
   {
     //add it to the combat list of the space its trying to enter/hold
-    if(units[x].order.move=="m" || units[x].order.move=="h")
+    if(units[x].order.move=="m")
       MAP[units[x].order.to].combatlist.push(units[x].province);
-    else if(units[x].order.move=="s")
+    else if(units[x].order.move=="s" || units[x].order.move=="h")
       MAP[units[x].province].combatlist.push(units[x].province);
   }
 
@@ -917,7 +918,8 @@ function resetVars(units)
   //clear support
   for(var x in units)
   {
-    units[x].order={};
+    if(units[x].order.move!="r")
+      units[x].order={};
   }
 }
 
@@ -945,12 +947,31 @@ function DipResolve(units)
 
   //reset global variables for next turn
   resetVars(units);
-
   return units;
+}
+
+function resolveRetreats(units)
+{
+  //disband units that try to retreat into occupied/illegal spaces
+  //disband units that voluntarily disband
+  //create combatlist for units trying to retreat
+  //if there is only one player on the combatlist, player is allowed to move
+  //if two players on combatlist, both are disbanded
+  //clear orders
+  //return new units list
 }
 
 
 
+var GAME3={
+  units : [  
+    {owner: "Eng", province: "NAt", utype: "F", order: {move: "m", from: "NAt", to: "Nrg", tag: "", support: 0} },
+    {owner: "Aus", province: "Edi", utype: "F", order: {move: "s", from: "NAt", to: "Nrg", tag: "", support: 0} },
+    {owner: "Fra", province: "Nrg", utype: "F", order: {move: "h", from: "Nrg", to: "Nrg", tag: "", support: 0} },
+  ]
+}
+
+console.log(DipResolve(GAME3.units))
 
 
 if (typeof module !== 'undefined' && module.exports) {

@@ -29,8 +29,6 @@ define(['scripts/client/bootstrap.js'], function(){
       this.model = chatroom;
       this.messages = this.model.get('messages');
 
-      console.log(chatroom)
-
       player = chatroom.get('players').reject(function(p){ p == current_player})[0];
 
       $(this.el).html(this.template.r({
