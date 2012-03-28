@@ -174,19 +174,23 @@ io.sockets.on('connection', function (socket) {
           })
         );
         var end = _.uniq(holds.concat(combined),false,function(u){ return u.province });
-        var ret = dipresolve(end);
+        var units = dipresolve(end);
+
+        var supply = 0;//countsupply(units);
 
 
         //remove orders from players
         model["player"].update({"_id": {$in:game.players}}, {orders:[]}, { multi: true }, function(err,num){});
-        //TODO: update game state on server
-        console.log(ret);
-        game.units=ret;
+        
+        game.units=units;
         game.save();
-        //broadcast updated game state to all clients
+        //TODO: broadcast updated game state to all clients
+
+
+        var fallturn=1;//TODO: fix this later
 
         //informing client that called us
-        cb(null,ret);
+        cb(null,fallturn,units,supply);
 
         
 

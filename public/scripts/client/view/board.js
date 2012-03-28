@@ -209,19 +209,79 @@ define(['scripts/client/bootstrap.js'], function(){
     resolveMoves: function(e)
     {
       e.preventDefault();
-      socket.emit('game:resolve',this.game.id, _.bind(function(err,data){
-        console.log(data)
+      socket.emit('game:resolve',this.game.id, _.bind(function(err,fallturn,units,supply){
+        var u={};
+
+        if(fallturn)
+        {
+          //find my current country
+          var power = window.current_player.attributes.power;
+          //find how many supply centers I should have
+          var mySupply=3;//supply[power];
+          //find how many units I have
+          var unitList=[];
+          //do I have any retreats
+          var retreatList=[];
+          for(var x in units)
+          {
+            if(units[x].owner==power)
+            {
+              if(units[x].order.move=='r')
+                retreatList.push(units[x]);
+              unitList.push(units[x]);
+            }
+          }
+          //retreatList=unitList;//test
+
+          var numUnits=unitList.length;
+
+          if(retreatList.length > 0)
+          {
+            u.msg1="You must retreat";
+            u.retreat=retreatList;
+          }
+
+          //if(numUnits < mySupply)
+          {
+            var x = mySupply-numUnits;
+
+            u.msg2="You can add " + x + " new unit(s)";
+            var spawnPoints=[];
+            for(var y in window.MAP)
+            {
+              if(MAP[y].spawn==power)
+                spawnPoints.push({province:y,owner:power});
+            }
+            u.spawn=spawnPoints;
+          }
+
+console.log(spawnPoints);
+          if(numUnits > mySupply)
+          {
+            var x = numUnits-mySupply;
+            u.msg3="You must select "+x+" unit(s) to disband";
+            u.disband=unitList;
+          }
+
+
+        }
+
         //update board with returned state
-        this.game.set({units:data});//owner, utype, prov, move
-        this.render();
-        $(e.target).parent().replaceWith(T['order_submit_unit'].r({units:data}));
+        this.game.set({units:units});//owner, utype, prov, move
+        //this.render();
+        /*$(e.target).parent().replaceWith(T['order_submit_unit'].r({units:units}));*/
+
+        if(u!=null)
+          $(e.target).parent().replaceWith(T['secondary_order'].r({derp:u}));
+        else
+          this.render();
       },this));
     },
     clickedMove: function(e){
       prov = $(e.target).parent().find("[name='prov']").val();
       var u= _.select(this.units.toData(), function(unit) { return unit.province == prov});
       //var m=_.clone(window.MAP[prov]);
-
+      var s=0;
       switch($(e.currentTarget).val())
       {
         case "h":
@@ -249,10 +309,17 @@ define(['scripts/client/bootstrap.js'], function(){
           u.to=m; //u.to = m intersect possible_moves(twoaway.selectedvalue)
           break;
         
+        case "retreat":
+          s=1;
+          break;
+        
         default:
           console.log("move is not understood in clickedMove");
           
       }
+      if(s)
+      $(e.target).parent().replaceWith(T['secondary_order'].r({derp:u}));
+      else
       $(e.target).parent().replaceWith(T['order_submit_unit'].r({units:u}));
       
     }

@@ -34,6 +34,7 @@ MAP = {
         army_moves: ["Cly","Lvp","Yor",],
         fleet_moves: ["Cly","Nth","Yor","Nrg"],
         belongsto: "Eng",
+        spawn:"Eng",
         supply: 1,
         combatlist: []
       },
@@ -41,6 +42,7 @@ MAP = {
         army_moves: ["Edi","Cly","Yor","Wal"],
         fleet_moves: ["Cly","NAt","Wal","Iri"],
         belongsto: "Eng",
+        spawn:"Eng",
         supply: 1,
         combatlist: []
       },
@@ -62,6 +64,7 @@ MAP = {
         army_moves: ["Yor","Wal"],
         fleet_moves: ["Yor","Wal","Nth","Eng"],
         belongsto: "Eng",
+        spawn:"Eng",
         supply: 1,
         combatlist: []
       },
@@ -97,6 +100,7 @@ MAP = {
         army_moves: ["Pic","Par","Gas"],
         fleet_moves: ["Pic","Gas","Mid","Eng"],
         belongsto: "Fra",
+        spawn:"Fra",
         supply: 1,
         combatlist: []
       },
@@ -181,6 +185,7 @@ MAP = {
         army_moves: ["Spa","Gas","Bur","Pie"],
         fleet_moves: ["GoL","SpaS","Pie"],
         belongsto: "Fra",
+        spawn:"Fra",
         supply: 1,
         combatlist: []
       },
@@ -195,6 +200,7 @@ MAP = {
         army_moves: ["Pic","Bre","Gas","Bur"],
         fleet_moves: [],
         belongsto: "Fra",
+        spawn:"Fra",
         supply: 1,
         combatlist: []
       },
@@ -251,6 +257,7 @@ MAP = {
         army_moves: ["Hol","Ruh","Mun","Ber","Den"],
         fleet_moves: ["Hol","Ber","Hel","Bal","Den"],
         belongsto: "Ger",
+        spawn:"Ger",
         supply: 1,
         combatlist: []
       },
@@ -279,6 +286,7 @@ MAP = {
         army_moves: ["Kie","Pru","Sil","Mun"],
         fleet_moves: ["Kie","Pru","Bal"],
         belongsto: "Ger",
+        spawn:"Ger",
         supply: 1,
         combatlist: []
       },
@@ -286,6 +294,7 @@ MAP = {
         army_moves: ["Sil","Ber","Kie","Ruh","Bur","Tyr","Boh"],
         fleet_moves: [],
         belongsto: "Ger",
+        spawn:"Ger",
         supply: 1,
         combatlist: []
       },
@@ -300,6 +309,7 @@ MAP = {
         army_moves: ["Tri","Tyr","Pie","Tus","Rom","Apu"],
         fleet_moves: ["Tri","Apu","Adr"],
         belongsto: "Ita",
+        spawn:"Ita",
         supply: 1,
         combatlist: []
       },
@@ -314,6 +324,7 @@ MAP = {
         army_moves: ["Tus","Ven","Apu","Nap"],
         fleet_moves: ["Tus","Nap","Tyn"],
         belongsto: "Ita",
+        spawn:"Ita",
         supply: 1,
         combatlist: []
       },
@@ -321,6 +332,7 @@ MAP = {
         army_moves: ["Rom","Apu"],
         fleet_moves: ["Rom","Apu","Tyn","Ion"],
         belongsto: "Ita",
+        spawn:"Ita",
         supply: 1,
         combatlist: []
       },
@@ -342,6 +354,7 @@ MAP = {
         army_moves: ["Alb","Ser","Bud","Vie","Tyr","Ven"],
         fleet_moves: ["Ven","Adr","Alb"],
         belongsto: "Aus",
+        spawn:"Aus",
         supply: 1,
         combatlist: []
       },
@@ -349,6 +362,7 @@ MAP = {
         army_moves: ["Boh","Gal","Bud","Tri","Tyr"],
         fleet_moves: [],
         belongsto: "Aus",
+        spawn:"Aus",
         supply: 1,
         combatlist: []
       },
@@ -405,6 +419,7 @@ MAP = {
         army_moves: [],
         fleet_moves: ["Bar","Nwy"],
         belongsto: "Rus",
+        spawn:"Rus",
         supply: 1,
         combatlist: []
       },
@@ -426,6 +441,7 @@ MAP = {
         army_moves: ["StP","Lvn","War","Ukr","Sev"],
         fleet_moves: [],
         belongsto: "Rus",
+        spawn:"Rus",
         supply: 1,
         combatlist: []
       },
@@ -433,6 +449,7 @@ MAP = {
         army_moves: ["Lvn","Pru","Sil","Gal","Ukr","Mos"],
         fleet_moves: [],
         belongsto: "Rus",
+        spawn:"Rus",
         supply: 1,
         combatlist: []
       },
@@ -447,6 +464,7 @@ MAP = {
         army_moves: ["Mos","Ukr","Rum","Arm"],
         fleet_moves: ["Bla","Rum","Arm"],
         belongsto: "Rus",
+        spawn:"Rus",
         supply: 0,
         combatlist: []
       },
@@ -461,6 +479,7 @@ MAP = {
         army_moves: ["Gal","Rum","Ser","Tri","Vie"],
         fleet_moves: [],
         belongsto: "Aus",
+        spawn:"Aus",
         supply: 1,
         combatlist: []
       },
@@ -538,6 +557,7 @@ MAP = {
         army_moves: ["Bul","Smy","Ank"],
         fleet_moves: ["Aeg","BulN","BulS","Bla","Ank","Smy"],
         belongsto: "Tur",
+        spawn:"Tur",
         supply: 1,
         combatlist: []
       },
@@ -545,6 +565,7 @@ MAP = {
         army_moves: ["Con","Smy","Arm"],
         fleet_moves: ["Con","Bla","Arm"],
         belongsto: "Tur",
+        spawn:"Tur",
         supply: 1,
         combatlist: []
       },
@@ -552,6 +573,7 @@ MAP = {
         army_moves: ["Con","Ank","Arm","Syr"],
         fleet_moves: ["Aeg","Eas","Con","Syr"],
         belongsto: "Tur",
+        spawn:"Tur",
         supply: 1,
         combatlist: []
       },
@@ -577,6 +599,7 @@ COUNTRY = ["Aus","Eng","Fra","Ger","Ita","Rus","Tur"];
 
 
 //utility functions
+
 
 
 
@@ -892,6 +915,7 @@ function finalBoard(units)
 {
   //find all the ones that say RETREAT
   //Finalize all people on the combatlist
+  //Update owner of each province
   for(var x in MAP)
   {
     var cl = MAP[x].combatlist;
@@ -900,6 +924,7 @@ function finalBoard(units)
       var u = unit(cl[0],units)
       if(u.order.move=="m")
         u.province=u.order.to;
+      MAP[x].belongsto=u.order.owner;
     }
     else if(MAP[x].combatlist.length>1)
     {
@@ -961,7 +986,21 @@ function resolveRetreats(units)
   //return new units list
 }
 
+function countSupply(units)
+{
+  var supply = {"Aus":0,"Eng":0,"Fra":0,"Ger":0,"Ita":0,"Rus":0,"Tur":0};
 
+  //count how many supply center each have
+  for (var x in units)
+  {
+    var prov = units[x].province;
+    var owner = units[x].owner;
+    if(MAP[prov].supply)//if prov is a supply prov
+      supply[owner]++;//one more unit
+  }
+
+  return supply;
+}
 
 var GAME3={
   units : [  
