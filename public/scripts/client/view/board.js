@@ -231,7 +231,6 @@ define(['scripts/client/bootstrap.js'], function(){
               unitList.push(units[x]);
             }
           }
-          //retreatList=unitList;//test
 
           var numUnits=unitList.length;
 
@@ -240,8 +239,7 @@ define(['scripts/client/bootstrap.js'], function(){
             u.msg1="You must retreat";
             u.retreat=retreatList;
           }
-
-          //if(numUnits < mySupply)
+          if(numUnits < mySupply)
           {
             var x = mySupply-numUnits;
 
@@ -250,12 +248,11 @@ define(['scripts/client/bootstrap.js'], function(){
             for(var y in window.MAP)
             {
               if(MAP[y].spawn==power)
-                spawnPoints.push({province:y,owner:power});
+                spawnPoints.push({owner:power,province:y});
             }
             u.spawn=spawnPoints;
           }
 
-console.log(spawnPoints);
           if(numUnits > mySupply)
           {
             var x = numUnits-mySupply;
