@@ -231,15 +231,15 @@ define(['scripts/client/bootstrap.js'], function(){
               unitList.push(units[x]);
             }
           }
-
+          retreatList=unitList;
           var numUnits=unitList.length;
 
-          if(retreatList.length > 0)
+          //if(retreatList.length > 0)
           {
             u.msg1="You must retreat";
             u.retreat=retreatList;
           }
-          if(numUnits < mySupply)
+          //if(numUnits < mySupply)
           {
             var x = mySupply-numUnits;
 
@@ -253,10 +253,10 @@ define(['scripts/client/bootstrap.js'], function(){
             u.spawn=spawnPoints;
           }
 
-          if(numUnits > mySupply)
+          //if(numUnits > mySupply)
           {
             var x = numUnits-mySupply;
-            u.msg3="You must select "+x+" unit(s) to disband";
+            u.msg3="Select "+x+" unit(s) to disband";
             u.disband=unitList;
           }
 
@@ -267,7 +267,8 @@ define(['scripts/client/bootstrap.js'], function(){
         this.game.set({units:units});//owner, utype, prov, move
         //this.render();
         /*$(e.target).parent().replaceWith(T['order_submit_unit'].r({units:units}));*/
-        if(u.length==0)
+        console.log(u)
+        if(u.length!=0)
         {
           $(e.target).parent().replaceWith(T['secondary_order'].r({derp:u}));
         }
@@ -310,12 +311,15 @@ define(['scripts/client/bootstrap.js'], function(){
           u.to=m; //u.to = m intersect possible_moves(twoaway.selectedvalue)
           break;
         
-        case "retreat":
-          s=1;
-          break;
-        
         case "disband":
           s=1;
+          u.d=true;
+          break;
+
+        case "retreat":
+          s=1;
+          u.r=true;
+          u.to=possible_moves(u[0]);
           break;
 
         case "no new unit":
@@ -338,8 +342,12 @@ define(['scripts/client/bootstrap.js'], function(){
           console.log("move is not understood in clickedMove");
           
       }
+      console.log(u)
       if(s)
-      $(e.target).parent().replaceWith(T['secondary_order'].r({derp:u}));
+      {
+        console.log("if")
+        $(e.target).parent().replaceWith(T['retreat'].r({retreat:u}));
+      }
       else
       $(e.target).parent().replaceWith(T['order_submit_unit'].r({units:u}));
       
