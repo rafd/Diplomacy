@@ -267,11 +267,15 @@ define(['scripts/client/bootstrap.js'], function(){
         this.game.set({units:units});//owner, utype, prov, move
         //this.render();
         /*$(e.target).parent().replaceWith(T['order_submit_unit'].r({units:units}));*/
-
-        if(u!=null)
+        if(u.length==0)
+        {
           $(e.target).parent().replaceWith(T['secondary_order'].r({derp:u}));
+        }
         else
+        {
           this.render();
+          //(e.target).parent().replaceWith(T['order_submit_unit'].r({units:units}));
+        }
       },this));
     },
     clickedMove: function(e){
