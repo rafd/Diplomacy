@@ -14,7 +14,7 @@
       {{province}}
       <input name="prov" type="hidden" value="{{province}}"/>
       <select class="move" name="move">
-       <option>disband </option>
+       <option>disband</option>
        <option>retreat</option>
       </select>
         {{#to}}

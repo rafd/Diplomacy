@@ -314,6 +314,26 @@ define(['scripts/client/bootstrap.js'], function(){
           s=1;
           break;
         
+        case "disband":
+          s=1;
+          break;
+
+        case "no new unit":
+          s=1;
+          break;
+
+        case "new army":
+          s=1;
+          break;
+
+        case "new fleet":
+          s=1;
+          break;
+
+        case "hold":
+          s=1;
+          break;
+        
         default:
           console.log("move is not understood in clickedMove");
           
