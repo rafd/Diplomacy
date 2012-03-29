@@ -167,6 +167,8 @@ define(['scripts/client/bootstrap.js'], function(){
     events: {
       "click .submit" : "parseOrders",
       "click .resolve" : "resolveMoves",
+      "click .resolvetwo": "resolveMoves",
+      "click .submittwo" : "parseSecondary",
       "change select.move" : "clickedMove",
       "change select.from" : "clickedMove"
     },
@@ -206,78 +208,159 @@ define(['scripts/client/bootstrap.js'], function(){
         //$(e.target).parent().replaceWith(T['order_submit_unit'].r({units:data}));
       //},this));
     },
+    parseSecondary: function(e){
+      e.preventDefault();
+      var data = $(this.el).find("form").serializeArray();
+
+      var retreatOrders=[];
+      var spawnOrders=[];
+      var disbandOrders=[];
+
+      for(var x=0; x<data.length; x+=4)
+      {
+        if(data[x].name=="name" && data[x].value=="retreat")
+        {
+          var move = data[x+4].value;
+          if(move=="disband")
+          {
+            disbandOrders.push({
+            "owner":data[x+1].value,
+            "utype":data[x+2].value,
+            "province":data[x+3].value,
+            "move":"disband"
+            });
+          }
+          else
+          {
+            retreatOrders.push({
+            "owner":data[x+1].value,
+            "utype":data[x+2].value,
+            "province":data[x+3].value,
+            "move":data[x+4].value
+            });
+          }
+          x++;//this take up 5 spaces
+        }
+        if(data[x].name=="name" && data[x].value=="spawn")
+        {
+          spawnOrders.push({
+            "owner":data[x+1].value,
+            "province":data[x+2].value,
+            "move":data[x+3].value
+            });
+        }
+        /*else*/ if(data[x].name=="name" && data[x].value=="disband")
+        {
+          disbandOrders.push({
+            "owner":data[x+1].value,
+            "utype":data[x+2].value,
+            "province":data[x+3].value,
+            "move":data[x+4].value
+            });
+            x++;   
+        }
+      }
+      this.player.get('retreatorders').add(retareatOrders);
+      this.player.get('spawnorders').add(spawnOrders);
+      this.player.get('disbandorders').add(disbandOrders);
+      this.player.set({retreatorders:retareatOrders});
+      this.player.set({spawnorders:spawnOrders});
+      this.player.set({disbandorders:disbandOrders});
+      this.player.save();
+      
+    },
     resolveMoves: function(e)
     {
       e.preventDefault();
-      socket.emit('game:resolve',this.game.id, _.bind(function(err,fallturn,units,supply){
-        var u={};
-
-        if(fallturn)
-        {
-          //find my current country
-          var power = window.current_player.attributes.power;
-          //find how many supply centers I should have
-          var mySupply=3;//supply[power];
-          //find how many units I have
-          var unitList=[];
-          //do I have any retreats
-          var retreatList=[];
-          for(var x in units)
-          {
-            if(units[x].owner==power)
-            {
-              if(units[x].order.move=='r')
-                retreatList.push(units[x]);
-              unitList.push(units[x]);
-            }
-          }
-          retreatList=unitList;
-          var numUnits=unitList.length;
-
-          //if(retreatList.length > 0)
-          {
-            u.msg1="You must retreat";
-            u.retreat=retreatList;
-          }
-          //if(numUnits < mySupply)
-          {
-            var x = mySupply-numUnits;
-
-            u.msg2="You can add " + x + " new unit(s)";
-            var spawnPoints=[];
-            for(var y in window.MAP)
-            {
-              if(MAP[y].spawn==power)
-                spawnPoints.push({owner:power,province:y});
-            }
-            u.spawn=spawnPoints;
-          }
-
-          //if(numUnits > mySupply)
-          {
-            var x = numUnits-mySupply;
-            u.msg3="Select "+x+" unit(s) to disband";
-            u.disband=unitList;
-          }
-
-
-        }
-
-        //update board with returned state
-        this.game.set({units:units});//owner, utype, prov, move
-        //this.render();
-        /*$(e.target).parent().replaceWith(T['order_submit_unit'].r({units:units}));*/
-        console.log(u)
-        if(u.length!=0)
-        {
-          $(e.target).parent().replaceWith(T['secondary_order'].r({derp:u}));
-        }
-        else
-        {
+      socket.emit('game:resolve',this.game.id, _.bind(function(err,data){
+          //update board with returned state
+          this.game.set({units:data});//owner, utype, prov, move
           this.render();
           //(e.target).parent().replaceWith(T['order_submit_unit'].r({units:units}));
-        }
-      },this));
+        },this));
+    },
+    resolveMovesTwo: function(e)
+    {
+      e.preventDefault();
+      socket.emit(
+        'game:resolvetwo',
+        this.game.id,
+        this.player.id,
+        this.player.retreatorders,
+        this.player.spawnorders,
+        this.player.disbandorders,
+        _.bind(
+        function(err,fallturn,units,supply){
+          var u={};
+
+          if(fallturn)
+          {
+            //find my current country
+            var power = window.current_player.attributes.power;
+            //find how many supply centers I should have
+            var mySupply=3;//supply[power];
+            //find how many units I have
+            var unitList=[];
+            //do I have any retreats
+            var retreatList=[];
+            for(var x in units)
+            {
+              if(units[x].owner==power)
+              {
+                if(units[x].order.move=='r')
+                  retreatList.push(units[x]);
+                unitList.push(units[x]);
+              }
+            }
+            retreatList=unitList;
+            var numUnits=unitList.length;
+
+            //if(retreatList.length > 0)
+            {
+              u.msg1="You must retreat";
+              u.retreat=retreatList;
+            }
+            //if(numUnits < mySupply)
+            {
+              var x = mySupply-numUnits;
+
+              u.msg2="You can add " + x + " new unit(s)";
+              var spawnPoints=[];
+              for(var y in window.MAP)
+              {
+                if(MAP[y].spawn==power)
+                  spawnPoints.push({owner:power,province:y});
+              }
+              u.spawn=spawnPoints;
+            }
+
+            //if(numUnits > mySupply)
+            {
+              var x = numUnits-mySupply;
+              u.msg3="Select "+x+" unit(s) to disband";
+              u.disband=unitList;
+            }
+
+
+          }
+
+          //update board with returned state
+          this.game.set({units:units});//owner, utype, prov, move
+          //this.render();
+          /*$(e.target).parent().replaceWith(T['order_submit_unit'].r({units:units}));*/
+          if(u.length!=0)
+          {
+            $(e.target).parent().replaceWith(T['secondary_order'].r({derp:u}));
+          }
+          else
+          {
+            this.render();
+            //(e.target).parent().replaceWith(T['order_submit_unit'].r({units:units}));
+          }
+        },
+        this
+        )
+      );
     },
     clickedMove: function(e){
       prov = $(e.target).parent().find("[name='prov']").val();
@@ -311,29 +394,17 @@ define(['scripts/client/bootstrap.js'], function(){
           u.to=m; //u.to = m intersect possible_moves(twoaway.selectedvalue)
           break;
         
-        case "disband":
-          s=1;
-          u.d=true;
-          break;
-
         case "retreat":
           s=1;
           u.r=true;
           u.to=possible_moves(u[0]);
+        $(e.target).parent().replaceWith(T['retreat'].r({retreat:u}));
           break;
 
+        case "disband":
         case "no new unit":
-          s=1;
-          break;
-
         case "new army":
-          s=1;
-          break;
-
         case "new fleet":
-          s=1;
-          break;
-
         case "hold":
           s=1;
           break;
@@ -342,13 +413,7 @@ define(['scripts/client/bootstrap.js'], function(){
           console.log("move is not understood in clickedMove");
           
       }
-      console.log(u)
-      if(s)
-      {
-        console.log("if")
-        $(e.target).parent().replaceWith(T['retreat'].r({retreat:u}));
-      }
-      else
+      if(!s)
       $(e.target).parent().replaceWith(T['order_submit_unit'].r({units:u}));
       
     }

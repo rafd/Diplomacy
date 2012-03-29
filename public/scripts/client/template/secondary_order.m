@@ -1,13 +1,14 @@
 {{#derp}}
 <form>
   <ul>
-  <input type="submit" class="submit" value = "Submit secondary moves"/>
-  <input type="submit" class="resolve" value = "Resolve secondary moves"/>
+  <input type="submit" class="submittwo" value = "Submit secondary moves"/>
+  <input type="submit" class="resolvetwo" value = "Resolve secondary moves"/>
 <br>
   {{msg1}}
 
   {{#retreat}}
     <li>
+      <input name="name" type="hidden" value="retreat"/>
       <input name="owner" type="hidden" value="{{owner}}"/>
       {{utype}}
       <input name="utype" type="hidden" value="{{utype}}"/>
@@ -28,6 +29,7 @@
 
   {{#spawn}}
     <li>
+     <input name="name" type="hidden" value="spawn"/>
       <input name="owner" type="hidden" value="{{owner}}"/>
       {{province}}
       <input name="prov" type="hidden" value="{{province}}"/>
@@ -42,6 +44,7 @@
   {{msg3}}
   {{#disband}}
     <li>
+      <input name="name" type="hidden" value="disband"/>
       <input name="owner" type="hidden" value="{{owner}}"/>
       {{utype}}
       <input name="utype" type="hidden" value="{{utype}}"/>

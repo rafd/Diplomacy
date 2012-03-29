@@ -147,9 +147,49 @@ io.sockets.on('connection', function (socket) {
   //   socket.emit('chat:users',users);
   //   socket.broadcast.emit('chat:users',users);
   // });
-
-
   socket.on('game:resolve', function(gameID, cb){
+    console.log("Game resolving");
+    //get units for gameID from mongoose
+
+    var _model = model["game"];
+
+    _model.findOne({'_id':gameID}, function(err, game){
+
+      model["player"].find({}).where("_id").in(game.players).select('orders power').exec(function(er, data){
+        //var orders=[];
+        var u = game.units;
+        var combined = _.flatten(_.map(data, function(doc){ return doc.orders }),true);
+        var provinces_with_orders = _.map(combined, function(order){return order.province});
+        var holds = _.compact(_.map(u,function(unit){ 
+            if(-1 == _.indexOf(provinces_with_orders, unit.province)){
+              return { 
+                province: unit.province,  
+                utype: unit.utype,
+                owner: unit.owner,
+                order: { to: unit.province, from: unit.province, move: 'h' } 
+              }
+            }
+          })
+        );
+        var end = _.uniq(holds.concat(combined),false,function(u){ return u.province });
+        var units = dipresolve(end);
+
+        //remove orders from players
+        model["player"].update({"_id": {$in:game.players}}, {orders:[]}, { multi: true }, function(err,num){});
+        
+        game.units=units;
+        game.save();
+        //TODO: broadcast updated game state to all clients
+
+        //informing client that called us
+        cb(null,units);
+      });
+    
+    });
+
+  });
+
+  socket.on('game:resolvetwo', function(gameID, cb){
     console.log("Game resolving");
     //get units for gameID from mongoose
 
@@ -181,7 +221,7 @@ io.sockets.on('connection', function (socket) {
 
         //remove orders from players
         model["player"].update({"_id": {$in:game.players}}, {orders:[]}, { multi: true }, function(err,num){});
-        
+
         game.units=units;
         game.save();
         //TODO: broadcast updated game state to all clients
