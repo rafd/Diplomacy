@@ -204,9 +204,10 @@ define(['scripts/client/bootstrap.js'], function(){
       //this.player.get('orders').add(orders);
       this.player.set({orders:orders});
       this.player.save();
-      //socket.emit('game:submit',this.game.id,this.player.id,orders, _.bind(function(err,data){ 
-        //$(e.target).parent().replaceWith(T['order_submit_unit'].r({units:data}));
-      //},this));
+/*
+      socket.emit('game:submit',this.game.id,this.player.id,orders, _.bind(function(err,data){ 
+        $(e.target).parent().replaceWith(T['order_submit_unit'].r({units:data}));
+      },this));*/
     },
     parseSecondary: function(e){
       e.preventDefault();
@@ -263,85 +264,69 @@ define(['scripts/client/bootstrap.js'], function(){
       this.player.get('retreatorders').add(retareatOrders);
       this.player.get('spawnorders').add(spawnOrders);
       this.player.get('disbandorders').add(disbandOrders);
+      //console.log(this.player.get('disbandorders'));
       this.player.set({retreatorders:retareatOrders});
       this.player.set({spawnorders:spawnOrders});
       this.player.set({disbandorders:disbandOrders});
       this.player.save();
+      console.log(this.player.get('retreatorders'))
       
     },
     resolveMoves: function(e)
     {
       e.preventDefault();
-      socket.emit('game:resolve',this.game.id, _.bind(function(err,data){
-          //update board with returned state
-          this.game.set({units:data});//owner, utype, prov, move
-          this.render();
-          //(e.target).parent().replaceWith(T['order_submit_unit'].r({units:units}));
-        },this));
-    },
-    resolveMovesTwo: function(e)
-    {
-      e.preventDefault();
+      console.log("rm");
       socket.emit(
-        'game:resolvetwo',
+        'game:resolve',
         this.game.id,
         this.player.id,
-        this.player.retreatorders,
-        this.player.spawnorders,
-        this.player.disbandorders,
         _.bind(
-        function(err,fallturn,units,supply){
+        function(err,units,supply){
           var u={};
-
-          if(fallturn)
+          //find my current country
+          var power = window.current_player.attributes.power;
+          //find how many supply centers I should have
+          var mySupply=3;//supply[power];
+          //find how many units I have
+          var unitList=[];
+          //do I have any retreats
+          var retreatList=[];
+          for(var x in units)
           {
-            //find my current country
-            var power = window.current_player.attributes.power;
-            //find how many supply centers I should have
-            var mySupply=3;//supply[power];
-            //find how many units I have
-            var unitList=[];
-            //do I have any retreats
-            var retreatList=[];
-            for(var x in units)
+            if(units[x].owner==power)
             {
-              if(units[x].owner==power)
-              {
-                if(units[x].order.move=='r')
-                  retreatList.push(units[x]);
-                unitList.push(units[x]);
-              }
+              if(units[x].order.move=='r')
+                retreatList.push(units[x]);
+              unitList.push(units[x]);
             }
-            retreatList=unitList;
-            var numUnits=unitList.length;
+          }
+          retreatList=unitList;
+          var numUnits=unitList.length;
 
-            //if(retreatList.length > 0)
+          //if(retreatList.length > 0)
+          {
+            u.msg1="You must retreat";
+            u.retreat=retreatList;
+          }
+          //if(numUnits < mySupply)
+          {
+            var x = mySupply-numUnits;
+
+            u.msg2="You can add " + x + " new unit(s)";
+            var spawnPoints=[];
+            for(var y in window.MAP)
             {
-              u.msg1="You must retreat";
-              u.retreat=retreatList;
+              if(MAP[y].spawn==power)
+                spawnPoints.push({owner:power,province:y});
             }
-            //if(numUnits < mySupply)
-            {
-              var x = mySupply-numUnits;
+            u.spawn=spawnPoints;
+          }
 
-              u.msg2="You can add " + x + " new unit(s)";
-              var spawnPoints=[];
-              for(var y in window.MAP)
-              {
-                if(MAP[y].spawn==power)
-                  spawnPoints.push({owner:power,province:y});
-              }
-              u.spawn=spawnPoints;
-            }
-
-            //if(numUnits > mySupply)
-            {
-              var x = numUnits-mySupply;
-              u.msg3="Select "+x+" unit(s) to disband";
-              u.disband=unitList;
-            }
-
-
+          //if(numUnits > mySupply)
+          {
+            var x = numUnits-mySupply;
+            u.msg3="Select "+x+" unit(s) to disband";
+            u.disband=unitList;
           }
 
           //update board with returned state
@@ -358,6 +343,23 @@ define(['scripts/client/bootstrap.js'], function(){
             //(e.target).parent().replaceWith(T['order_submit_unit'].r({units:units}));
           }
         },
+        this));
+    },
+    resolveMovesTwo: function(e)
+    {
+      e.preventDefault();
+      socket.emit(
+        'game:resolvetwo',
+        this.game.id,
+        this.player.id,
+        this.player.retreatorders,
+        this.player.spawnorders,
+        this.player.disbandorders,
+        _.bind(
+        function(err,units){
+            this.render();
+          }
+        ,
         this
         )
       );

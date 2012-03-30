@@ -180,9 +180,10 @@ io.sockets.on('connection', function (socket) {
         game.units=units;
         game.save();
         //TODO: broadcast updated game state to all clients
+        var supply = 0;//countsupply(units);
 
         //informing client that called us
-        cb(null,units);
+        cb(null,units,supply);
       });
     
     });
@@ -226,11 +227,8 @@ io.sockets.on('connection', function (socket) {
         game.save();
         //TODO: broadcast updated game state to all clients
 
-
-        var fallturn=1;//TODO: fix this later
-
         //informing client that called us
-        cb(null,fallturn,units,supply);
+        cb(null,units);
 
         
 
