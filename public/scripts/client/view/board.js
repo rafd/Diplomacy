@@ -216,8 +216,7 @@ define(['scripts/client/bootstrap.js'], function(){
       var retreatOrders=[];
       var spawnOrders=[];
       var disbandOrders=[];
-
-      for(var x=0; x<data.length; x+=4)
+      for(var x=0; x<data.length; )
       {
         if(data[x].name=="name" && data[x].value=="retreat")
         {
@@ -230,6 +229,7 @@ define(['scripts/client/bootstrap.js'], function(){
             "province":data[x+3].value,
             "move":"disband"
             });
+            x+=5;
           }
           else
           {
@@ -237,10 +237,11 @@ define(['scripts/client/bootstrap.js'], function(){
             "owner":data[x+1].value,
             "utype":data[x+2].value,
             "province":data[x+3].value,
-            "move":data[x+4].value
+            "move":data[x+5].value
             });
+            x+=6;
           }
-          x++;//this take up 5 spaces
+          //this take up 5 spaces
         }
         if(data[x].name=="name" && data[x].value=="spawn")
         {
@@ -249,27 +250,32 @@ define(['scripts/client/bootstrap.js'], function(){
             "province":data[x+2].value,
             "move":data[x+3].value
             });
-        }
+            x+=4;
+        } 
         /*else*/ if(data[x].name=="name" && data[x].value=="disband")
         {
-          disbandOrders.push({
-            "owner":data[x+1].value,
-            "utype":data[x+2].value,
-            "province":data[x+3].value,
-            "move":data[x+4].value
-            });
-            x++;   
+          var move = data[x+4].value;
+          if(move!='hold')
+          {
+            disbandOrders.push({
+              "owner":data[x+1].value,
+              "utype":data[x+2].value,
+              "province":data[x+3].value,
+              "move":"disband"
+              });
+            }
+            x+=5;   
         }
       }
-      this.player.get('retreatorders').add(retareatOrders);
-      this.player.get('spawnorders').add(spawnOrders);
-      this.player.get('disbandorders').add(disbandOrders);
-      //console.log(this.player.get('disbandorders'));
-      this.player.set({retreatorders:retareatOrders});
+
+
+      this.player.set({retreatorders:retreatOrders});
       this.player.set({spawnorders:spawnOrders});
       this.player.set({disbandorders:disbandOrders});
       this.player.save();
-      console.log(this.player.get('retreatorders'))
+/*      console.log(this.player.get('retreatorders'));
+      console.log(this.player.get('spawnorders'));
+      console.log(this.player.get('disbandorders'));*/
       
     },
     resolveMoves: function(e)
@@ -279,7 +285,6 @@ define(['scripts/client/bootstrap.js'], function(){
       socket.emit(
         'game:resolve',
         this.game.id,
-        this.player.id,
         _.bind(
         function(err,units,supply){
           var u={};
@@ -360,9 +365,7 @@ define(['scripts/client/bootstrap.js'], function(){
             this.render();
           }
         ,
-        this
-        )
-      );
+        this));
     },
     clickedMove: function(e){
       prov = $(e.target).parent().find("[name='prov']").val();
@@ -404,6 +407,12 @@ define(['scripts/client/bootstrap.js'], function(){
           break;
 
         case "disband":
+          s=1;
+          u.d=true;
+          console.log(u)
+        $(e.target).parent().replaceWith(T['retreat'].r({retreat:u}));
+          break;
+
         case "no new unit":
         case "new army":
         case "new fleet":
