@@ -11,6 +11,9 @@ exports.create = function(mongoose) {
       units:[]
     });
 
+  var timestamps = require('./plugins/timestamps');
+  new_schema.plugin(timestamps);
+
   return mongoose.model('Game', new_schema);
 
 

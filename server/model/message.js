@@ -9,6 +9,9 @@ exports.create = function(mongoose) {
     created_at:"" //needed?
   })
 
+  var timestamps = require('./plugins/timestamps');
+  new_schema.plugin(timestamps);
+
   // new_schema.pre('save', function (next) {
   //   console.log('\n\n\nawegaweg\n\n\n')
   //   this.updated_at = new Date

@@ -9,6 +9,9 @@ exports.create = function(mongoose) {
       players:[],
     });
 
+  var timestamps = require('./plugins/timestamps');
+  new_schema.plugin(timestamps);
+
   return mongoose.model('ChatRoom', new_schema);
 
   // return mongoose.model('ChatRoom', new mongoose.Schema({}));

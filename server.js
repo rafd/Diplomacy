@@ -8,8 +8,6 @@ var express = require('express')
   , hedgehog = require('./server/lib/hedgehog')
   , fs = require('fs')
   , dipresolve = require('./server/lib/dipresolve')
-  // , mongooseTypes = require('mongoose-types')
-  // , useTimestamps = mongooseTypes.useTimestamps;
 
 
 var 
@@ -320,35 +318,36 @@ io.sockets.on('connection', function (socket) {
               doc.save(function cb(err){
                 if (err) console.log(err);
                 //save complete
+                //   // console.log(args.collection, id, args.data)
+                //   switch(args.collection){
+                //     case 'player':
+                //       model['game'].findOne({'players': mongoose.Types.ObjectId.toString(id)}, function(err, game){
+                //         _.each(game.players, function(player_id){
+                //           // model['player'].testf();
+                //           model['player'].findOne({'_id':player_id}, function(err, doc){
+                //             console.log(doc.user);
+                //           });
+                //         });
+                //       });
+                //       break;
+                //     case 'chatroom':
+                //     case 'game':
+                //     //Need to filter out game commands sends
+                //       // console.log()
+                //       _.each(args.data.players, function(player_id){
+                //         // console.log('playerid', player_id)
+                //         model['player'].findOne({'_id':player_id}, function(err, doc){
+                //           console.log(doc.user);
+                //         });
+                //       });
+                //       break;
+                //   }
               })
             }
             else console.log('no doc to update')
           })
           // _model.update({_id: id}, args.data, {}, function(e,num){
-          //   // console.log(args.collection, id, args.data)
-          //   switch(args.collection){
-          //     case 'player':
-          //       model['game'].findOne({'players': mongoose.Types.ObjectId.toString(id)}, function(err, game){
-          //         _.each(game.players, function(player_id){
-          //           // model['player'].testf();
-          //           model['player'].findOne({'_id':player_id}, function(err, doc){
-          //             console.log(doc.user);
-          //           });
-          //         });
-          //       });
-          //       break;
-          //     case 'chatroom':
-          //     case 'game':
-          //     //Need to filter out game commands sends
-          //       // console.log()
-          //       _.each(args.data.players, function(player_id){
-          //         // console.log('playerid', player_id)
-          //         model['player'].findOne({'_id':player_id}, function(err, doc){
-          //           console.log(doc.user);
-          //         });
-          //       });
-          //       break;
-          //   }
+          
           // })
         }
 

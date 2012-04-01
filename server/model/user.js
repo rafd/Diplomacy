@@ -7,6 +7,9 @@ exports.create = function(mongoose) {
       email:"",
     });
 
+  var timestamps = require('./plugins/timestamps');
+  new_schema.plugin(timestamps);
+
   return mongoose.model('User', new_schema);
 
   // return mongoose.model('User', new mongoose.Schema({}));

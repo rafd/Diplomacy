@@ -1,6 +1,7 @@
 exports.create = function(mongoose) {
 
 
+
   var new_schema = new mongoose.Schema();
 
   new_schema.add({
@@ -8,15 +9,11 @@ exports.create = function(mongoose) {
     messages:[],
     chatrooms:[],
     user:"",
-    power:"",
-    updated_at: Date
+    power:""
   });
 
-  new_schema.pre('save', function (next) {
-    console.log('\n\n\nawegaweg\n\n\n')
-    this.updated_at = new Date
-    next()
-  })
+  var timestamps = require('./plugins/timestamps');
+  new_schema.plugin(timestamps);
 
 
   return mongoose.model('Player', new_schema);
