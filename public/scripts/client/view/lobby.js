@@ -1,10 +1,9 @@
 define(['scripts/client/bootstrap.js'], function(){
   
   LobbyView = Backbone.View.extend({
-    template: T['lobby'],
     className: 'lobby',
     events: {
-      "click #create-game": "createGame"
+     
     },
     initialize: function(){
       window.RemoteUsers = new UserCollection();
@@ -21,33 +20,32 @@ define(['scripts/client/bootstrap.js'], function(){
       this.render();
     },
     render: function(){
-      $(this.el).html(this.template.r({}));
-
-      this.input = $(this.el).find("form #new-game-input");
-      
       $('#diplomacy').append(this.el);
 
       new GamesView($(this.el));
-      new UserView($(this.el));
-      new RemoteUserList($(this.el));
-    },
-    createGame: function(e){
-      var name = this.input.val();
-
-      g = Games.create({name:name});
-      console.log(g.toData())
-      this.input.val('');
-      return false;
-    },
+      new DashView($(this.el));
+    }
   });
 
-
-  UserView = Backbone.View.extend({
-    className: 'user',
-    template: T['user'],
+  DashView = Backbone.View.extend({
+    className: 'dash',
+    template: T['dash'],
+    events: {
+       "click #create-game": "createGame"
+    },
+    createGame: function(e){
+      g = Games.create();
+      return false;
+    },
     initialize: function(target){
-      $(this.el).html(T['user'].r(window.user.toData()));
+      RemoteUsers.bind('add', this.render, this);
+      RemoteUsers.bind('reset', this.render, this);
+
       target.append(this.el);
+      this.render();
+    },
+    render: function(){
+      $(this.el).html(this.template.r({user:window.user.toData(),users:RemoteUsers.toJSON()}));
     }
   });
 
@@ -87,11 +85,8 @@ define(['scripts/client/bootstrap.js'], function(){
       var power = null;
       if(player)
         power = player.get('power');
-      game_players = this.model.get('players').map(
-            function(p){ if(p.get('power') != power) return p.toData()}
-          );
 
-      console.log(game_players)
+      game_players = this.model.get('players').map(function(p){ if(p.get('power') != power) return p.toData()});
       $(this.el).html(this.template.r({game:this.model.toData(),game_players:game_players,user_power:power}));
       return this;
     }
@@ -125,14 +120,10 @@ define(['scripts/client/bootstrap.js'], function(){
   RemoteUserList = Backbone.View.extend({
     template: T['users'],
     initialize: function(target){
-      RemoteUsers.bind('add', this.render, this);
-      RemoteUsers.bind('reset', this.render, this);
-
-      target.append(this.el);
-      this.render();
+      
     },
     render: function(){
-      $(this.el).html(this.template.r({users:RemoteUsers.toJSON()}));
+      $(this.el).html(this.template.r({}));
     }
 
   });

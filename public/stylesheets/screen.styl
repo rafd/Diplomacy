@@ -23,6 +23,7 @@ c_ger = #e6ce0e //y
 c_rus = #65af3d //g
 c_ita = #00a1a3 //b
 c_tur = #824eff //v
+c_eng = #aeaeae //g
 
 text_l = 26px
 text_m = 20px
@@ -31,41 +32,113 @@ text_s = 16px
 #diplomacy
   background #000
   font-family Oxygen
+  height 100%
 
 .lobby
   color #fff
-  .game
-    clear both
 
   a
     color #fff
     text-decoration none
 
-  .game-link
-    .info
-      width 180px
-      height 120px
-      border-left 10px #000 solid
-      float left
-      padding-left 10px
+  .games
+    padding 10px
 
-      .turn
-        font-size text_m
-      .status
-        font-size text_s
-      .message
-        font-size text_s
+    .game
+      clear both  
 
-  .players
-    width 180px
-    float left
+      .game-link
+        .info
+          width 180px
+          height 120px
+          border-left 10px #000 solid
+          float left
+          padding-left 10px
+
+          .turn
+            font-size text_m
+          .status
+            font-size text_s
+          .message
+            font-size text_s
+
+      .players
+        width 180px
+        float left
+        .user
+          border-top 5px #000 solid
+          width 50px
+          height 50px
+          float left
+          margin 0 10px 10px 0
+
+  .dash
+    position absolute
+    background #1a1a1a
+    top 0
+    right 0
+    width 256px
+    height 100%
+
     .user
-      border-top 5px #000 solid
-      width 50px
+      padding 10px
+      position relative
       height 50px
-      float left
-      margin 0 10px 10px 0
+      font-size text_m
+      line-height 40px
+      .level
+        font-size text_s
+        position absolute
+        top 10px
+        right 10px
+      img
+        float left
+        margin-right 10px
+      .progress
+        width 176px
+        height 10px
+        background #000
+        position absolute
+        right 10px
+        bottom 10px
+        .bar
+          background #fff
+          -webkit-transition width 0.6s ease
+          width 50%
+          height 100%
 
+    ul.actions
+      padding 10px
+      margin 0
+      background #333
+      list-style none
+      li
+        a
+          display block
+          background no-repeat left center
+          font-size text_m
+          padding 10px 0 10px 50px
+          margin 0 10px 
+          line-height 25px
+
+      .matchmaker a
+        background-image url(/images/icons/matchmake.png)
+      .host a
+        background-image url(/images/icons/host.png)
+
+    ul.remote_players
+      background #4d4d4d
+      margin 0
+      padding 10px
+      list-style none
+      overflow hidden
+      height 100%
+      li
+        float left
+        margin 0
+        padding 0
+        height 25px
+        margin 0 5px 5px 0
 
 .Aus
   border-color c_aus !important
@@ -79,3 +152,5 @@ text_s = 16px
   border-color c_ita !important
 .Tur
   border-color c_tur !important
+.Eng
+  border-color c_eng !important

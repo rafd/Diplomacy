@@ -50,13 +50,16 @@ define(['scripts/client/bootstrap.js'], function(){
 
         this.get('units').add(starting_locations);
 
+        user_index = [1,2,3,4,5,6,7,8,9,10,11]
+        user_index.sort(function() {return 0.5 - Math.random()})
+
         // TODO: should loop through this
         this.get('players').create({power:"Aus", user: window.user});
-        this.get('players').create({power:"Fra", user: RemoteUsers.at(1)});
-        this.get('players').create({power:"Ger", user: RemoteUsers.at(2)});
-        this.get('players').create({power:"Ita", user: RemoteUsers.at(3)});
-        this.get('players').create({power:"Rus", user: RemoteUsers.at(4)});
-        this.get('players').create({power:"Tur", user: RemoteUsers.at(5)});
+        this.get('players').create({power:"Fra", user: RemoteUsers.at(user_index[0])});
+        this.get('players').create({power:"Ger", user: RemoteUsers.at(user_index[1])});
+        this.get('players').create({power:"Ita", user: RemoteUsers.at(user_index[2])});
+        this.get('players').create({power:"Rus", user: RemoteUsers.at(user_index[3])});
+        this.get('players').create({power:"Tur", user: RemoteUsers.at(user_index[4])});
         // this.get('players').create({power:"Eng", user: RemoteUsers.at(6)});
 
         // create chatrooms using player permutations 
