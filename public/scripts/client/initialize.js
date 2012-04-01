@@ -12,27 +12,10 @@ define(['scripts/client/bootstrap.js'], function(){
 
 
     window.sign_in = function() { }
-    
-    random_user_specs = [
-      {
-        name: "Cliff",
-        avatar: "/images/cliff.jpg"
-      },
-      {
-        name: "Raf",
-        avatar: "/images/raf.jpg"
-      },
-      {
-        name: "Canna",
-        avatar: "/images/canna.jpg"
-      }
-    ]
 
     PLAYERS = ["Eng","Aus","Fra","Ger", "Ita", "Rus", "Tur"];
     PROVINCES = ["NAt","Nrg","Nth","Cly","Edi","Lvp","Yor","Wal","Lon","Iri"];
 
-
-    //window.user = new User(random_user_specs[Math.floor(Math.random() * random_user_specs.length)]);
 
     Splash = new SplashView();
 

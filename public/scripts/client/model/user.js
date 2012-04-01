@@ -7,15 +7,15 @@ define(['scripts/client/bootstrap.js'], function(){
     }
   });
 
-  USER_NAMES = ["Joe","Evert","Bob","George","Bruce","Milly","Sam","Evan","Jane","Jess","Ryan"];
-
+  USER_NAMES = ["Canna","Cliff","Evert","Franz","Joe","Kirill","Mark","Max","Raf","Winston","Woodrow"]
 
   UserCollection = Backbone.Collection.extend({
     model:User,
     url:'user',
     mock: function(){
       for(i in USER_NAMES){
-        this.create({name:USER_NAMES[i] + " " + Math.floor(Math.random()*100)});
+        NAME = USER_NAMES[i];
+        this.create({name:NAME + " " + Math.floor(Math.random()*100), slug:NAME.toLowerCase() });
       }
     }
   });

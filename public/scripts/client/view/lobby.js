@@ -53,6 +53,7 @@ define(['scripts/client/bootstrap.js'], function(){
 
   GameView = Backbone.View.extend({
     tagName: 'div',
+    className: 'game',
     template: T['game'],
     events: {
       "click a": "switchToGame"
@@ -82,7 +83,16 @@ define(['scripts/client/bootstrap.js'], function(){
 
       },
     render: function(){
-      $(this.el).html(this.template.r(this.model.toData()));
+      var player = this.model.get('players').ownedBy(user);
+      var power = null;
+      if(player)
+        power = player.get('power');
+      game_players = this.model.get('players').map(
+            function(p){ if(p.get('power') != power) return p.toData()}
+          );
+
+      console.log(game_players)
+      $(this.el).html(this.template.r({game:this.model.toData(),game_players:game_players,user_power:power}));
       return this;
     }
   });
