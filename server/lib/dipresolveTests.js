@@ -1,5 +1,44 @@
 //everything passes
 
+var units=[
+  {owner:"Aus",province:"Rum",utype:"A",order:{}},
+  {owner:"Fra",province:"Gre",utype:"A",order:{}},
+  {owner:"Eng",province:"Gre",utype:"A",order:{move:'r'}},
+  {owner:"Tur",province:"Kie",utype:"A",order:{}},
+  {owner:"Eng",province:"Kie",utype:"A",order:{move:'r'}},
+  {owner:"Tur",province:"Pru",utype:"A",order:{}},
+  {owner:"Eng",province:"Pru",utype:"A",order:{move:'r'}},
+
+  {owner:"Fra",province:"Tyr",utype:"A",order:{}},
+  {owner:"Aus",province:"Boh",utype:"A",order:{}},
+  {owner:"Eng",province:"Mun",utype:"A",order:{}},
+  {owner:"Ita",province:"Bud",utype:"A",order:{}},
+  {owner:"Rus",province:"Ser",utype:"A",order:{}},
+  {owner:"Eng",province:"Boh",utype:"A",order:{move:"r"}},//r
+  {owner:"Eng",province:"Bud",utype:"A",order:{move:"r"}},//d
+  {owner:"Eng",province:"Ser",utype:"A",order:{move:"r"}}//r
+  ];
+var disband=[
+  {owner:"Eng",province:"Mun",utype:"A",move:"disband"},
+  {owner:"Eng",province:"Bud",utype:"A",move:"disband"}
+  ];
+var retreat=[
+  {owner:"Eng",province:"Gre",utype:"A",move:"Bul"},
+  {owner:"Eng",province:"Kie",utype:"A",move:"Ber"},
+  {owner:"Aus",province:"Pru",utype:"A",move:"Ber"},
+
+  {owner:"Eng",province:"Boh",utype:"A",move:"Sil"},
+  {owner:"Eng",province:"Ser",utype:"A",move:"Bud"}
+  ];
+var spawn=[
+  {move: "new army",province:"Bul",owner:"Aus"},
+  {move: "new army",province:"Rum",owner:"Aus"},
+
+  {move: "new army",province:"Vie",owner:"Aus"}
+];
+units = secondaryResolve(units,disband,retreat,spawn)
+console.log(units)
+
 
 var GAME1={
   units : [  

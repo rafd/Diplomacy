@@ -996,15 +996,11 @@ function disbandUnits(units,disband)
   //u2 is list of units minus the ones disbanded
   var u2 = _.reject(units,function(u){
     //go through disband list
-    console.error("this is the unit")
-    console.error(u)
     for(var x in disband)
     {
-      console.error("disband list")
-      console.error(disband[x])
       //if provinces and owners match
       if(disband[x].province == u.province
-        && u[x].owner == disband[x].owner)
+        && u.owner == disband[x].owner)
         return true;//return true to reject
     }
     return false;//return false to keep
@@ -1017,8 +1013,7 @@ function addRemoveUnits(units,retreat,spawn)
   //are there existing units in retreat or spawn locations?
   retreat = _.reject(retreat,function(r){
     var found = _.find(units,function(u){
-      if(u.province==retreat[x].province
-        && u.owner==retreat[x].owner)
+      if(u.province==r.move)
         return true;
       return false;
     });
@@ -1026,10 +1021,9 @@ function addRemoveUnits(units,retreat,spawn)
       return true;
     return false;
   });
-  spawn = _.reject(spawn,function(r){
+  spawn = _.reject(spawn,function(s){
     var found = _.find(units,function(u){
-      if(u.province==spawn[x].province
-        && u.owner==spawn[x].owner)
+      if(u.province==s.province)
         return true;
       return false;
     });
@@ -1041,12 +1035,12 @@ function addRemoveUnits(units,retreat,spawn)
   for(var x in retreat)
   {
     //TODO: make sure it's a legal move
-      MAP[retreat[x].move].combatlist.add(retreat[x]);
+      MAP[retreat[x].move].combatlist.push(retreat[x]);
   }
   for(var x in spawn)
   {
     //TODO: make sure it's a legal move
-      MAP[spawn[x].province].combatlist.add(spawn[x]);
+      MAP[spawn[x].province].combatlist.push(spawn[x]);
   }
 
   //two or more units in combatlist: do not add
@@ -1056,12 +1050,14 @@ function addRemoveUnits(units,retreat,spawn)
   {
     var cl = MAP[x].combatlist
     if(cl.length>1)
+    {
       for(var y in cl)
         //this was a spawn move
-        if(cl[y].utype!=undefined)
+        if(cl[y].utype==undefined)
           noSpawn.push(cl[y]);
         else//if it was a retreat move
           noRetreat.push(cl[y]);
+    }
   }
   //these are the units we must add
   var endS=_.difference(spawn,noSpawn);
@@ -1069,6 +1065,7 @@ function addRemoveUnits(units,retreat,spawn)
 
   for(var x in endS)
   {
+    var move = endS[x].move;
     if(move=="new army")
     {
       units.push({
@@ -1137,7 +1134,6 @@ DipResolve = {
   countSupply: countSupply,
   secondaryResolve: secondaryResolve
 }
-
 
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = DipResolve;
