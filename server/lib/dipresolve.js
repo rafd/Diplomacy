@@ -996,11 +996,17 @@ function disbandUnits(units,disband)
   //u2 is list of units minus the ones disbanded
   var u2 = _.reject(units,function(u){
     //go through disband list
+    console.error("this is the unit")
+    console.error(u)
     for(var x in disband)
+    {
+      console.error("disband list")
+      console.error(disband[x])
       //if provinces and owners match
       if(disband[x].province == u.province
-        && u[x].owner == disband[x].province)
+        && u[x].owner == disband[x].owner)
         return true;//return true to reject
+    }
     return false;//return false to keep
   });
   return u2;
@@ -1066,19 +1072,19 @@ function addRemoveUnits(units,retreat,spawn)
     if(move=="new army")
     {
       units.push({
-        owner: endS[x].owner;
-        province: endS[x].province;
-        utype: "a";
-        order: {};
+        owner: endS[x].owner,
+        province: endS[x].province,
+        utype: "a",
+        order: {}
       });
     }
     else if(move=="new fleet")
     {
       units.push({
-        owner: endS[x].owner;
-        province: endS[x].province;
-        utype: "f";
-        order: {};
+        owner: endS[x].owner,
+        province: endS[x].province,
+        utype: "f",
+        order: {}
       });
     }
     else
@@ -1090,10 +1096,10 @@ function addRemoveUnits(units,retreat,spawn)
   for(var x in endR)
   {
     units.push({
-      owner: endR[x].owner;
-      province: endR[x].move;
-      utype: endR[x].utype;
-      order: {};
+      owner: endR[x].owner,
+      province: endR[x].move,
+      utype: endR[x].utype,
+      order: {}
     });
   }
 
