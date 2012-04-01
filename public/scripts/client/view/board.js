@@ -167,7 +167,7 @@ define(['scripts/client/bootstrap.js'], function(){
     events: {
       "click .submit" : "parseOrders",
       "click .resolve" : "resolveMoves",
-      "click .resolvetwo": "resolveMoves",
+      "click .resolvetwo": "resolveMovesTwo",
       "click .submittwo" : "parseSecondary",
       "change select.move" : "clickedMove",
       "change select.from" : "clickedMove"
@@ -291,7 +291,7 @@ define(['scripts/client/bootstrap.js'], function(){
           //find my current country
           var power = window.current_player.attributes.power;
           //find how many supply centers I should have
-          var mySupply=3;//supply[power];
+          var mySupply=supply[power];
           //find how many units I have
           var unitList=[];
           //do I have any retreats
@@ -361,10 +361,17 @@ define(['scripts/client/bootstrap.js'], function(){
         this.player.spawnorders,
         this.player.disbandorders,
         _.bind(
-        function(err,units){
-            this.render();
+        function(err,data)
+        {
+          var d=[]
+          for(var x in data)
+          {
+            if(data[x].owner==window.current_player.attributes.power)
+              d.push(data[x]);
           }
-        ,
+          _.flatten(d,true);
+          $(e.target).parent().replaceWith(T['order_submit'].r({units:d}));
+        },
         this));
     },
     clickedMove: function(e){

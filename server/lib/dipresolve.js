@@ -948,7 +948,7 @@ function resetVars(units)
   }
 }
 
-function DipResolve(units)
+function resolve(units)
 {
   //sanity test: are orders legal?
   //1. unit can move there
@@ -975,17 +975,6 @@ function DipResolve(units)
   return units;
 }
 
-function resolveRetreats(units)
-{
-  //disband units that try to retreat into occupied/illegal spaces
-  //disband units that voluntarily disband
-  //create combatlist for units trying to retreat
-  //if there is only one player on the combatlist, player is allowed to move
-  //if two players on combatlist, both are disbanded
-  //clear orders
-  //return new units list
-}
-
 function countSupply(units)
 {
   var supply = {"Aus":0,"Eng":0,"Fra":0,"Ger":0,"Ita":0,"Rus":0,"Tur":0};
@@ -1002,15 +991,42 @@ function countSupply(units)
   return supply;
 }
 
-var GAME3={
-  units : [  
-    {owner: "Eng", province: "NAt", utype: "F", order: {move: "m", from: "NAt", to: "Nrg", tag: "", support: 0} },
-    {owner: "Aus", province: "Edi", utype: "F", order: {move: "s", from: "NAt", to: "Nrg", tag: "", support: 0} },
-    {owner: "Fra", province: "Nrg", utype: "F", order: {move: "h", from: "Nrg", to: "Nrg", tag: "", support: 0} },
-  ]
+function disbandUnits(units,disband)
+{
+  
+  return units;
 }
 
-console.log(DipResolve(GAME3.units))
+function addRemoveUnits(units,retreat,spawn)
+{
+  return units;
+}
+
+function secondaryResolve(units,disband,retreat,spawn)
+{
+  /*console.log("secondary resolve")
+  console.log(units)
+  console.log(disband)
+  console.log(retreat)
+  console.log(spawn)*/
+  var u = disbandUnits(units,disband);
+  return addRemoveUnits(u,retreat,spawn);
+
+  //disband units that try to retreat into occupied/illegal spaces
+  //disband units that voluntarily disband
+  //create combatlist for units trying to retreat
+  //if there is only one player on the combatlist, player is allowed to move
+  //if two players on combatlist, both are disbanded
+  //clear orders
+  //return new units list
+
+}
+
+DipResolve = {
+  resolve: resolve,
+  countSupply: countSupply,
+  secondaryResolve: secondaryResolve
+}
 
 
 if (typeof module !== 'undefined' && module.exports) {

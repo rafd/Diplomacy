@@ -1,7 +1,10 @@
 exports.create = function(mongoose) {
 
   return mongoose.model('Player', new mongoose.Schema({
-    orders:[]
+    orders:[],
+    disbandorders:[],
+    spawnorders:[],
+    retreatorders:[]
   }));
 
 }

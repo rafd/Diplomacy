@@ -172,7 +172,7 @@ io.sockets.on('connection', function (socket) {
           })
         );
         var end = _.uniq(holds.concat(combined),false,function(u){ return u.province });
-        var units = dipresolve(end);
+        var units = dipresolve.resolve(end);
 
         //remove orders from players
         model["player"].update({"_id": {$in:game.players}}, {orders:[]}, { multi: true }, function(err,num){});
@@ -180,7 +180,7 @@ io.sockets.on('connection', function (socket) {
         game.units=units;
         game.save();
         //TODO: broadcast updated game state to all clients
-        var supply = 0;//countsupply(units);
+        var supply = dipresolve.countSupply(units);
 
         //informing client that called us
         cb(null,units,supply);
@@ -190,7 +190,7 @@ io.sockets.on('connection', function (socket) {
 
   });
 
-  socket.on('game:resolvetwo', function(gameID, cb){
+  socket.on('game:resolvetwo', function(gameID, playerID,retreatOrders,spawnOrders,disbandOrders, cb){
     console.log("Game resolving");
     //get units for gameID from mongoose
 
@@ -198,37 +198,44 @@ io.sockets.on('connection', function (socket) {
 
     _model.findOne({'_id':gameID}, function(err, game){
 
-      model["player"].find({}).where("_id").in(game.players).select('orders power').exec(function(er, data){
-        //var orders=[];
-        var u = game.units;
-        var combined = _.flatten(_.map(data, function(doc){ return doc.orders }),true);
-        var provinces_with_orders = _.map(combined, function(order){return order.province});
-        var holds = _.compact(_.map(u,function(unit){ 
-            if(-1 == _.indexOf(provinces_with_orders, unit.province)){
-              return { 
-                province: unit.province,  
-                utype: unit.utype,
-                owner: unit.owner,
-                order: { to: unit.province, from: unit.province, move: 'h' } 
-              }
-            }
-          })
-        );
-        var end = _.uniq(holds.concat(combined),false,function(u){ return u.province });
-        var units = dipresolve(end);
+      model["player"].find({}).where("_id").in(game.players).select('retreatorders spawnorders disbandorders power').exec(function(er, data){
+        var toDisband=[];
+        var toRetreat=[];
+        var toSpawn=[];
+        //resolve disband orders
+        //resolve spawn and retreat
+        for (var x in data)
+        {
+          toDisband.push(data[x].disbandorders);
+          toRetreat.push(data[x].retreatorders);
+          toSpawn.push(data[x].spawnorders);
+        }
 
-        var supply = 0;//countsupply(units);
+        toDisband=_.flatten(toDisband,true);
+        toRetreat=_.flatten(toRetreat,true);
+        toSpawn=_.flatten(toSpawn,true);
 
+        var u = _.flatten(game.units);        
+        var end = dipresolve.secondaryResolve(u,toDisband,toRetreat,toSpawn);
 
         //remove orders from players
-        model["player"].update({"_id": {$in:game.players}}, {orders:[]}, { multi: true }, function(err,num){});
+        model["player"].update(
+          {"_id": {$in:game.players}},
+          {
+            disbandorders:[],
+            retreatorders:[],
+            spawnorders:[]
+          },
+          { multi: true },
+          function(err,num){console.log(num)}
+        );
 
-        game.units=units;
+        game.units=end;
         game.save();
         //TODO: broadcast updated game state to all clients
 
         //informing client that called us
-        cb(null,units);
+        cb(null,end);
 
         
 
