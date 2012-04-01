@@ -253,7 +253,7 @@ define(['scripts/client/bootstrap.js'], function(){
               });
             x+=4;
         } 
-        /*else*/ if(data[x].name=="name" && data[x].value=="disband")
+        else if(data[x].name=="name" && data[x].value=="disband")
         {
           var move = data[x+4].value;
           if(move!='hold')
@@ -306,15 +306,17 @@ define(['scripts/client/bootstrap.js'], function(){
               unitList.push(units[x]);
             }
           }
-          retreatList=unitList;
+
+          console.log(unitList)
+          console.log(mySupply)
           var numUnits=unitList.length;
 
-          //if(retreatList.length > 0)
+          if(retreatList.length > 0)
           {
             u.msg1="You must retreat";
             u.retreat=retreatList;
           }
-          //if(numUnits < mySupply)
+          if(numUnits < mySupply)
           {
             var x = mySupply-numUnits;
 
@@ -328,7 +330,7 @@ define(['scripts/client/bootstrap.js'], function(){
             u.spawn=spawnPoints;
           }
 
-          //if(numUnits > mySupply)
+          if(numUnits > mySupply)
           {
             var x = numUnits-mySupply;
             u.msg3="Select "+x+" unit(s) to disband";
@@ -337,6 +339,7 @@ define(['scripts/client/bootstrap.js'], function(){
 
           //update board with returned state
           this.game.set({units:units});//owner, utype, prov, move
+          this.game.save();
           //this.render();
           /*$(e.target).parent().replaceWith(T['order_submit_unit'].r({units:units}));*/
           if(u.length!=0)
@@ -371,12 +374,17 @@ define(['scripts/client/bootstrap.js'], function(){
               d.push(data[x]);
           }
           _.flatten(d,true);
-          $(e.target).parent().replaceWith(T['order_submit'].r({units:d}));
+
+          //update UI
+          this.game.set({units:data});//owner, utype, prov, move
+          this.game.save();
+          this.render();
+
         },
         this));
     },
     clickedMove: function(e){
-      prov = $(e.target).parent().find("[name='prov']").val();
+      var prov = $(e.target).parent().find("[name='prov']").val();
       var u= _.select(this.units.toData(), function(unit) { return unit.province == prov});
       //var m=_.clone(window.MAP[prov]);
       var s=0;

@@ -411,7 +411,7 @@ MAP = {
   StP:  {fullname: "St. Petersburg",
         army_moves: ["Nwy","Fin","Lvn","Mos"],
         fleet_moves: [],
-        belongsto: "Rus",
+        belongsto: "",
         supply: 1,
         combatlist: []
       },
@@ -426,7 +426,7 @@ MAP = {
   StPS:  {fullname: "St. Petersburg South Coast",
         army_moves: [],
         fleet_moves: ["Lvn","Fin","Bot"],
-        belongsto: "Rus",
+        belongsto: "",
         supply: 1,
         combatlist: []
       },
@@ -465,7 +465,7 @@ MAP = {
         fleet_moves: ["Bla","Rum","Arm"],
         belongsto: "Rus",
         spawn:"Rus",
-        supply: 0,
+        supply: 1,
         combatlist: []
       },
   Gal:  {fullname: "Galicia",
@@ -924,7 +924,54 @@ function finalBoard(units)
       var u = unit(cl[0],units)
       if(u.order.move=="m")
         u.province=u.order.to;
-      MAP[x].belongsto=u.order.owner;
+
+      if(x=="StP")
+      {
+        MAP["StPN"].belongsto="";
+        MAP["StPS"].belongsto="";
+      }
+      else if(x=="StPN")
+      {
+        MAP["StP"].belongsto="";
+        MAP["StPS"].belongsto="";
+      }
+      else if(x=="StPS")
+      {
+        MAP["StPN"].belongsto="";
+        MAP["StP"].belongsto="";
+      }
+      else if(x=="Spa")
+      {
+        MAP["SpaN"].belongsto="";
+        MAP["SpaS"].belongsto="";
+      }
+      else if(x=="SpaN")
+      {
+        MAP["Spa"].belongsto="";
+        MAP["SpaS"].belongsto="";
+      }
+      else if(x=="SpaS")
+      {
+        MAP["SpaN"].belongsto="";
+        MAP["Spa"].belongsto="";
+      }
+      else if(x=="Bul")
+      {
+        MAP["BulN"].belongsto="";
+        MAP["BulS"].belongsto="";
+      }
+      else if(x=="BulN")
+      {
+        MAP["Bul"].belongsto="";
+        MAP["BulS"].belongsto="";
+      }
+      else if(x=="BulS")
+      {
+        MAP["BulN"].belongsto="";
+        MAP["Bul"].belongsto="";
+      }
+      
+      MAP[x].belongsto=u.owner;
     }
     else if(MAP[x].combatlist.length>1)
     {
@@ -980,14 +1027,16 @@ function countSupply(units)
   var supply = {"Aus":0,"Eng":0,"Fra":0,"Ger":0,"Ita":0,"Rus":0,"Tur":0};
 
   //count how many supply center each have
-  for (var x in units)
+  for (var x in MAP)
   {
-    var prov = units[x].province;
-    var owner = units[x].owner;
-    if(MAP[prov].supply)//if prov is a supply prov
-      supply[owner]++;//one more unit
+    var mapOwner=MAP[x].belongsto;
+    if(MAP[x].supply==1)
+    {
+      if(MAP[x].belongsto=="Rus")
+        console.log(x);
+      supply[MAP[x].belongsto]++;
+    }
   }
-
   return supply;
 }
 
@@ -1039,8 +1088,12 @@ function addRemoveUnits(units,retreat,spawn)
   }
   for(var x in spawn)
   {
+/*    console.error("spawn x")
+    console.error(spawn[x]);*/
     //TODO: make sure it's a legal move
       MAP[spawn[x].province].combatlist.push(spawn[x]);
+      /*console.error("cl")
+      console.error(MAP[spawn[x].province].combatlist) */
   }
 
   //two or more units in combatlist: do not add
@@ -1057,6 +1110,62 @@ function addRemoveUnits(units,retreat,spawn)
           noSpawn.push(cl[y]);
         else//if it was a retreat move
           noRetreat.push(cl[y]);
+    }
+    else if(cl.length==1)
+    {
+      /*console.error("x")
+      console.error(x);
+      console.error("cl")
+      console.error(cl);
+      console.error("end")*/
+              
+      if(x=="StP")
+      {
+        MAP["StPN"].belongsto="";
+        MAP["StPS"].belongsto="";
+      }
+      else if(x=="StPN")
+      {
+        MAP["StP"].belongsto="";
+        MAP["StPS"].belongsto="";
+      }
+      else if(x=="StPS")
+      {
+        MAP["StPN"].belongsto="";
+        MAP["StP"].belongsto="";
+      }
+      else if(x=="Spa")
+      {
+        MAP["SpaN"].belongsto="";
+        MAP["SpaS"].belongsto="";
+      }
+      else if(x=="SpaN")
+      {
+        MAP["Spa"].belongsto="";
+        MAP["SpaS"].belongsto="";
+      }
+      else if(x=="SpaS")
+      {
+        MAP["SpaN"].belongsto="";
+        MAP["Spa"].belongsto="";
+      }
+      else if(x=="Bul")
+      {
+        MAP["BulN"].belongsto="";
+        MAP["BulS"].belongsto="";
+      }
+      else if(x=="BulN")
+      {
+        MAP["Bul"].belongsto="";
+        MAP["BulS"].belongsto="";
+      }
+      else if(x=="BulS")
+      {
+        MAP["BulN"].belongsto="";
+        MAP["Bul"].belongsto="";
+      }
+      
+      MAP[x].belongsto = cl.owner;
     }
   }
   //these are the units we must add
@@ -1099,6 +1208,14 @@ function addRemoveUnits(units,retreat,spawn)
       order: {}
     });
   }
+
+  //clear combatlist
+  for(var x in MAP)
+  {
+    MAP[x].combatlist=[];
+  }
+
+  //update belongsto of map
 
   return units;
 }

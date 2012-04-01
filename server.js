@@ -215,7 +215,13 @@ io.sockets.on('connection', function (socket) {
         toRetreat=_.flatten(toRetreat,true);
         toSpawn=_.flatten(toSpawn,true);
 
-        var u = _.flatten(game.units);        
+        var u = _.flatten(game.units);
+        /*console.log("disband")
+        console.log(toDisband)
+        console.log("retreat")
+        console.log(toRetreat)
+        console.log("spawn")
+        console.log(toSpawn)  */    
         var end = dipresolve.secondaryResolve(u,toDisband,toRetreat,toSpawn);
 
         //remove orders from players
