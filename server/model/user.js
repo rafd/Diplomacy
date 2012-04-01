@@ -1,6 +1,15 @@
 exports.create = function(mongoose) {
 
-  return mongoose.model('User', new mongoose.Schema({}));
+ var new_schema = new mongoose.Schema();
+
+  new_schema.add({
+      name:"",
+      email:"",
+    });
+
+  return mongoose.model('User', new_schema);
+
+  // return mongoose.model('User', new mongoose.Schema({}));
 
 }
 

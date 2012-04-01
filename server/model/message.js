@@ -1,6 +1,23 @@
 exports.create = function(mongoose) {
 
-  return mongoose.model('Message', new mongoose.Schema({}));
+  var new_schema = new mongoose.Schema();
+
+  new_schema.add({
+    content:"",
+    username:"",
+    htmlId:"",
+    created_at:"" //needed?
+  })
+
+  // new_schema.pre('save', function (next) {
+  //   console.log('\n\n\nawegaweg\n\n\n')
+  //   this.updated_at = new Date
+  //   next()
+  // })
+
+  return mongoose.model('Message', new_schema);
+
+  // return mongoose.model('Message', new mongoose.Schema({}));
 
 }
 

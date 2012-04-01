@@ -1,13 +1,29 @@
 exports.create = function(mongoose) {
 
-  return mongoose.model('Game', new mongoose.Schema({
+  var new_schema = new mongoose.Schema();
+
+  new_schema.add({
       name:String,
+      chatrooms:[],
+      turns:[],
+      status:"",
       players:[],
       units:[]
-    })
-  );
+    });
+
+  return mongoose.model('Game', new_schema);
+
+
+  // return mongoose.model('Game', new mongoose.Schema({
+  //     name:String,
+  //     players:[],
+  //     units:[]
+  //   })
+  // );
 
 }
+
+
 
 /*
 

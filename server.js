@@ -8,6 +8,9 @@ var express = require('express')
   , hedgehog = require('./server/lib/hedgehog')
   , fs = require('fs')
   , dipresolve = require('./server/lib/dipresolve')
+  // , mongooseTypes = require('mongoose-types')
+  // , useTimestamps = mongooseTypes.useTimestamps;
+
 
 var 
     MODEL_PATH  = './server/model/'
@@ -105,6 +108,8 @@ app.get('/', function(req, res) {
 app.get('/test', function(req, res) {
   res.render('test.jade', {title: 'Diplomacy'});
 });
+
+var user_sockets = {};
 
 io.sockets.on('connection', function (socket) {
 
@@ -224,14 +229,20 @@ io.sockets.on('connection', function (socket) {
   socket.on('user:login', function(args, cb){
     var _model = model['user'];
 
+    var login = function(doc){
+      user_sockets[doc._id] = socket;
+      socket.set('user_id', doc._id, function(){
+        cb(null,doc);
+      });
+    }
+
     _model.findOne({email: args.email}, function(err, doc){ 
 
       // if username exists
       if(doc){
         // if passphrase correct
         if(args.passphrase == doc.passphrase){
-          // return user id 
-          cb(null, doc);
+          login(doc)
         }
         // else (passphrase incorrect)
         else {
@@ -246,7 +257,7 @@ io.sockets.on('connection', function (socket) {
         doc.save();
 
         // return user id
-        cb(null, doc);
+        login(doc)
       }
 
     });
@@ -295,6 +306,7 @@ io.sockets.on('connection', function (socket) {
           args.data._id =  mongoose.Types.ObjectId.fromString(args.data._id);
           newEntry = new _model(args.data);
           newEntry.save();
+          //broadcast update to all players
         }
         break;
 
@@ -302,7 +314,42 @@ io.sockets.on('connection', function (socket) {
         if(args.data){
           id = mongoose.Types.ObjectId.fromString(args.data._id);
           delete args.data["_id"];
-          _model.update({_id: id}, args.data, {}, function(e,num){console.log(num)})
+          _model.findOne({_id: id}, function(e,doc){
+            if (doc){
+              _.extend(doc, args.data)
+              doc.save(function cb(err){
+                if (err) console.log(err);
+                //save complete
+              })
+            }
+            else console.log('no doc to update')
+          })
+          // _model.update({_id: id}, args.data, {}, function(e,num){
+          //   // console.log(args.collection, id, args.data)
+          //   switch(args.collection){
+          //     case 'player':
+          //       model['game'].findOne({'players': mongoose.Types.ObjectId.toString(id)}, function(err, game){
+          //         _.each(game.players, function(player_id){
+          //           // model['player'].testf();
+          //           model['player'].findOne({'_id':player_id}, function(err, doc){
+          //             console.log(doc.user);
+          //           });
+          //         });
+          //       });
+          //       break;
+          //     case 'chatroom':
+          //     case 'game':
+          //     //Need to filter out game commands sends
+          //       // console.log()
+          //       _.each(args.data.players, function(player_id){
+          //         // console.log('playerid', player_id)
+          //         model['player'].findOne({'_id':player_id}, function(err, doc){
+          //           console.log(doc.user);
+          //         });
+          //       });
+          //       break;
+          //   }
+          // })
         }
 
         break;
@@ -315,9 +362,17 @@ io.sockets.on('connection', function (socket) {
         break;
     }
     
-  })
+  });
+
+  socket.on('disconnect', function(){
+    socket.get('user_id', function(err, user_id){
+      delete user_sockets[user_id];
+    });
+  });
 
 });
+
+  
 
 // RUN
 

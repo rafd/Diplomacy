@@ -1,10 +1,32 @@
 exports.create = function(mongoose) {
 
-  return mongoose.model('Player', new mongoose.Schema({
-    orders:[]
-  }));
+
+  var new_schema = new mongoose.Schema();
+
+  new_schema.add({
+    orders:[],
+    messages:[],
+    chatrooms:[],
+    user:"",
+    power:"",
+    updated_at: Date
+  });
+
+  new_schema.pre('save', function (next) {
+    console.log('\n\n\nawegaweg\n\n\n')
+    this.updated_at = new Date
+    next()
+  })
+
+
+  return mongoose.model('Player', new_schema);
 
 }
+
+  // return mongoose.model('Player', new mongoose.Schema({
+  //   orders:[],
+  //   user:""
+  // }));
 
 /*
 
