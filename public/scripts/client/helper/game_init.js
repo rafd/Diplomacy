@@ -445,7 +445,7 @@ window.MAP = {
   StP:  {fullname: "St. Petersburg",
         army_moves: ["Nwy","Fin","Lvn","Mos"],
         fleet_moves: [],
-        belongsto: "Rus",
+        belongsto: "",
         supply: 1,
         combatlist: []
       },
@@ -460,7 +460,7 @@ window.MAP = {
   StPS:  {fullname: "St. Petersburg South Coast",
         army_moves: [],
         fleet_moves: ["Lvn","Fin","Bot"],
-        belongsto: "Rus",
+        belongsto: "",
         supply: 1,
         combatlist: []
       },
@@ -499,7 +499,7 @@ window.MAP = {
         fleet_moves: ["Bla","Rum","Arm"],
         belongsto: "Rus",
         spawn:"Rus",
-        supply: 0,
+        supply: 1,
         combatlist: []
       },
   Gal:  {fullname: "Galicia",

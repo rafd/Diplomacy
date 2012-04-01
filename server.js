@@ -172,15 +172,16 @@ io.sockets.on('connection', function (socket) {
           })
         );
         var end = _.uniq(holds.concat(combined),false,function(u){ return u.province });
-        var units = dipresolve.resolve(end);
-
+        var u = dipresolve.resolve(end,game.map);
+        game.map = u.MAP;
+        var units=u.units;
         //remove orders from players
         model["player"].update({"_id": {$in:game.players}}, {orders:[]}, { multi: true }, function(err,num){});
         
         game.units=units;
         game.save();
         //TODO: broadcast updated game state to all clients
-        var supply = dipresolve.countSupply(units);
+        var supply = dipresolve.countSupply(units,game.map);
 
         //informing client that called us
         cb(null,units,supply);
@@ -222,8 +223,9 @@ io.sockets.on('connection', function (socket) {
         console.log(toRetreat)
         console.log("spawn")
         console.log(toSpawn)  */    
-        var end = dipresolve.secondaryResolve(u,toDisband,toRetreat,toSpawn);
-
+        var e = dipresolve.secondaryResolve(u,toDisband,toRetreat,toSpawn,game.map);
+        game.map = e.MAP;
+        var end = e.units;
         //remove orders from players
         model["player"].update(
           {"_id": {$in:game.players}},

@@ -41,7 +41,8 @@ define(['scripts/client/bootstrap.js'], function(){
         this.set({
           name: spec.name || "Game "+Math.floor(100*Math.random()),
           created_at: new Date().getTime(),
-          status: "pregame"
+          status: "pregame",
+          map: window.MAP
         });
 
 

@@ -3,7 +3,8 @@ exports.create = function(mongoose) {
   return mongoose.model('Game', new mongoose.Schema({
       name:String,
       players:[],
-      units:[]
+      units:[],
+      map:{}
     })
   );
 
