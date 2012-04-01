@@ -993,8 +993,17 @@ function countSupply(units)
 
 function disbandUnits(units,disband)
 {
-  
-  return units;
+  //u2 is list of units minus the ones disbanded
+  var u2 = _.reject(units,function(u){
+    //go through disband list
+    for(var x in disband)
+      //if provinces and owners match
+      if(disband[x].province == u.province
+        && u[x].owner == disband[x].province)
+        return true;//return true to reject
+    return false;//return false to keep
+  });
+  return u2;
 }
 
 function addRemoveUnits(units,retreat,spawn)
