@@ -1008,6 +1008,95 @@ function disbandUnits(units,disband)
 
 function addRemoveUnits(units,retreat,spawn)
 {
+  //are there existing units in retreat or spawn locations?
+  retreat = _.reject(retreat,function(r){
+    var found = _.find(units,function(u){
+      if(u.province==retreat[x].province
+        && u.owner==retreat[x].owner)
+        return true;
+      return false;
+    });
+    if(found!=undefined)
+      return true;
+    return false;
+  });
+  spawn = _.reject(spawn,function(r){
+    var found = _.find(units,function(u){
+      if(u.province==spawn[x].province
+        && u.owner==spawn[x].owner)
+        return true;
+      return false;
+    });
+    if(found!=undefined)
+      return true;
+    return false;
+  });
+  //add each spawn and retreat to combatlist of map
+  for(var x in retreat)
+  {
+    //TODO: make sure it's a legal move
+      MAP[retreat[x].move].combatlist.add(retreat[x]);
+  }
+  for(var x in spawn)
+  {
+    //TODO: make sure it's a legal move
+      MAP[spawn[x].province].combatlist.add(spawn[x]);
+  }
+
+  //two or more units in combatlist: do not add
+  var noSpawn=[];
+  var noRetreat=[];
+  for(var x in MAP)
+  {
+    var cl = MAP[x].combatlist
+    if(cl.length>1)
+      for(var y in cl)
+        //this was a spawn move
+        if(cl[y].utype!=undefined)
+          noSpawn.push(cl[y]);
+        else//if it was a retreat move
+          noRetreat.push(cl[y]);
+  }
+  //these are the units we must add
+  var endS=_.difference(spawn,noSpawn);
+  var endR=_.difference(retreat,noRetreat);
+
+  for(var x in endS)
+  {
+    if(move=="new army")
+    {
+      units.push({
+        owner: endS[x].owner;
+        province: endS[x].province;
+        utype: "a";
+        order: {};
+      });
+    }
+    else if(move=="new fleet")
+    {
+      units.push({
+        owner: endS[x].owner;
+        province: endS[x].province;
+        utype: "f";
+        order: {};
+      });
+    }
+    else
+    {
+      console.log("ERROR IN ADDING UNIT - TYPE DOES NOT EXIST");
+    }
+  }
+
+  for(var x in endR)
+  {
+    units.push({
+      owner: endR[x].owner;
+      province: endR[x].move;
+      utype: endR[x].utype;
+      order: {};
+    });
+  }
+
   return units;
 }
 
@@ -1018,6 +1107,12 @@ function secondaryResolve(units,disband,retreat,spawn)
   console.log(disband)
   console.log(retreat)
   console.log(spawn)*/
+
+  //if tehre are units move=r, remove them from units
+  units = _.reject(units,function(u){
+    return u.order.move=="r";
+  })
+
   var u = disbandUnits(units,disband);
   return addRemoveUnits(u,retreat,spawn);
 

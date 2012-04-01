@@ -245,11 +245,12 @@ define(['scripts/client/bootstrap.js'], function(){
         }
         if(data[x].name=="name" && data[x].value=="spawn")
         {
-          spawnOrders.push({
-            "owner":data[x+1].value,
-            "province":data[x+2].value,
-            "move":data[x+3].value
-            });
+          if(data[x+3].value!="no new unit")
+            spawnOrders.push({
+              "owner":data[x+1].value,
+              "province":data[x+2].value,
+              "move":data[x+3].value
+              });
             x+=4;
         } 
         /*else*/ if(data[x].name=="name" && data[x].value=="disband")
