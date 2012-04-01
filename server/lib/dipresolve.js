@@ -2,21 +2,14 @@ _=require("../../public/scripts/vendor/underscore.min");
 
 //constants.
 
-
 COUNTRY = ["Aus","Eng","Fra","Ger","Ita","Rus","Tur"];
 
-
-
 //utility functions
-
-
-
 
 function sameToFrom(x,y)
 {
   return (x.order.from==y.order.from) && (x.order.to==y.order.to)
 }
-
 
 function validMove(unit,MAP)
 {
@@ -88,7 +81,8 @@ function markCutSupport(units)
   //for all units
   for(var x in units)
   {
-    var existingUnit=unit(units[x].order.to,units);
+    var to = units[x].order.to;
+    var existingUnit=unit(to,units);
 
     //there is no existing unit
     if(existingUnit==null)
@@ -333,7 +327,7 @@ function finalBoard(units,MAP)
       var u = unit(cl[0],units)
       if(u.order.move=="m")
         u.province=u.order.to;
-
+/*
       if(x=="StP")
       {
         MAP["StPN"].belongsto="";
@@ -379,7 +373,7 @@ function finalBoard(units,MAP)
         MAP["BulN"].belongsto="";
         MAP["Bul"].belongsto="";
       }
-      
+      */
       MAP[x].belongsto=u.owner;
     }
     else if(MAP[x].combatlist.length>1)
@@ -406,8 +400,6 @@ function resetVars(units,MAP)
 
 function resolve(units,MAP)
 {
-  console.log("resolve")
-  console.log(MAP);
   //sanity test: are orders legal?
   //1. unit can move there
   //2. order is from valid province
@@ -529,7 +521,7 @@ function addRemoveUnits(units,retreat,spawn,MAP)
       console.error("cl")
       console.error(cl);
       console.error("end")*/
-              
+         /*     
       if(x=="StP")
       {
         MAP["StPN"].belongsto="";
@@ -575,7 +567,7 @@ function addRemoveUnits(units,retreat,spawn,MAP)
         MAP["BulN"].belongsto="";
         MAP["Bul"].belongsto="";
       }
-      
+      */
       MAP[x].belongsto = cl.owner;
     }
   }
