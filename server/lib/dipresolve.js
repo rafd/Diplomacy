@@ -167,11 +167,16 @@ function resolveStrengths(units,MAP)
           sup[y]={ prov: MAP[x].combatlist[y],
             sup: unit(MAP[x].combatlist[y], units).order.support };
         }
+        //if(x=="Gal")
+          //console.log(sup);
         //find max supply number
         var max = _.max(sup,function(s){ return s.sup; });
+        //console.log("max")
+        //console.log(max);
         //find all who have max
         var top = _.select(sup,function(s){ return s.sup==max.sup; });
-
+        //console.log("top")
+        //console.log(top)
         if(top.length!=sup.length)//if not all the same number
         {
           //all units less than max should be invalidated
@@ -204,7 +209,7 @@ function resolveStrengths(units,MAP)
     }
   }
 
-  //assume everyone tied should be put on hold
+  //assume everyone tied should be put on hold if they arent already
   for(var x in MAP)
   {
     var cl = MAP[x].combatlist;
@@ -215,7 +220,13 @@ function resolveStrengths(units,MAP)
       {
         var prov = cl[y];
         //move onto its own list combat as hold
-        MAP[prov].combatlist.push(prov);
+        //if it is a move
+        if(unit(prov,units).order.move=="m")
+        {
+          MAP[prov].combatlist.push(prov);
+          MAP[x].combatlist = _.reject(MAP[x].combatlist,function(p){return p==prov;});//not working?
+        }
+        //if it is a tie
         //mark the unit as hold
         invalidateUnit(unit(prov,units),"tied");
       }
@@ -235,7 +246,6 @@ function initialResolve(units,MAP)
     else if(units[x].order.move=="s" || units[x].order.move=="h")
       MAP[units[x].province].combatlist.push(units[x].province);
   }
-
   cannotSwapSpaces(units);
   resolveStrengths(units,MAP);
 }
@@ -257,6 +267,7 @@ function finalResolve(units,MAP)
         if(MAP[x].combatlist.length>1)
         {
           var sup=[];
+
           //count each prov's supply
           for(var y in MAP[x].combatlist)
           {
@@ -268,8 +279,15 @@ function finalResolve(units,MAP)
           //find max supply number
           var max = _.max(sup,function(s){ return s.sup; });
           //find all who have max
-          var top = _.select(sup,function(s){ return s.sup==max; });
-
+          var top = _.select(sup,function(s){ return s.sup==max.sup; });
+          /*console.log("max")
+          console.log(max)
+          console.log("cl");
+          console.log(MAP[x].combatlist)
+          console.log("sup")
+          console.log(sup)
+          console.log("top")
+          console.log(top)*/
           if(top.length!=sup.length)//if not all the same number
           {
             //all units less than max should be invalidated
@@ -302,10 +320,13 @@ function finalResolve(units,MAP)
       {
         for(var y in cl)
         {
-          //move onto its own list combat as hold
-          MAP[cl[y]].combatlist.push(cl[y]);
+          //move onto its own list combat as hold, if it is a move
+          if(unit(cl[y],units).order.move=="m")
+          {
+            MAP[cl[y]].combatlist.push(cl[y]);
           //remove from this combat list
-          _.reject(MAP[x].combatlist,function(p){return p==invalidate[y].prov;});
+            MAP[x].combatlist =_.reject(MAP[x].combatlist,function(p){return p==invalidate[y].prov;});
+          }
           //mark the unit as hold
           invalidateUnit(unit(invalidate[y].prov,units),"tied");
         }
@@ -422,6 +443,8 @@ function resolve(units,MAP)
 
   //reset global variables for next turn
   resetVars(units,MAP);
+  console.log("units from resolve");
+  console.log(units);
   return {units:units,MAP:MAP};
 }
 
@@ -435,8 +458,8 @@ function countSupply(units,MAP)
     var mapOwner=MAP[x].belongsto;
     if(MAP[x].supply==1)
     {
-      if(MAP[x].belongsto=="Rus")
-        console.log(x);
+/*      if(MAP[x].belongsto=="Rus")
+        console.log(x);*/
       supply[MAP[x].belongsto]++;
     }
   }

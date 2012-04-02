@@ -14,8 +14,8 @@ define(['scripts/client/bootstrap.js'], function(){
       this.render();
     },
     render: function(){
-      console.log('rendering board...');
-      console.log(this.model.get('players').toData())
+      //console.log('rendering board...');
+      //console.log(this.model.get('players').toData())
       $(this.el).html(this.template.r(this.model.toJSON()));
 
       if($("#diplomacy .board").length == 0){
@@ -282,7 +282,6 @@ define(['scripts/client/bootstrap.js'], function(){
     resolveMoves: function(e)
     {
       e.preventDefault();
-      console.log("rm");
       socket.emit(
         'game:resolve',
         this.game.id,
@@ -307,8 +306,8 @@ define(['scripts/client/bootstrap.js'], function(){
             }
           }
 
-          console.log(unitList)
-          console.log(mySupply)
+          //console.log(unitList)
+          //console.log(mySupply)
           var numUnits=unitList.length;
 
           if(retreatList.length > 0)
@@ -342,7 +341,7 @@ define(['scripts/client/bootstrap.js'], function(){
           this.game.save();
           //this.render();
           /*$(e.target).parent().replaceWith(T['order_submit_unit'].r({units:units}));*/
-          if(u.length!=0)
+          if(Object.keys(u).length!=0)
           {
             $(e.target).parent().replaceWith(T['secondary_order'].r({derp:u}));
           }
@@ -425,7 +424,7 @@ define(['scripts/client/bootstrap.js'], function(){
         case "disband":
           s=1;
           u.d=true;
-          console.log(u)
+          //console.log(u)
         $(e.target).parent().replaceWith(T['retreat'].r({retreat:u}));
           break;
 
