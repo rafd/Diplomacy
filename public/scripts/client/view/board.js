@@ -286,7 +286,8 @@ define(['scripts/client/bootstrap.js'], function(){
         'game:resolve',
         this.game.id,
         _.bind(
-        function(err,units,supply){
+        function(err,units,supply,map){
+          this.game.set({map:map});
           var u={};
           //find my current country
           var power = window.current_player.attributes.power;
@@ -305,7 +306,7 @@ define(['scripts/client/bootstrap.js'], function(){
               unitList.push(units[x]);
             }
           }
-
+          //console.log("unit list, my supply")
           //console.log(unitList)
           //console.log(mySupply)
           var numUnits=unitList.length;
@@ -371,7 +372,7 @@ define(['scripts/client/bootstrap.js'], function(){
         this.player.spawnorders,
         this.player.disbandorders,
         _.bind(
-        function(err,data)
+        function(err,data,map)
         {
           var d=[]
           for(var x in data)
@@ -382,6 +383,7 @@ define(['scripts/client/bootstrap.js'], function(){
           _.flatten(d,true);
 
           //update UI
+          this.game.set({map:map});
           this.game.set({units:data});//owner, utype, prov, move
           this.game.save();
           this.render();

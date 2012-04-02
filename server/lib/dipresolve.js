@@ -45,8 +45,20 @@ function unit(prov,units)
   return null;
 }
 
+//unique unit
+function u_unit(prov,units)
+{
+  for(var x in units)
+    if( (units[x].province==prov) 
+      && (units[x].order.move=="m")
+      && ( units[x].order.to!=prov) )
+      return units[x];
 
-
+  for(var x in units)
+    if(units[x].province==prov)
+      return units[x];
+  return null;
+}
 
 
 
@@ -345,56 +357,10 @@ function finalBoard(units,MAP)
     var cl = MAP[x].combatlist;
     if (cl.length==1)
     {
-      var u = unit(cl[0],units)
+      var u = u_unit(cl[0],units)
       if(u.order.move=="m")
         u.province=u.order.to;
-/*
-      if(x=="StP")
-      {
-        MAP["StPN"].belongsto="";
-        MAP["StPS"].belongsto="";
-      }
-      else if(x=="StPN")
-      {
-        MAP["StP"].belongsto="";
-        MAP["StPS"].belongsto="";
-      }
-      else if(x=="StPS")
-      {
-        MAP["StPN"].belongsto="";
-        MAP["StP"].belongsto="";
-      }
-      else if(x=="Spa")
-      {
-        MAP["SpaN"].belongsto="";
-        MAP["SpaS"].belongsto="";
-      }
-      else if(x=="SpaN")
-      {
-        MAP["Spa"].belongsto="";
-        MAP["SpaS"].belongsto="";
-      }
-      else if(x=="SpaS")
-      {
-        MAP["SpaN"].belongsto="";
-        MAP["Spa"].belongsto="";
-      }
-      else if(x=="Bul")
-      {
-        MAP["BulN"].belongsto="";
-        MAP["BulS"].belongsto="";
-      }
-      else if(x=="BulN")
-      {
-        MAP["Bul"].belongsto="";
-        MAP["BulS"].belongsto="";
-      }
-      else if(x=="BulS")
-      {
-        MAP["BulN"].belongsto="";
-        MAP["Bul"].belongsto="";
-      }
-      */
+
       MAP[x].belongsto=u.owner;
     }
     else if(MAP[x].combatlist.length>1)
@@ -440,11 +406,9 @@ function resolve(units,MAP)
   finalResolve(units,MAP);
   //deal with move and retreat
   finalBoard(units,MAP);
-
   //reset global variables for next turn
   resetVars(units,MAP);
-  console.log("units from resolve");
-  console.log(units);
+  
   return {units:units,MAP:MAP};
 }
 
@@ -453,13 +417,14 @@ function countSupply(units,MAP)
   var supply = {"Aus":0,"Eng":0,"Fra":0,"Ger":0,"Ita":0,"Rus":0,"Tur":0};
 
   //count how many supply center each have
+  //console.log("Aus's supply centers")
   for (var x in MAP)
   {
     var mapOwner=MAP[x].belongsto;
     if(MAP[x].supply==1)
     {
-/*      if(MAP[x].belongsto=="Rus")
-        console.log(x);*/
+      //if(MAP[x].belongsto=="Aus")
+        //console.log(x);
       supply[MAP[x].belongsto]++;
     }
   }
@@ -539,58 +504,6 @@ function addRemoveUnits(units,retreat,spawn,MAP)
     }
     else if(cl.length==1)
     {
-      /*console.error("x")
-      console.error(x);
-      console.error("cl")
-      console.error(cl);
-      console.error("end")*/
-         /*     
-      if(x=="StP")
-      {
-        MAP["StPN"].belongsto="";
-        MAP["StPS"].belongsto="";
-      }
-      else if(x=="StPN")
-      {
-        MAP["StP"].belongsto="";
-        MAP["StPS"].belongsto="";
-      }
-      else if(x=="StPS")
-      {
-        MAP["StPN"].belongsto="";
-        MAP["StP"].belongsto="";
-      }
-      else if(x=="Spa")
-      {
-        MAP["SpaN"].belongsto="";
-        MAP["SpaS"].belongsto="";
-      }
-      else if(x=="SpaN")
-      {
-        MAP["Spa"].belongsto="";
-        MAP["SpaS"].belongsto="";
-      }
-      else if(x=="SpaS")
-      {
-        MAP["SpaN"].belongsto="";
-        MAP["Spa"].belongsto="";
-      }
-      else if(x=="Bul")
-      {
-        MAP["BulN"].belongsto="";
-        MAP["BulS"].belongsto="";
-      }
-      else if(x=="BulN")
-      {
-        MAP["Bul"].belongsto="";
-        MAP["BulS"].belongsto="";
-      }
-      else if(x=="BulS")
-      {
-        MAP["BulN"].belongsto="";
-        MAP["Bul"].belongsto="";
-      }
-      */
       MAP[x].belongsto = cl.owner;
     }
   }
@@ -660,7 +573,8 @@ function secondaryResolve(units,disband,retreat,spawn,MAP)
   })
 
   var u = disbandUnits(units,disband);
-  return {units:addRemoveUnits(u,retreat,spawn,MAP),MAP:MAP};
+  var v = addRemoveUnits(u,retreat,spawn,MAP);
+  return {units:v,MAP:MAP};
 
   //disband units that try to retreat into occupied/illegal spaces
   //disband units that voluntarily disband
@@ -671,6 +585,8 @@ function secondaryResolve(units,disband,retreat,spawn,MAP)
   //return new units list
 
 }
+
+
 
 DipResolve = {
   resolve: resolve,

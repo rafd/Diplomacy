@@ -178,11 +178,14 @@ io.sockets.on('connection', function (socket) {
 
         game.units=units;
         game.save();
+        
+        //console.log("resolve map's Rum")
+        //console.log(game.map.Rum)
         //TODO: broadcast updated game state to all clients
         var supply = dipresolve.countSupply(units,game.map);
 
         //informing client that called us
-        cb(null,units,supply);
+        cb(null,units,supply,game.map);
 
       });
     
@@ -211,7 +214,6 @@ io.sockets.on('connection', function (socket) {
     var _model = model["game"];
 
     _model.findOne({'_id':gameID}, function(err, game){
-
       model["player"].find({}).where("_id").in(game.players).select('retreatorders spawnorders disbandorders power').exec(function(er, data){
         var toDisband=[];
         var toRetreat=[];
@@ -240,6 +242,7 @@ io.sockets.on('connection', function (socket) {
         game.map = e.MAP;
         var end = e.units;
         //remove orders from players
+        console.log("removing secondary orders from players")
         model["player"].update(
           {"_id": {$in:game.players}},
           {
@@ -256,7 +259,7 @@ io.sockets.on('connection', function (socket) {
         //TODO: broadcast updated game state to all clients
 
         //informing client that called us
-        cb(null,end);
+        cb(null,end,game.map);
         
 
       });
