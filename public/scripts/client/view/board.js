@@ -287,7 +287,6 @@ define(['scripts/client/bootstrap.js'], function(){
         this.game.id,
         _.bind(
         function(err,units,supply,map){
-          this.game.set({map:map});
           var u={};
           //find my current country
           var power = window.current_player.attributes.power;
@@ -340,7 +339,7 @@ define(['scripts/client/bootstrap.js'], function(){
             u.msg3="Select "+x+" unit(s) to disband";
             u.disband=unitList;
           }
-
+          this.game.set({map:map});
           //update board with returned state
           this.game.set({units:units});//owner, utype, prov, move
           this.game.save();
@@ -386,6 +385,10 @@ define(['scripts/client/bootstrap.js'], function(){
           this.game.set({map:map});
           this.game.set({units:data});//owner, utype, prov, move
           this.game.save();
+          this.player.set({retreatorders:null});
+          this.player.set({spawnorders:null});
+          this.player.set({disbandorders:null});
+          this.player.save();
           this.render();
 
         },
