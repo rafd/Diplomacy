@@ -36,7 +36,7 @@
       <select class="move" name="move">
        <option>no new unit</option>
        <option>new army</option>
-       <option>new fleet</option>
+       {{#coast}}<option>new fleet</option>{{/coast}}
       </select>
     </li>
   {{/spawn}}

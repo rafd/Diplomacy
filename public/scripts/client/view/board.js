@@ -321,10 +321,14 @@ define(['scripts/client/bootstrap.js'], function(){
 
             u.msg2="You can add " + x + " new unit(s)";
             var spawnPoints=[];
+            
             for(var y in window.MAP)
             {
+              var coast=false;
+              if(MAP[y].fleet_moves.length!=0)
+                coast=true;
               if(MAP[y].spawn==power)
-                spawnPoints.push({owner:power,province:y});
+                spawnPoints.push({owner:power,province:y,coast:coast});
             }
             u.spawn=spawnPoints;
           }
@@ -385,6 +389,12 @@ define(['scripts/client/bootstrap.js'], function(){
     clickedMove: function(e){
       var prov = $(e.target).parent().find("[name='prov']").val();
       var u= _.select(this.units.toData(), function(unit) { return unit.province == prov});
+      //if province is coastal, set u.coast = true
+      /*console.log(prov);
+      console.log(this.game.get('map')[prov].fleet_moves)
+      if(this.game.get('map')[prov].fleet_moves.length!=0)
+        u.coast=true;
+      console.log(u.coast)*/
       //var m=_.clone(window.MAP[prov]);
       var s=0;
       switch($(e.currentTarget).val())
@@ -441,7 +451,7 @@ define(['scripts/client/bootstrap.js'], function(){
       }
       if(!s)
       $(e.target).parent().replaceWith(T['order_submit_unit'].r({units:u}));
-      
+      //$(e.target).parent().replaceWith(T['secondary_order'].r({derp:u}));
     }
   });
 

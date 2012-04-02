@@ -445,8 +445,9 @@ window.MAP = {
   StP:  {fullname: "St. Petersburg",
         army_moves: ["Nwy","Fin","Lvn","Mos"],
         fleet_moves: ["Lvn","Bot","Fin","Nwy","Bar"],
-        belongsto: "",
+        belongsto: "Rus",
         supply: 1,
+        spawn:"Rus",
         combatlist: []
       },
 /*  StPN:  {fullname: "St. Petersburg North Coast",
