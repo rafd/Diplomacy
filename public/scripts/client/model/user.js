@@ -3,7 +3,9 @@ define(['scripts/client/bootstrap.js'], function(){
   window.User = Backbone.RelationalModel.extend({
     urlRoot: 'user',
     initialize: function(spec){
-      
+      this.set({
+        slug: spec.slug || spec.name.toLowerCase()
+      });
     }
   });
 

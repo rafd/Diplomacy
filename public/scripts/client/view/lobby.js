@@ -18,11 +18,13 @@ define(['scripts/client/bootstrap.js'], function(){
       Games.fetch();
 
       this.render();
+      
     },
     render: function(){
       $('#diplomacy').append(this.el);
 
-      new GamesView($(this.el));
+      new GamesView($(this.el), Games);
+
       new DashView($(this.el));
     }
   });
@@ -58,26 +60,18 @@ define(['scripts/client/bootstrap.js'], function(){
     },
     initialize: function() {
       this.model.get('players').bind("change", this.render, this);
+      this.model.get('players').bind("remove", this.render, this)
+      this.model.get('players').bind("add", this.render, this)
     },
     switchToGame: function(){
       $(".lobby").hide();
 
       if(this.model.get('status') == "pregame"){
-        //check if player existing
-        console.log(this.model.get('players').toData())
-        player_joined = this.model.get('players').any(function(player){return player.get('user').id == window.user.id})
-        console.log(player_joined)
-        if (!player_joined){
-          this.model.get('players').create({power:"Aus", user: window.user})
-          this.model.save()
-          console.log(this.model.get('players').toData())
-        }
-
-
-        new PreGameView(this.model, this);
+        new PreGameView({game:this.model});
       }
-      else if(this.model.get('status') == "active")
-       new BoardView(this.model)
+      else if(this.model.get('status') == "active"){
+        new BoardView(this.model)
+      }
 
       },
     render: function(){
@@ -88,44 +82,44 @@ define(['scripts/client/bootstrap.js'], function(){
 
       game_players = this.model.get('players').map(function(p){ if(p.get('power') != power) return p.toData()});
       $(this.el).html(this.template.r({game:this.model.toData(),game_players:game_players,user_power:power}));
+
+      if(undefined != this.model.get('players').ownedBy(window.user)){
+        $(this.el).appendTo('.games .my_games');
+      } else {
+        $(this.el).appendTo('.games .other_games');
+      }
       return this;
     }
   });
 
   window.GamesView = Backbone.View.extend({
     className: 'games',
+    template: T['games'],
     events: {
       
     },
-    initialize: function(target){
-      this.render(target);
-
-      Games.bind('reset', this.addAll, this);
-      Games.bind('add', this.addOne, this);
-    },
-    render: function(target){
+    initialize: function(target, games, title){
       target.append(this.el);
-      return this;
+
+      this.games = games;
+
+      $(this.el).html(this.template.r({}));
+
+      this.games.bind('reset', this.addAll, this);
+      this.games.bind('add', this.addOne, this);
     },
     addOne: function(g){
       var view = new GameView({model: g});
-      $('.games').append(view.render().el);
+      if(undefined != g.get('players').ownedBy(window.user)){
+        $('.games .my_games').append(view.render().el);
+      } else {
+        $('.games .other_games').append(view.render().el);
+      }
     },
     addAll: function(){
-      $(this.el).html('');
-      Games.each(this.addOne);
-    }
-  });
-
-  RemoteUserList = Backbone.View.extend({
-    template: T['users'],
-    initialize: function(target){
-      
-    },
-    render: function(){
       $(this.el).html(this.template.r({}));
+      this.games.each(this.addOne);
     }
-
   });
 
 

@@ -81,6 +81,9 @@ define(['scripts/client/bootstrap.js'], function(){
         //this.fetchRelated('turns');
         
       }
+      this.get('players').bind("remove", function(){this.save()}, this)
+      this.get('players').bind("add", function(){this.save()}, this)
+      this.get('players').bind("change", function(){this.save()}, this)
     }
   });
 

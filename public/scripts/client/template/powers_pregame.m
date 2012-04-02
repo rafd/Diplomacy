@@ -1,6 +1,7 @@
 Powers:
-<ul>
 {{#powers}}
-<li><a href=# class="{{select_state}} {{name}}">{{name}}</a></li>
+<a href=# class="power {{select_state}} {{name}}" data-power="{{name}}">
+  {{name}}
+  <div class="box {{name}} bg"></div>
+</a>
 {{/powers}}
-</ul>
