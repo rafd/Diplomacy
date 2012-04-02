@@ -207,7 +207,7 @@ io.sockets.on('connection', function (socket) {
 
   });
 
-  socket.on('game:resolvetwo', function(gameID, playerID,retreatOrders,spawnOrders,disbandOrders, cb){
+  socket.on('game:resolvetwo', function(gameID, playerID, cb){
     console.log("Game resolving");
     //get units for gameID from mongoose
 
@@ -226,6 +226,8 @@ io.sockets.on('connection', function (socket) {
           toRetreat.push(data[x].retreatorders);
           toSpawn.push(data[x].spawnorders);
         }
+        console.log("DATA")
+        console.log(data)
 
         toDisband=_.flatten(toDisband,true);
         toRetreat=_.flatten(toRetreat,true);
@@ -241,6 +243,15 @@ io.sockets.on('connection', function (socket) {
         var e = dipresolve.secondaryResolve(u,toDisband,toRetreat,toSpawn,game.map);
         game.map = e.MAP;
         var end = e.units;
+
+        //Are there still issues that need to be fixed?
+        //Countries with too many units?
+          //countSupply
+          //count units
+        //Retreat units that are not retreated?
+          //for all units, units.order.move==r
+          //delete them
+
         //remove orders from players
         console.log("removing secondary orders from players")
         model["player"].update(

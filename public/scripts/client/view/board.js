@@ -367,9 +367,6 @@ define(['scripts/client/bootstrap.js'], function(){
         'game:resolvetwo',
         this.game.id,
         this.player.id,
-        this.player.retreatorders,
-        this.player.spawnorders,
-        this.player.disbandorders,
         _.bind(
         function(err,data,map)
         {
@@ -385,14 +382,15 @@ define(['scripts/client/bootstrap.js'], function(){
           this.game.set({map:map});
           this.game.set({units:data});//owner, utype, prov, move
           this.game.save();
-          this.player.set({retreatorders:null});
-          this.player.set({spawnorders:null});
-          this.player.set({disbandorders:null});
+          this.player.set({retreatorders:[]});
+          this.player.set({spawnorders:[]});
+          this.player.set({disbandorders:[]});
           this.player.save();
           this.render();
 
         },
         this));
+        socket.emit('game:removeorders',this.game.id,_.bind(function(err){},this));
     },
     clickedMove: function(e){
       var prov = $(e.target).parent().find("[name='prov']").val();
@@ -474,9 +472,7 @@ define(['scripts/client/bootstrap.js'], function(){
           
       }
       if(!s)
-      $(e.target).parent().replaceWith(T['order_submit_unit'].r({units:u}));
-      else//we are in secondary
-        socket.emit('game:removeorders',this.game.id,_.bind(function(err){},this));
+      $(e.target).parent().replaceWith(T['order_submit_unit'].r({units:u}));        
       //$(e.target).parent().replaceWith(T['secondary_order'].r({derp:u}));
     }
   });
