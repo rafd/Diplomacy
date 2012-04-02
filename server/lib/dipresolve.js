@@ -411,12 +411,12 @@ function resetVars(units,MAP)
   {
     MAP[x].combatlist=[];
   }
-  //clear support
-  for(var x in units)
+  //do not clear support - we need this so retreating units cannot go into attacker's spaces
+  /*for(var x in units)
   {
     if(units[x].order.move!="r")
       units[x].order={};
-  }
+  }*/
 }
 
 function resolve(units,MAP)

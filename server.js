@@ -175,9 +175,7 @@ io.sockets.on('connection', function (socket) {
         var u = dipresolve.resolve(end,game.map);
         game.map = u.MAP;
         var units=u.units;
-        //remove orders from players
-        model["player"].update({"_id": {$in:game.players}}, {orders:[]}, { multi: true }, function(err,num){});
-        
+
         game.units=units;
         game.save();
         //TODO: broadcast updated game state to all clients
@@ -185,8 +183,23 @@ io.sockets.on('connection', function (socket) {
 
         //informing client that called us
         cb(null,units,supply);
+
       });
     
+    });
+
+  });
+
+
+  socket.on('game:removeorders', function(gameID, cb){
+    //get units for gameID from mongoose
+    console.log("removing orders from units")
+    var _model = model["game"];
+      _model.findOne({'_id':gameID}, function(err, game){
+      //remove orders from players
+      game.save();
+      //informing client that called us
+      cb(null);
     });
 
   });
@@ -244,7 +257,6 @@ io.sockets.on('connection', function (socket) {
 
         //informing client that called us
         cb(null,end);
-
         
 
       });

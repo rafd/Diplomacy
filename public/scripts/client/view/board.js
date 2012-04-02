@@ -345,15 +345,18 @@ define(['scripts/client/bootstrap.js'], function(){
           this.game.save();
           //this.render();
           /*$(e.target).parent().replaceWith(T['order_submit_unit'].r({units:units}));*/
-          if(Object.keys(u).length!=0)
+
+          //ALWAYS GO TO SECONDARY MOVE PANE
+          //EVEN IF YOU HAVE NO SECONDARY MOVES TO SUBMIT
+          //if(Object.keys(u).length!=0)
           {
             $(e.target).parent().replaceWith(T['secondary_order'].r({derp:u}));
           }
-          else
+          /*else
           {
             this.render();
-            //(e.target).parent().replaceWith(T['order_submit_unit'].r({units:units}));
-          }
+            socket.emit('game:removeorders',this.game.id,_.bind(function(err){},this));
+          }*/
         },
         this));
     },
@@ -428,13 +431,29 @@ define(['scripts/client/bootstrap.js'], function(){
           s=1;
           u.r=true;
           u.to=possible_moves(u[0]);
+          var allunits=this.game.get('units').toData();
+          var from;
+
+          for(var x in allunits)
+          {
+            //Find other unit in this space
+            if((allunits[x].province==u[0].province)
+              && (u[0].owner!=allunits[x].owner))
+            {
+              from = allunits[x].order.from
+            }
+          }
+          //take out where they came from from u.to
+          u.to = _.reject(u.to,function(v){
+            return v==from;
+          })
+
         $(e.target).parent().replaceWith(T['retreat'].r({retreat:u}));
           break;
 
         case "disband":
           s=1;
           u.d=true;
-          //console.log(u)
         $(e.target).parent().replaceWith(T['retreat'].r({retreat:u}));
           break;
 
@@ -451,6 +470,8 @@ define(['scripts/client/bootstrap.js'], function(){
       }
       if(!s)
       $(e.target).parent().replaceWith(T['order_submit_unit'].r({units:u}));
+      else//we are in secondary
+        socket.emit('game:removeorders',this.game.id,_.bind(function(err){},this));
       //$(e.target).parent().replaceWith(T['secondary_order'].r({derp:u}));
     }
   });
