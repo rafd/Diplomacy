@@ -243,7 +243,7 @@ define(['scripts/client/bootstrap.js'], function(){
           }
           //this take up 5 spaces
         }
-        if(data[x].name=="name" && data[x].value=="spawn")
+        else if(data[x].name=="name" && data[x].value=="spawn")
         {
           if(data[x+3].value!="no new unit")
             spawnOrders.push({
