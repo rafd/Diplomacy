@@ -20,8 +20,13 @@ define(['scripts/client/bootstrap.js'], function(){
       this.playerlist = new PlayerList(this.model.get('players'));
       this.powerlist = new PowerList(this.model.get('players'));
 
+      // this.model.get('players').bind("change", alert('aega'))
+
+      this.model.get('players').bind("add", function(){this.playerlist.render(this.model.get('players'))}, this)
       this.model.get('players').bind("change", function(){this.playerlist.render(this.model.get('players'))}, this)
       this.model.get('players').bind("change", function(){this.powerlist.render(this.model.get('players'))}, this)
+
+      this.model.bind("change:status", function(){this._startGame()}, this)
 
       this.parentView = this.options['parentView']
 
@@ -69,14 +74,19 @@ define(['scripts/client/bootstrap.js'], function(){
 
     },
     startGame: function(ev){
-      $(this.el).remove()
       this.model.set({status:"active"})
-      //generate chatrooms
-      _.each(this.model.get('players').permutations(), function(pair){
-        this.model.get('chatrooms').create({players: [pair[0].id, pair[1].id]})
-      }, this);
       this.model.save()
-      new BoardView(this.model)
+      console.log('aewg')
+    },
+    _startGame: function(){
+      if (this.model.get('status') == "active"){
+        $(this.el).remove()
+        //generate chatrooms
+        _.each(this.model.get('players').permutations(), function(pair){
+          this.model.get('chatrooms').create({players: [pair[0].id, pair[1].id]})
+        }, this);
+        new BoardView(this.model)
+      }
     }
 
   });
@@ -85,6 +95,7 @@ define(['scripts/client/bootstrap.js'], function(){
     template: T['players_pregame'],
     anchor: '#player-list-ul',
     initialize: function(){
+
 
     },
     render: function(players){

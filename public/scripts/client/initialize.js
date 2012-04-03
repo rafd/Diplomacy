@@ -27,23 +27,49 @@ define(['scripts/client/bootstrap.js'], function(){
       });
       var model = null;
 
+      // new_user = new User({})
+
       if (!_.isUndefined(game)){
         //LAZY WAY WOO
         //Existing object
         
-        if (args.collection == 'game') model = game;
-        else model = game.get(args.collection + 's').find(function(sub){
+        if (args.collection == 'game') {
+          model = game;
+
+        //need to create new user for remote join.
+
+        //first check if user exists
+          model.get('players').each(function(player){
+            var player_id = player.get('_id')
+            //remove pre-existing from queue
+            if (!_.isUndefined(args.user_map[player_id])) delete args.user_map[player_id]
+          })
+
+          for (player_id in args.user_map){
+            //create new players
+            console.log('adding', args.user_map[player_id].name, 'to game')
+            var new_user = new User(args.user_map[player_id])
+            model.get('players').create({_id:player_id, power:'Aus', user:new_user})
+          }
+        
+        } else model = game.get(args.collection + 's').find(function(sub){
           return (sub.get('_id') == args.data["_id"])
         }); //need to pluralize
 
+        //don't update _id
+        delete args.data["_id"];
+
+
+
         for (key in args.data){
-          console.log(key, model.has(key))
           //{key:value} will literally set the key as 'key', so hacky workaround
           var set_hash = {}
           set_hash[key] = args.data[key]
-          var test = model.set(set_hash);
-          //console.log(test.get(key), {key:args.data[key]});
-          console.log('setting:', model.attributes, key, args.data[key], model.get(key))
+
+          console.log('setting:', key, '|', model.get(key), 'to:', args.data[key])
+
+          model.set(set_hash);
+          
         }
 
       }

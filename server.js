@@ -284,7 +284,7 @@ io.sockets.on('connection', function (socket) {
         if (user_id != other_id){
           console.log('Attempting to broadcast to:', other_id)
           if (other_id in user_sockets){
-            user_sockets[other_id].emit('update:force', {collection:args.collection, data:args.data, game_id:args.game_id});
+            user_sockets[other_id].emit('update:force', args);
           }  else {console.log('Broadcast failed, user not online.')}
         }
     }
@@ -309,6 +309,10 @@ io.sockets.on('connection', function (socket) {
       
       case 'POST':
         if (args.data){
+          socket.get('user_id', function(err, user_id){
+            console.log('create from:', user_id);
+            console.log(args.data)
+          })
           //create new post in collection
           args.data._id =  mongoose.Types.ObjectId.fromString(args.data._id);
           newEntry = new _model(args.data);
@@ -318,7 +322,13 @@ io.sockets.on('connection', function (socket) {
         break;
 
       case 'update':
+        if(args.collection == 'chatroom'){ console.log('drop chat'); break;}//temporarily drop chatroom for debug
         if(args.data){
+
+          socket.get('user_id', function(err, user_id){
+            console.log('update from:', user_id, 'to:', args.collection);
+          })
+
           var arg_id = mongoose.Types.ObjectId.fromString(args.data._id);
           delete args.data["_id"];
           _model.findOne({_id: arg_id}, function(e,doc){
@@ -333,25 +343,70 @@ need to pass args.game_id, args.data, args.collection
 
 */
 
+//user will only send own player obj
+//game will send game status, player stuff?
+//chatroom?
+
+/*
+user
+chatrooms other player's chatrooms
+messages other player's messages
+power
+timestamps
+_id same id
+*/
+
                     //Broadcast update to other players in game
                     // console.log(args.collection, id, args.data)
                     
                       // console.log(args.data)
                 var player_list = null
                 if (args.collection == 'player') player_id = mongoose.Types.ObjectId.toString(arg_id)
-                  else player_id = args.data.players[0]
+                else player_id = args.data.players[0]
                 model['game'].findOne({'players': player_id}, function(err, game){
                   console.log(args.data)
                   args["game_id"] = game._id
                   args.data["_id"] = arg_id
-                  _.each(game.players, function(player){
-                    model['player'].findOne({'_id':player}, function(err, doc){
-                      //Don't send orders to other people
-                      if (args.collection == 'player') delete args.data["orders"];
-                      socket.get('user_id', function(err, data){
-                        update_other(data, doc.user);
+                  args["user_map"] = {}
+                  if (args.collection == 'player') {
+                    //remove stuff we don't send to other players
+                    var private_list = ["orders", "chatrooms", "messages", "user"]
+                    for (key in args.data){
+                      if (_.indexOf(private_list, key) > -1) delete args.data[key]
+                    }
+                  }
+                  if (args.collection == 'game') {
+                    var private_list = ["players", "units", "turns", "chatrooms", "order_submit"]
+                    for (key in args.data){
+                      console.log(key)
+                      if (_.indexOf(private_list, key) > -1) delete args.data[key]
+                    }
+                  }
+                  model['player'].find({'_id':{$in:game.players}}, function(err, player_list){
+
+                    var user_ids = []
+                    _.each(player_list, function(player){
+                      user_ids.push(player.user)
+                    })
+                    console.log(user_ids)
+                    model['user'].find({'_id':{$in:user_ids}}, function(err, user_list){
+
+                      //build player id to user info map
+                      _.each(player_list, function(player){
+                        args.user_map[player._id] = _.find(user_list, function(user){
+                          return (player.user == user._id)
+                        })
+                      })
+
+                      _.each(user_ids, function(user_id){
+                        socket.get('user_id', function(err, data){
+                          update_other(data, user_id);
+                        });
                       });
-                    });
+
+                    })
+
+
                   });
                 });
               });
