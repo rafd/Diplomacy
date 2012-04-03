@@ -10,6 +10,8 @@ define(['scripts/client/bootstrap.js'], function(){
   
     window.socket = io.connect('/', socket_defaults);
 
+
+
     socket.on('update:force', function(args, cb){
     /* 
          args = {

@@ -310,7 +310,7 @@ io.sockets.on('connection', function (socket) {
       case 'POST':
         if (args.data){
           socket.get('user_id', function(err, user_id){
-            console.log('create from:', user_id);
+            console.log('create', args.collection,'from:', user_id);
             console.log(args.data)
           })
           //create new post in collection
@@ -318,6 +318,47 @@ io.sockets.on('connection', function (socket) {
           newEntry = new _model(args.data);
           newEntry.save();
           //broadcast update to all players
+          if (args.collection == 'game'){
+
+            socket.broadcast.emit('update:newgame')
+
+            // socket.broadcast.emit('update:newgame', args) 
+            
+            // args["game_id"] = args.data._id
+            // args["user_map"] = {}
+            // if (args.collection == 'game') {
+            //   var private_list = ["players", "turns", "chatrooms", "order_submit"]
+            //   for (key in args.data){
+            //     if (_.indexOf(private_list, key) > -1) delete args.data[key]
+            //   }
+            // }
+            // model['player'].find({'_id':{$in:args.players}}, function(err, player_list){
+
+            //   var user_ids = []
+            //   _.each(player_list, function(player){
+            //     user_ids.push(player.user)
+            //   })
+            //   console.log(user_ids)
+            //   model['user'].find({'_id':{$in:user_ids}}, function(err, user_list){
+
+            //     //build player id to user info map
+            //     _.each(player_list, function(player){
+            //       args.user_map[player._id] = _.find(user_list, function(user){
+            //         return (player.user == user._id)
+            //       })
+            //     })
+
+            //     _.each(user_ids, function(user_id){
+            //         socket.broadcast.emit('update:force', args)
+            //     });
+
+            //   })
+
+
+            // });
+
+
+          }
         }
         break;
 
