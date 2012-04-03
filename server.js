@@ -150,8 +150,6 @@ io.sockets.on('connection', function (socket) {
   //   socket.emit('chat:users',users);
   //   socket.broadcast.emit('chat:users',users);
   // });
-
-
   socket.on('game:resolve', function(gameID, cb){
     console.log("Game resolving");
     //get units for gameID from mongoose
@@ -177,20 +175,187 @@ io.sockets.on('connection', function (socket) {
           })
         );
         var end = _.uniq(holds.concat(combined),false,function(u){ return u.province });
-        var ret = dipresolve(end);
+        
+        /*console.log("units before resolve")
+        for(var x in end)
+          if(end[x].owner=="Aus")
+            console.log(end[x]);*/
 
+        var u = dipresolve.resolve(end,game.map);
+        game.map = u.MAP;
+        var units=u.units;
 
-        //remove orders from players
-        model["player"].update({"_id": {$in:game.players}}, {orders:[]}, { multi: true }, function(err,num){});
-        //TODO: update game state on server
-        console.log(ret);
-        game.units=ret;
+        /*console.log("units after resolve")
+        for(var x in units)
+          if(units[x].owner=="Aus")
+            console.log(units[x]);*/
+
+        game.units=units;
         game.save();
-        //broadcast updated game state to all clients
+        
+        //console.log("resolve map's Rum")
+        //console.log(game.map.Rum)
+        //TODO: broadcast updated game state to all clients
+        var supply = dipresolve.countSupply(units,game.map);
 
         //informing client that called us
-        cb(null,ret);
+        cb(null,units,supply,game.map);
 
+      });
+    
+    });
+
+  });
+
+
+  socket.on('game:removeorders', function(gameID, cb){
+    //get units for gameID from mongoose
+    console.log("removing orders from units")
+
+    var _model = model["game"];
+      _model.findOne({'_id':gameID}, function(err, game){
+
+        model["player"].update({"_id": {$in:game.players}}, {orders:[]}, { multi: true }, function(err,num){});
+
+      //informing client that called us
+      cb(null);
+    });
+
+  });
+
+
+  socket.on('game:removesecondaryorders', function(gameID, cb){
+
+    console.log("removing secondary orders from players")
+    model["game"].findOne({'_id':gameID}, function(err, game){
+
+        model["player"].update(
+          {"_id": {$in:game.players}},
+          {
+            disbandorders:[],
+            retreatorders:[],
+            spawnorders:[]
+          },
+          { multi: true },
+          function(err,num){console.log(num)}
+        );
+      //informing client that called us
+      cb(null);
+    });
+
+  });
+
+
+
+  socket.on('game:resolvetwo', function(gameID, playerID, cb){
+    console.log("Game resolving");
+    //get units for gameID from mongoose
+
+    var _model = model["game"];
+
+    _model.findOne({'_id':gameID}, function(err, game){
+      model["player"].find({}).where("_id").in(game.players).select('retreatorders spawnorders disbandorders power').exec(function(er, data){
+        var toDisband=[];
+        var toRetreat=[];
+        var toSpawn=[];
+        //resolve disband orders
+        //resolve spawn and retreat
+        for (var x in data)
+        {
+          toDisband.push(data[x].disbandorders);
+          toRetreat.push(data[x].retreatorders);
+          toSpawn.push(data[x].spawnorders);
+        }
+
+        toDisband=_.flatten(toDisband,true);
+        toRetreat=_.flatten(toRetreat,true);
+        toSpawn=_.flatten(toSpawn,true);
+
+        var u = _.flatten(game.units);
+        
+        /*console.log("units before secondaryResolve")
+        for(var x in u)
+          if(u[x].owner=="Aus")
+            console.log(u[x]);*/
+
+        /*console.log("disband")
+        console.log(toDisband)
+        console.log("retreat")
+        console.log(toRetreat)
+        console.log("spawn")
+        console.log(toSpawn)  */    
+
+        var e = dipresolve.secondaryResolve(u,toDisband,toRetreat,toSpawn,game.map);
+        game.map = e.MAP;
+        var end = e.units;
+
+        /*console.log("units after secondaryResolve")
+        for(var x in end)
+          if(end[x].owner=="Aus")
+            console.log(end[x]);*/
+
+        //Are there still issues that need to be fixed?
+        
+        //Retreat units that are not retreated?
+          //for all units, units.order.move==r
+          //delete them
+        for(var x in end)
+        {
+          if(end[x].order.move=="r")
+            {delete end[x]; console.log("deleted retreat unit: " + end[x].province);}
+        }
+        end = _.compact(end)
+
+        //Countries with too many units?
+        //countSupply
+        var supply = dipresolve.countSupply(units,game.map)
+        console.log("supply")
+        console.log(supply)
+        //count units
+        var units = {"Aus":0,"Eng":0,"Fra":0,"Ger":0,"Ita":0,"Rus":0,"Tur":0};
+        for(var x in end)
+        {
+          units[end[x].owner]++;
+        }
+        console.log("units")
+        console.log(units)
+        //randomly disband until supply >= units
+        for(var x in supply)
+        {
+          var extraunits = units[x]-supply[x];
+          for(var i=0;i<extraunits;i++)
+          {
+            for(var y in end)
+            {
+              if(end[y].owner==x)
+              {
+                delete end[y];
+                break;
+              }
+            }
+          }
+        }
+
+        end = _.compact(end)
+        //remove orders from players
+        console.log("removing secondary orders from players")
+        model["player"].update(
+          {"_id": {$in:game.players}},
+          {
+            disbandorders:[],
+            retreatorders:[],
+            spawnorders:[]
+          },
+          { multi: true },
+          function(err,num){console.log(num)}
+        );
+
+        game.units=end;
+        game.save();
+        //TODO: broadcast updated game state to all clients
+
+        //informing client that called us
+        cb(null,end,game.map);
         
 
       });

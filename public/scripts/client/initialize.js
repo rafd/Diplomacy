@@ -99,7 +99,6 @@ define(['scripts/client/bootstrap.js'], function(){
     ]
 
     PLAYERS = ["Eng","Aus","Fra","Ger", "Ita", "Rus", "Tur"];
-    PROVINCES = ["NAt","Nrg","Nth","Cly","Edi","Lvp","Yor","Wal","Lon","Iri"];
 
 
     //window.user = new User(random_user_specs[Math.floor(Math.random() * random_user_specs.length)]);

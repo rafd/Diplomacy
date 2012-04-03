@@ -8,6 +8,9 @@ exports.create = function(mongoose) {
       turns:[],
       status:"",
       players:[],
+      map:{},
+      state:String,
+      turn:Number,
       units:[]
     });
 
@@ -15,14 +18,6 @@ exports.create = function(mongoose) {
   new_schema.plugin(timestamps);
 
   return mongoose.model('Game', new_schema);
-
-
-  // return mongoose.model('Game', new mongoose.Schema({
-  //     name:String,
-  //     players:[],
-  //     units:[]
-  //   })
-  // );
 
 }
 

@@ -1,7 +1,5 @@
 exports.create = function(mongoose) {
 
-
-
   var new_schema = new mongoose.Schema();
 
   new_schema.add({
@@ -9,7 +7,10 @@ exports.create = function(mongoose) {
     messages:[],
     chatrooms:[],
     user:"",
-    power:""
+    power:"",    
+    disbandorders:[],
+    spawnorders:[],
+    retreatorders:[]
   });
 
   var timestamps = require('./plugins/timestamps');
