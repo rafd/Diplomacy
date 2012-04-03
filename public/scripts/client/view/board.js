@@ -247,7 +247,7 @@ define(['scripts/client/bootstrap.js'], function(){
       {
         if(Object.keys(u).length==1 )
           u.msg1="You have no secondary moves"
-        $(this.el).html(T['secondary_order'].r({derp:u,season:season}));
+        $(this.el).html(T['secondary_order'].r({derp:u,season:season,turn:turn}));
       }
       else
       {
