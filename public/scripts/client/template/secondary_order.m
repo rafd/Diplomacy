@@ -4,6 +4,7 @@
   <input type="submit" class="resolvetwo" value = "Resolve secondary moves"/>
 
 {{#derp}}
+<form>
 <br>
   {{msg1}}
 
@@ -27,7 +28,7 @@
 
 
   {{msg2}}
-
+  <input name="spawnum" type="hidden" value="{{spawnum}}"/>
   {{#spawn}}
     <li>
      <input name="name" type="hidden" value="spawn"/>
@@ -59,4 +60,5 @@
   {{/disband}}
 
   </ul>
+</form>
 {{/derp}}

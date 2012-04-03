@@ -204,7 +204,7 @@ define(['scripts/client/bootstrap.js'], function(){
 
           u.msg2="You can add " + x + " new unit(s)";
           var spawnPoints=[];
-          
+          u.spawnum=x;
           for(var y in window.MAP)
           {
             var coast=false;
@@ -292,8 +292,14 @@ define(['scripts/client/bootstrap.js'], function(){
       var retreatOrders=[];
       var spawnOrders=[];
       var disbandOrders=[];
+      var allowedSpawn=0;
       for(var x=0; x<data.length; )
       {
+        if(data[x].name=="spawnum")
+        {
+          allowedSpawn=data[x].value;
+          x++;
+        }
         if(data[x].name=="name" && data[x].value=="retreat")
         {
           var move = data[x+4].value;
@@ -321,13 +327,16 @@ define(['scripts/client/bootstrap.js'], function(){
         }
         else if(data[x].name=="name" && data[x].value=="spawn")
         {
-          if(data[x+3].value!="no new unit")
+          if(data[x+3].value!="no new unit" && allowedSpawn>0)
+          {
             spawnOrders.push({
               "owner":data[x+1].value,
               "province":data[x+2].value,
               "move":data[x+3].value
               });
-            x+=4;
+            allowedSpawn--;
+          }
+          x+=4;
         } 
         else if(data[x].name=="name" && data[x].value=="disband")
         {
@@ -397,7 +406,7 @@ define(['scripts/client/bootstrap.js'], function(){
 
             u.msg2="You can add " + x + " new unit(s)";
             var spawnPoints=[];
-            
+            u.spawnum=x;
             for(var y in window.MAP)
             {
               var coast=false;

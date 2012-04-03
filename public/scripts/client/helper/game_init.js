@@ -184,7 +184,7 @@ window.MAP = {
         army_moves: ["Swe","Fin","StP"],
         fleet_moves: ["StP","Bar","Nrg","Nth","Ska","Swe"],
         belongsto: "",
-        supply: 0,
+        supply: 1,
         combatlist: []
       },
   /*SpaN:  {fullname: "Spain North Coast",

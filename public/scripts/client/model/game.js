@@ -38,7 +38,7 @@ define(['scripts/client/bootstrap.js'], function(){
       if(spec['_id'] == undefined) {
         console.log("new game")
         this.set({
-          state:"Primary",
+          state:"primary",
           name: spec.name || "Game "+Math.floor(100*Math.random()),
           created_at: new Date().getTime(),
           status: "pregame",
