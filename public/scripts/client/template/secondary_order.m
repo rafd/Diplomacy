@@ -2,13 +2,11 @@
   <ul>
   <input type="submit" class="submittwo" value = "Submit secondary moves"/>
   <input type="submit" class="resolvetwo" value = "Resolve secondary moves"/>
-
+<br>
+Turn: {{turn}} ({{season}})
 {{#derp}}
 <form>
-Turn: {{turn}}
-<br>
   {{msg1}}
-
   {{#retreat}}
     <li>
       <input name="name" type="hidden" value="retreat"/>

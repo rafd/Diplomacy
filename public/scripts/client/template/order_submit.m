@@ -2,7 +2,7 @@
   <ul>
   <input type="submit" class="submit" value = "Submit moves"/>
   <input type="submit" class="resolve" value = "Resolve all moves"/>
-  Turn: {{turn}}
+  Turn: {{turn}} ({{season}})
   {{#units}}
     <li>
       <input name="owner" type="hidden" value="{{owner}}"/>
