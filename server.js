@@ -280,6 +280,15 @@ io.sockets.on('connection', function (socket) {
     //  Automated schema loading from models folder
     //  Unit tests
 
+    var update_other = function(user_id, other_id){
+        if (user_id != other_id){
+          console.log('Attempting to broadcast to:', other_id)
+          if (other_id in user_sockets){
+            user_sockets[other_id].emit('update:force', {collection:args.collection, data:args.data, game_id:args.game_id});
+          }  else {console.log('Broadcast failed, user not online.')}
+        }
+    }
+
     var _model = model[args.collection];
 
     switch(args.action){
@@ -310,47 +319,46 @@ io.sockets.on('connection', function (socket) {
 
       case 'update':
         if(args.data){
-          id = mongoose.Types.ObjectId.fromString(args.data._id);
+          var arg_id = mongoose.Types.ObjectId.fromString(args.data._id);
           delete args.data["_id"];
-          _model.findOne({_id: id}, function(e,doc){
+          _model.findOne({_id: arg_id}, function(e,doc){
             if (doc){
               _.extend(doc, args.data)
               doc.save(function cb(err){
                 if (err) console.log(err);
                 //save complete
-                //   // console.log(args.collection, id, args.data)
-                //   switch(args.collection){
-                //     case 'player':
-                //       model['game'].findOne({'players': mongoose.Types.ObjectId.toString(id)}, function(err, game){
-                //         _.each(game.players, function(player_id){
-                //           // model['player'].testf();
-                //           model['player'].findOne({'_id':player_id}, function(err, doc){
-                //             console.log(doc.user);
-                //           });
-                //         });
-                //       });
-                //       break;
-                //     case 'chatroom':
-                //     case 'game':
-                //     //Need to filter out game commands sends
-                //       // console.log()
-                //       _.each(args.data.players, function(player_id){
-                //         // console.log('playerid', player_id)
-                //         model['player'].findOne({'_id':player_id}, function(err, doc){
-                //           console.log(doc.user);
-                //         });
-                //       });
-                //       break;
-                //   }
-              })
-            }
-            else console.log('no doc to update')
-          })
-          // _model.update({_id: id}, args.data, {}, function(e,num){
-          
-          // })
-        }
 
+/*have game id for game, naturally pull game id for player, need one for chatroom
+need to pass args.game_id, args.data, args.collection
+
+*/
+
+                    //Broadcast update to other players in game
+                    // console.log(args.collection, id, args.data)
+                    
+                      // console.log(args.data)
+                var player_list = null
+                if (args.collection == 'player') player_id = mongoose.Types.ObjectId.toString(arg_id)
+                  else player_id = args.data.players[0]
+                model['game'].findOne({'players': player_id}, function(err, game){
+                  console.log(args.data)
+                  args["game_id"] = game._id
+                  args.data["_id"] = arg_id
+                  _.each(game.players, function(player){
+                    model['player'].findOne({'_id':player}, function(err, doc){
+                      //Don't send orders to other people
+                      if (args.collection == 'player') delete args.data["orders"];
+                      socket.get('user_id', function(err, data){
+                        update_other(data, doc.user);
+                      });
+                    });
+                  });
+                });
+              });
+            } 
+            else console.log('no doc to update');
+          });
+        }
         break;
       
       case 'DELETE':
