@@ -6,7 +6,7 @@ exports.create = function(mongoose) {
       units:[],
       map:{},
       state:String,
-      turn:int
+      turn:Number
     })
   );
 

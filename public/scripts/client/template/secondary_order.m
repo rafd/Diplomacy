@@ -5,6 +5,7 @@
 
 {{#derp}}
 <form>
+Turn: {{turn}}
 <br>
   {{msg1}}
 
@@ -26,7 +27,7 @@
     </li>
   {{/retreat}}
 
-
+  {{#fall}}
   {{msg2}}
   <input name="spawnum" type="hidden" value="{{spawnum}}"/>
   {{#spawn}}
@@ -58,7 +59,7 @@
       </select>
     </li>
   {{/disband}}
-
+  {{/fall}}
   </ul>
 </form>
 {{/derp}}

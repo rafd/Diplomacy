@@ -158,7 +158,7 @@ define(['scripts/client/bootstrap.js'], function(){
       var s = this.game.get('state');
       var turn = this.game.get('turn');
       var u={};
-      if(s=='secondary' && turn%2==0)//secondary state and fall turn
+      if(s=='secondary')//secondary state and fall turn
       {
         //get all units
         //get all units order.move==r and owner==myPower
@@ -199,7 +199,9 @@ define(['scripts/client/bootstrap.js'], function(){
           u.msg1="You must retreat";
           u.retreat=retreatList;
         }
-        if(numUnits < mySupply)
+        if(turn%2==0)//if fall turn
+          u.fall=true;
+        if(u.fall && numUnits < mySupply)
         {
           var x = mySupply-numUnits;
 
@@ -217,7 +219,7 @@ define(['scripts/client/bootstrap.js'], function(){
           u.spawn=spawnPoints;
         }
 
-        if(numUnits > mySupply)
+        if(u.fall && numUnits > mySupply)
         {
           var x = numUnits-mySupply;
           u.msg3="Select "+x+" unit(s) to disband";
@@ -225,7 +227,6 @@ define(['scripts/client/bootstrap.js'], function(){
         }
       }
       this.render(u);
-      
       $('#side').append(this.el);
     },
     render: function(u){
@@ -233,10 +234,18 @@ define(['scripts/client/bootstrap.js'], function(){
       //get game state to see what to render
       var turn = this.game.get('turn');
       var s = this.game.get('state');
+      var v=[];
+      if(u==undefined) 
+        u=v;
+      u.turn = turn;
       if(s=="primary")
-        $(this.el).html(T['order_submit'].r({units:this.units.toData()}));
-      else if (turn%2==0 && s=="secondary")
+        $(this.el).html(T['order_submit'].r({units:this.units.toData(),turn:turn}));
+      else if (s=="secondary")
+      {
+        if(Object.keys(u).length==1 )
+          u.msg1="You have no secondary moves"
         $(this.el).html(T['secondary_order'].r({derp:u}));
+      }
       else
       {
         $(this.el).html(this.template.r({units:this.units.toData()}));
@@ -403,7 +412,10 @@ define(['scripts/client/bootstrap.js'], function(){
             u.msg1="You must retreat";
             u.retreat=retreatList;
           }
-          if(numUnits < mySupply)
+          var turn = this.game.get('turn');
+          if(turn%2==0)//if fall turn
+            u.fall=true;
+          if(u.fall && numUnits < mySupply)
           {
             var x = mySupply-numUnits;
 
@@ -421,7 +433,7 @@ define(['scripts/client/bootstrap.js'], function(){
             u.spawn=spawnPoints;
           }
 
-          if(numUnits > mySupply)
+          if(u.fall && numUnits > mySupply)
           {
             var x = numUnits-mySupply;
             u.msg3="Select "+x+" unit(s) to disband";
@@ -431,15 +443,15 @@ define(['scripts/client/bootstrap.js'], function(){
           //update board with returned state
           this.game.set({units:units});//owner, utype, prov, move
           var turn = this.game.get('turn');
-          if(turn%2==0)//we are in a fall turn: set secondary state
+          //if(turn%2==0)//we are in a fall turn: set secondary state
             this.game.set({state:"secondary"});
-          else//only increment turn when we are in a non-fall turn
+          //else//only increment turn when we are in a non-fall turn
           //also delete orders if we are not going to secondary
-          {
+          /*{
             //state is primary, stays primary
             this.game.set({turn:this.game.get('turn')+1});
             socket.emit('game:removeorders',this.game.id,_.bind(function(err){},this));
-          }
+          }*/
           this.game.save();
           //this.render();
           /*$(e.target).parent().replaceWith(T['order_submit_unit'].r({units:units}));*/
