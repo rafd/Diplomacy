@@ -17,7 +17,7 @@ window.T["games"].r = function(cx,p){var c = [cx];var b = "";var _ = this;b += "
 window.T["map"] = new HoganTemplate();
 window.T["map"].r = function(cx,p){var c = [cx];var b = "";var _ = this;if(_.s(_.f("units",c,p,1),c,p,0,10,61)){b += _.rs(c,p,function(c,p){ var b = "";b += "<li>";b += "\n";b += "  ";b += (_.v(_.f("owner",c,p,0)));b += "\n";b += "  ";b += (_.v(_.f("utype",c,p,0)));b += "\n";b += "  ";b += (_.v(_.f("province",c,p,0)));b += "\n";b += "</li>";b += "\n";return b;});c.pop();}else{b += _.b; _.b = ""};return b;;}
 window.T["map_unit"] = new HoganTemplate();
-window.T["map_unit"].r = function(cx,p){var c = [cx];var b = "";var _ = this;b += "<div class=\"unit ";b += (_.v(_.f("utype",c,p,0)));b += "\" style=\"top: ";b += (_.v(_.f("top",c,p,0)));b += "; left: ";b += (_.v(_.f("left",c,p,0)));b += "; background-color: ";b += (_.v(_.f("color",c,p,0)));b += ";\">";b += "\n";b += "</div>";return b;;}
+window.T["map_unit"].r = function(cx,p){var c = [cx];var b = "";var _ = this;b += "<div class=\"unit ";b += (_.v(_.f("utype",c,p,0)));b += "\" style=\"top: ";b += (_.v(_.f("top",c,p,0)));b += "; left: ";b += (_.v(_.f("left",c,p,0)));b += "; background-position-x: -";b += (_.v(_.f("sprite",c,p,0)));b += "px\">";b += "\n";b += "</div>";return b;;}
 window.T["message"] = new HoganTemplate();
 window.T["message"].r = function(cx,p){var c = [cx];var b = "";var _ = this;b += "<span class='username'>";b += (_.v(_.f("username",c,p,0)));b += ": </span>";b += "\n";b += "<span class='content'>";b += (_.v(_.f("content",c,p,0)));b += "</span>";return b;;}
 window.T["order_submit"] = new HoganTemplate();
