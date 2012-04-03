@@ -73,15 +73,17 @@ define(['scripts/client/bootstrap.js'], function(){
     initialize: function(target, unit){//unit: {owner: "Ger",province:"Ber",utype:"a"}
       this.unit = unit;
       var loc = window.MAP_COORDS[unit.province]
-      var top, left, color;
-      if(loc!=undefined)
-      {
-        top= loc[1] + "px",
-        left= loc[0] + "px",
-        color= window.MAP_COLORS[unit.owner]
+      var top, left, color, sprite;
+      if(loc!=undefined){
+        top = loc[1] + "px";
+        left = loc[0] + "px";
+        if(unit.utype == 'f')
+          sprite = window.FLEET_SPRITE[unit.owner];
+        else
+          sprite = window.ARMY_SPRITE[unit.owner];
       }
 
-      $(this.el).html(this.template.r({top:top,left:left,color:color,utype:unit.utype}));
+      $(this.el).html(this.template.r({top:top,left:left,sprite:sprite,utype:unit.utype}));
 
       $(target).append(this.el);
     },
