@@ -434,7 +434,12 @@ define(['scripts/client/bootstrap.js'], function(){
           if(turn%2==0)//we are in a fall turn: set secondary state
             this.game.set({state:"secondary"});
           else//only increment turn when we are in a non-fall turn
+          //also delete orders if we are not going to secondary
+          {
+            //state is primary, stays primary
             this.game.set({turn:this.game.get('turn')+1});
+            socket.emit('game:removeorders',this.game.id,_.bind(function(err){},this));
+          }
           this.game.save();
           //this.render();
           /*$(e.target).parent().replaceWith(T['order_submit_unit'].r({units:units}));*/
