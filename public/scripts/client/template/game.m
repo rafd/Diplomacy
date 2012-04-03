@@ -1,7 +1,7 @@
 {{#game}}
 <a href='#' class='game-link'>
   <div class="info {{user_power}}">
-    <div class="turn">{{turn}}</div>
+    <div class="turn">{{turn_label}}</div>
     <div class="status">{{name}}</div>
     <div class="message"></div>
   </div>

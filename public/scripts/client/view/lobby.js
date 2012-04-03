@@ -98,7 +98,7 @@ define(['scripts/client/bootstrap.js'], function(){
         power = player.get('power');
 
       game_players = this.model.get('players').map(function(p){ if(p.get('power') != power) return p.toData()});
-      $(this.el).html(this.template.r({game:this.model.toData(), turn:this.model.turnLabel(),game_players:game_players,user_power:power}));
+      $(this.el).html(this.template.r({game:this.model.toData(), turn_label:this.model.turnLabel(),game_players:game_players,user_power:power}));
 
       if(undefined != this.model.get('players').ownedBy(window.user)){
         $(this.el).appendTo('.games .my_games');
