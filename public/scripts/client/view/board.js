@@ -155,8 +155,75 @@ define(['scripts/client/bootstrap.js'], function(){
     initialize: function(game, player){
       this.game = game;
       this.player = player;
-      //this.game.set({state:"primary"});//can't do this here.
-      this.render();
+      var s = this.game.get('state');
+      var u={};
+      if(s=='secondary')
+      {
+        //get all units
+        //get all units order.move==r and owner==myPower
+        //get all units owner==power
+        //count all supply centers
+        //calculate retreat, and spawn or disband
+        var units = this.game.get('units').toData();
+        //find my current country
+        var power = window.current_player.attributes.power;
+        //find how many supply centers I should have
+        var MAP=this.game.get('map');
+        var mySupply=0;
+        for(var x in MAP)
+        {
+          if(MAP[x].supply==1 && MAP[x].belongsto==power)
+            mySupply++;
+        }
+        //find how many units I have
+        var unitList=[];
+        //do I have any retreats
+        var retreatList=[];
+        for(var x in units)
+        {
+          if(units[x].owner==power)
+          {
+            if(units[x].order.move=='r')
+              retreatList.push(units[x]);
+            unitList.push(units[x]);
+          }
+        }
+        //console.log("unit list, my supply")
+        //console.log(unitList)
+        //console.log(mySupply)
+        var numUnits=unitList.length;
+
+        if(retreatList.length > 0)
+        {
+          u.msg1="You must retreat";
+          u.retreat=retreatList;
+        }
+        if(numUnits < mySupply)
+        {
+          var x = mySupply-numUnits;
+
+          u.msg2="You can add " + x + " new unit(s)";
+          var spawnPoints=[];
+          
+          for(var y in window.MAP)
+          {
+            var coast=false;
+            if(MAP[y].fleet_moves.length!=0)
+              coast=true;
+            if(MAP[y].spawn==power)
+              spawnPoints.push({owner:power,province:y,coast:coast});
+          }
+          u.spawn=spawnPoints;
+        }
+
+        if(numUnits > mySupply)
+        {
+          var x = numUnits-mySupply;
+          u.msg3="Select "+x+" unit(s) to disband";
+          u.disband=unitList;
+        }
+      }
+      this.render(u);
       
       $('#side').append(this.el);
     },
