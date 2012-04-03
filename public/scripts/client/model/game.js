@@ -84,6 +84,19 @@ define(['scripts/client/bootstrap.js'], function(){
       this.get('players').bind("remove", function(){this.save()}, this)
       this.get('players').bind("add", function(){this.save()}, this)
       this.get('players').bind("change", function(){this.save()}, this)
+    },
+    turnLabel: function(){
+      turn = this.get('turn') || 1 //remove || ... once merged
+      state = this.get('state') || "primary" //remove || ... once merged
+      season = ""
+      if(state == "primary")
+        season = (turn % 2) ? "Spring" : "Fall";
+      else
+        season = (turn % 2) ? "Summer" : "Winter";
+      
+      year = 1900 + Math.floor(turn/2)
+
+      return season + " " + year
     }
   });
 

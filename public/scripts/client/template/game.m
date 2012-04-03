@@ -1,9 +1,9 @@
 {{#game}}
 <a href='#' class='game-link'>
   <div class="info {{user_power}}">
-    <div class="turn">{{name}}</div>
-    <div class="status">Awaiting Orders</div>
-    <div class="message">4 Hours Remaining</div>
+    <div class="turn">{{turn}}</div>
+    <div class="status">{{name}}</div>
+    <div class="message"></div>
   </div>
 
   <div class="players">
