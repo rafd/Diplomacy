@@ -91,4 +91,22 @@ define([], function(){
     Rus: 'white',
     Tur: 'brown'
   }
+  window.ARMY_SPRITE = {
+    Aus: 0,
+    Eng: 11,
+    Fra: 22,
+    Ger: 33,
+    Ita: 44,
+    Rus: 55,
+    Tur: 66
+  },
+  window.FLEET_SPRITE = {
+    Aus: 0,
+    Eng: 20,
+    Fra: 39,
+    Ger: 60,
+    Ita: 78,
+    Rus: 99,
+    Tur: 118
+  }
 });
