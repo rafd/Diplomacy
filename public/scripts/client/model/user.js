@@ -17,7 +17,7 @@ define(['scripts/client/bootstrap.js'], function(){
     }
   });
 
-  USER_NAMES = ["Canna","Cliff","Evert","Franz","Joe","Kirill","Mark","Max","Raf","Winston","Woodrow"]
+  USER_NAMES = ["Canna","Cliff","Evert","Franz","Joe","Kirill","Mark","Max","Raf","Winston","Woodrow","Vaughn"]
 
   UserCollection = Backbone.Collection.extend({
     model:User,
