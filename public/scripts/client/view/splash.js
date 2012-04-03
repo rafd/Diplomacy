@@ -4,7 +4,7 @@ define(['scripts/client/bootstrap.js'], function(){
     template: T['splash'],
     className: 'splash',
     events: {
-      "click #logIn":"logIn"
+      "click #logIn":"clickLogIn"
     },
     initialize: function(){
       $(this.el).html(this.template.r({}));
@@ -18,9 +18,12 @@ define(['scripts/client/bootstrap.js'], function(){
       }
       
     },
-    logIn: function(e){
-      if(e) { e.preventDefault(); } //TODO: this shouldn't be necessary
-      
+    clickLogIn: function(e) {
+      e.preventDefault();
+      if(this.name.val() != "")
+        this.logIn();
+    },
+    logIn: function(){
       info = {name: localStorage.name || this.name.val() };
       // TODO: passphrase needs to be sent securely
       // TODO: check the passphrase
