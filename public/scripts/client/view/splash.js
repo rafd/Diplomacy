@@ -9,28 +9,29 @@ define(['scripts/client/bootstrap.js'], function(){
     initialize: function(){
       $(this.el).html(this.template.r({}));
 
-      this.email = $(this.el).find("form input.email");
       this.name = $(this.el).find("form input.name");
 
-      if(localStorage.email){
-        this.email.val(localStorage.email);
-      }
-
       $('#diplomacy').append(this.el);
+
+      if(localStorage.name){
+        this.logIn();
+      }
+      
     },
     logIn: function(e){
-      e.preventDefault(); //TODO: this shouldn't be necessary
-
-      info = {email: this.email.val(), name: this.name.val()};
+      if(e) { e.preventDefault(); } //TODO: this shouldn't be necessary
+      
+      info = {name: localStorage.name || this.name.val() };
       // TODO: passphrase needs to be sent securely
       // TODO: check the passphrase
-    
+
+      
       socket.emit('user:login',info, function(err,data){ 
         // create local user object
         window.user = new User(data);
 
         // store in localstorage
-        localStorage.email = data.email;
+        localStorage.name = data.name;
 
         // switch to lobby
         Lobby = new LobbyView();

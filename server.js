@@ -224,7 +224,7 @@ io.sockets.on('connection', function (socket) {
   socket.on('user:login', function(args, cb){
     var _model = model['user'];
 
-    _model.findOne({email: args.email}, function(err, doc){ 
+    _model.findOne({name: args.name}, function(err, doc){ 
 
       // if username exists
       if(doc){

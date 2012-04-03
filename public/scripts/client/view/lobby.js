@@ -33,7 +33,8 @@ define(['scripts/client/bootstrap.js'], function(){
     className: 'dash',
     template: T['dash'],
     events: {
-       "click #create-game": "createGame"
+       "click #create-game": "createGame",
+       "click .logout": "logOut"
     },
     createGame: function(e){
       g = Games.create();
@@ -48,6 +49,16 @@ define(['scripts/client/bootstrap.js'], function(){
     },
     render: function(){
       $(this.el).html(this.template.r({user:window.user.toData(),users:RemoteUsers.toJSON()}));
+    },
+    logOut: function(){
+
+      delete localStorage['name'];
+      location.reload()
+      /*     
+      $('.lobby').remove();
+
+      window.Splash = new SplashView();
+      */
     }
   });
 
@@ -60,8 +71,9 @@ define(['scripts/client/bootstrap.js'], function(){
     },
     initialize: function() {
       this.model.get('players').bind("change", this.render, this);
-      this.model.get('players').bind("remove", this.render, this)
-      this.model.get('players').bind("add", this.render, this)
+      this.model.get('players').bind("remove", this.render, this);
+      this.model.get('players').bind("add", this.render, this);
+      this.model.get('players').bind("add:user", this.render, this);
     },
     switchToGame: function(){
       $(".lobby").hide();
