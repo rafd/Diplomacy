@@ -4,7 +4,8 @@ exports.create = function(mongoose) {
       name:String,
       players:[],
       units:[],
-      map:{}
+      map:{},
+      state:String
     })
   );
 

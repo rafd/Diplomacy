@@ -155,24 +155,33 @@ define(['scripts/client/bootstrap.js'], function(){
     initialize: function(game, player){
       this.game = game;
       this.player = player;
-
+      this.game.set({state:"primary"});//can't do this here.
       this.render();
       
       $('#side').append(this.el);
     },
-    render: function(){
+    render: function(u){
       this.units = new UnitCollection(this.game.get('units').ownedBy(this.player.get('power')));
-      $(this.el).html(this.template.r({units:this.units.toData()}));
+      //get game state to see what to render
+      if(this.game.get('state')=="primary")
+        $(this.el).html(T['order_submit'].r({units:this.units.toData()}));
+      else if (this.game.get('state')=="secondary")
+        $(this.el).html(T['secondary_order'].r({derp:u}));
+      else
+      {
+        $(this.el).html(this.template.r({units:this.units.toData()}));
+        console.log("OrderSubmit.render() is confused")
+      }
     },
     events: {
-      "click .submit" : "parseOrders",
+      "click .submit" : "submitClicked",
       "click .resolve" : "resolveMoves",
       "click .resolvetwo": "resolveMovesTwo",
-      "click .submittwo" : "parseSecondary",
+      "click .submittwo" : "submitClickedTwo",
       "change select.move" : "clickedMove",
       "change select.from" : "clickedMove"
     },
-    parseOrders: function(e){
+    submitClicked: function(e){
       e.preventDefault();
       var data = $(this.el).find("form").serializeArray();
       var orders=[];
@@ -209,7 +218,7 @@ define(['scripts/client/bootstrap.js'], function(){
         $(e.target).parent().replaceWith(T['order_submit_unit'].r({units:data}));
       },this));*/
     },
-    parseSecondary: function(e){
+    submitClickedTwo: function(e){
       e.preventDefault();
       var data = $(this.el).find("form").serializeArray();
 
@@ -342,21 +351,23 @@ define(['scripts/client/bootstrap.js'], function(){
           this.game.set({map:map});
           //update board with returned state
           this.game.set({units:units});//owner, utype, prov, move
+          this.game.set({state:"secondary"});
           this.game.save();
           //this.render();
           /*$(e.target).parent().replaceWith(T['order_submit_unit'].r({units:units}));*/
 
           //ALWAYS GO TO SECONDARY MOVE PANE
           //EVEN IF YOU HAVE NO SECONDARY MOVES TO SUBMIT
-          //if(Object.keys(u).length!=0)
+          /*if(Object.keys(u).length!=0)
           {
             $(e.target).parent().replaceWith(T['secondary_order'].r({derp:u}));
           }
-          /*else
+          else
           {
             this.render();
             socket.emit('game:removeorders',this.game.id,_.bind(function(err){},this));
           }*/
+          this.render(u);
         },
         this));
     },
@@ -380,6 +391,7 @@ define(['scripts/client/bootstrap.js'], function(){
 
           //update UI
           this.game.set({map:map});
+          this.game.set({state:"primary"});
           this.game.set({units:data});//owner, utype, prov, move
           this.game.save();
           this.player.set({retreatorders:[]});
@@ -387,7 +399,6 @@ define(['scripts/client/bootstrap.js'], function(){
           this.player.set({disbandorders:[]});
           this.player.save();
           this.render();
-
         },
         this));
         socket.emit('game:removeorders',this.game.id,_.bind(function(err){},this));
@@ -472,7 +483,7 @@ define(['scripts/client/bootstrap.js'], function(){
           
       }
       if(!s)
-      $(e.target).parent().replaceWith(T['order_submit_unit'].r({units:u}));        
+        $(e.target).parent().replaceWith(T['order_submit_unit'].r({units:u}));        
       //$(e.target).parent().replaceWith(T['secondary_order'].r({derp:u}));
     }
   });
