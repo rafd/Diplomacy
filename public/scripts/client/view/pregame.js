@@ -4,7 +4,8 @@ define(['scripts/client/bootstrap.js'], function(){
     template: T['pregame'],
     className: 'pregame',
     events: {
-      "click .goToLobby": "goToLobby"
+      "click .goToLobby": "goToLobby",
+      "click .startGame": "startGame"
     },
     initialize: function(options){
       this.game = options.game;
@@ -35,6 +36,23 @@ define(['scripts/client/bootstrap.js'], function(){
       choosing_player.set({'power':power});
       choosing_player.save();
 
+    },
+    startGame: function(ev){
+      $(this.el).remove()
+
+      this.game.set({status:"active"})
+
+      //generate chatrooms
+      
+      /*
+      _.each(this.game.get('players').permutations(), function(pair){
+        this.game.get('chatrooms').create({players: [pair[0].id, pair[1].id]})
+      }, this);
+      
+      */
+      this.game.save()
+
+      new BoardView(this.game)
     }
   });
 

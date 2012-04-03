@@ -1,4 +1,3 @@
-Powers:
 {{#powers}}
 <a href=# class="power {{select_state}} {{name}}" data-power="{{name}}">
   {{name}}
