@@ -155,7 +155,7 @@ define(['scripts/client/bootstrap.js'], function(){
     initialize: function(game, player){
       this.game = game;
       this.player = player;
-      this.game.set({state:"primary"});//can't do this here.
+      //this.game.set({state:"primary"});//can't do this here.
       this.render();
       
       $('#side').append(this.el);

@@ -1,8 +1,9 @@
-{{#derp}}
-<form>
+
   <ul>
   <input type="submit" class="submittwo" value = "Submit secondary moves"/>
   <input type="submit" class="resolvetwo" value = "Resolve secondary moves"/>
+
+{{#derp}}
 <br>
   {{msg1}}
 
@@ -58,5 +59,4 @@
   {{/disband}}
 
   </ul>
-</form>
 {{/derp}}
