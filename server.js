@@ -305,7 +305,9 @@ io.sockets.on('connection', function (socket) {
             {delete end[x]; console.log("deleted retreat unit: " + end[x].province);}
         }
         end = _.compact(end)
-
+        var turn = game.turn;
+        if(turn%2==0)
+        {
         //Countries with too many units?
         //countSupply
         var supply = dipresolve.countSupply(units,game.map)
@@ -337,6 +339,7 @@ io.sockets.on('connection', function (socket) {
         }
 
         end = _.compact(end)
+        }
         //remove orders from players
         console.log("removing secondary orders from players")
         model["player"].update(
