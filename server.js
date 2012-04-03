@@ -220,6 +220,30 @@ io.sockets.on('connection', function (socket) {
 
   });
 
+
+  socket.on('game:removesecondaryorders', function(gameID, cb){
+
+    console.log("removing secondary orders from players")
+    model["game"].findOne({'_id':gameID}, function(err, game){
+
+        model["player"].update(
+          {"_id": {$in:game.players}},
+          {
+            disbandorders:[],
+            retreatorders:[],
+            spawnorders:[]
+          },
+          { multi: true },
+          function(err,num){console.log(num)}
+        );
+      //informing client that called us
+      cb(null);
+    });
+
+  });
+
+
+
   socket.on('game:resolvetwo', function(gameID, playerID, cb){
     console.log("Game resolving");
     //get units for gameID from mongoose

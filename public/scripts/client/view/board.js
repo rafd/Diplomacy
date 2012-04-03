@@ -156,8 +156,9 @@ define(['scripts/client/bootstrap.js'], function(){
       this.game = game;
       this.player = player;
       var s = this.game.get('state');
+      var turn = this.game.get('turn');
       var u={};
-      if(s=='secondary')
+      if(s=='secondary' && turn%2==0)//secondary state and fall turn
       {
         //get all units
         //get all units order.move==r and owner==myPower
@@ -230,9 +231,11 @@ define(['scripts/client/bootstrap.js'], function(){
     render: function(u){
       this.units = new UnitCollection(this.game.get('units').ownedBy(this.player.get('power')));
       //get game state to see what to render
-      if(this.game.get('state')=="primary")
+      var turn = this.game.get('turn');
+      var s = this.game.get('state');
+      if(s=="primary")
         $(this.el).html(T['order_submit'].r({units:this.units.toData()}));
-      else if (this.game.get('state')=="secondary")
+      else if (turn%2==0 && s=="secondary")
         $(this.el).html(T['secondary_order'].r({derp:u}));
       else
       {
@@ -427,7 +430,11 @@ define(['scripts/client/bootstrap.js'], function(){
           this.game.set({map:map});
           //update board with returned state
           this.game.set({units:units});//owner, utype, prov, move
-          this.game.set({state:"secondary"});
+          var turn = this.game.get('turn');
+          if(turn%2==0)//we are in a fall turn: set secondary state
+            this.game.set({state:"secondary"});
+          else//only increment turn when we are in a non-fall turn
+            this.game.set({turn:this.game.get('turn')+1});
           this.game.save();
           //this.render();
           /*$(e.target).parent().replaceWith(T['order_submit_unit'].r({units:units}));*/
@@ -468,6 +475,7 @@ define(['scripts/client/bootstrap.js'], function(){
           //update UI
           this.game.set({map:map});
           this.game.set({state:"primary"});
+          this.game.set({turn:this.game.get('turn')+1});
           this.game.set({units:data});//owner, utype, prov, move
           this.game.save();
           this.player.set({retreatorders:[]});
