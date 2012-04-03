@@ -3,9 +3,17 @@ define(['scripts/client/bootstrap.js'], function(){
   window.User = Backbone.RelationalModel.extend({
     urlRoot: 'user',
     initialize: function(spec){
-      this.set({
-        slug: spec.slug || spec.name.toLowerCase()
-      });
+      console.log(spec.slug)
+      if(spec.slug == undefined){
+        if(USER_NAMES.indexOf(spec.name.split(" ")[0]) == -1)
+          spec.slug = "cat"+Math.floor(Math.random()*4)
+
+        this.set({
+          slug: spec.slug || spec.name.toLowerCase()
+        });
+
+        this.save();
+      }
     }
   });
 
