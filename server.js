@@ -172,9 +172,20 @@ io.sockets.on('connection', function (socket) {
           })
         );
         var end = _.uniq(holds.concat(combined),false,function(u){ return u.province });
+        
+        /*console.log("units before resolve")
+        for(var x in end)
+          if(end[x].owner=="Aus")
+            console.log(end[x]);*/
+
         var u = dipresolve.resolve(end,game.map);
         game.map = u.MAP;
         var units=u.units;
+
+        /*console.log("units after resolve")
+        for(var x in units)
+          if(units[x].owner=="Aus")
+            console.log(units[x]);*/
 
         game.units=units;
         game.save();
@@ -197,10 +208,12 @@ io.sockets.on('connection', function (socket) {
   socket.on('game:removeorders', function(gameID, cb){
     //get units for gameID from mongoose
     console.log("removing orders from units")
+
     var _model = model["game"];
       _model.findOne({'_id':gameID}, function(err, game){
-      //remove orders from players
-      game.save();
+
+        model["player"].update({"_id": {$in:game.players}}, {orders:[]}, { multi: true }, function(err,num){});
+
       //informing client that called us
       cb(null);
     });
@@ -226,32 +239,77 @@ io.sockets.on('connection', function (socket) {
           toRetreat.push(data[x].retreatorders);
           toSpawn.push(data[x].spawnorders);
         }
-        console.log("DATA")
-        console.log(data)
 
         toDisband=_.flatten(toDisband,true);
         toRetreat=_.flatten(toRetreat,true);
         toSpawn=_.flatten(toSpawn,true);
 
         var u = _.flatten(game.units);
+        
+        /*console.log("units before secondaryResolve")
+        for(var x in u)
+          if(u[x].owner=="Aus")
+            console.log(u[x]);*/
+
         /*console.log("disband")
         console.log(toDisband)
         console.log("retreat")
         console.log(toRetreat)
         console.log("spawn")
         console.log(toSpawn)  */    
+
         var e = dipresolve.secondaryResolve(u,toDisband,toRetreat,toSpawn,game.map);
         game.map = e.MAP;
         var end = e.units;
 
+        /*console.log("units after secondaryResolve")
+        for(var x in end)
+          if(end[x].owner=="Aus")
+            console.log(end[x]);*/
+
         //Are there still issues that need to be fixed?
-        //Countries with too many units?
-          //countSupply
-          //count units
+        
         //Retreat units that are not retreated?
           //for all units, units.order.move==r
           //delete them
+        for(var x in end)
+        {
+          if(end[x].order.move=="r")
+            {delete end[x]; console.log("deleted retreat unit: " + end[x].province);}
+        }
+        end = _.compact(end)
 
+        //Countries with too many units?
+        //countSupply
+        var supply = dipresolve.countSupply(units,game.map)
+        console.log("supply")
+        console.log(supply)
+        //count units
+        var units = {"Aus":0,"Eng":0,"Fra":0,"Ger":0,"Ita":0,"Rus":0,"Tur":0};
+        for(var x in end)
+        {
+          units[end[x].owner]++;
+        }
+        console.log("units")
+        console.log(units)
+        //randomly disband until supply >= units
+        for(var x in supply)
+        {
+          var extraunits = units[x]-supply[x];
+          for(var i=0;i<extraunits;i++)
+          {
+            for(var y in end)
+            {
+              if(end[y].owner==x)
+              {
+                delete end[y];
+                break;
+              }
+            }
+          }
+        }
+
+        end = _.compact(end)
         //remove orders from players
         console.log("removing secondary orders from players")
         model["player"].update(

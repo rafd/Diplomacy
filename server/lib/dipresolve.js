@@ -106,7 +106,7 @@ function markCutSupport(units)
     //if the space occupied by a unit offering support
     if(existingUnit.order.move=="s")
       //cannot cut support when you are the one bring attacked
-      if(supportedUnit.order.to!=unit[x].province)
+      if(supportedUnit.order.to!=units[x].province)
         //then cut support
         invalidateUnit(existingUnit,"sup_cut");
   }
@@ -504,7 +504,7 @@ function addRemoveUnits(units,retreat,spawn,MAP)
     }
     else if(cl.length==1)
     {
-      MAP[x].belongsto = cl.owner;
+      MAP[x].belongsto = cl[0].owner;
     }
   }
   //these are the units we must add
