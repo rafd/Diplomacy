@@ -9,6 +9,7 @@ var express = require('express')
   , fs = require('fs')
   , dipresolve = require('./server/lib/dipresolve')
 
+
 var 
     MODEL_PATH  = './server/model/'
   , db_uri      = process.env.MONGOLAB_URI || 'mongodb://localhost/diplomacy-dev';
@@ -106,6 +107,8 @@ app.get('/test', function(req, res) {
   res.render('test.jade', {title: 'Diplomacy'});
 });
 
+var user_sockets = {};
+
 io.sockets.on('connection', function (socket) {
 
   // socket.on('chat:message', function (data) {
@@ -147,8 +150,6 @@ io.sockets.on('connection', function (socket) {
   //   socket.emit('chat:users',users);
   //   socket.broadcast.emit('chat:users',users);
   // });
-
-
   socket.on('game:resolve', function(gameID, cb){
     console.log("Game resolving");
     //get units for gameID from mongoose
@@ -174,20 +175,190 @@ io.sockets.on('connection', function (socket) {
           })
         );
         var end = _.uniq(holds.concat(combined),false,function(u){ return u.province });
-        var ret = dipresolve(end);
+        
+        /*console.log("units before resolve")
+        for(var x in end)
+          if(end[x].owner=="Aus")
+            console.log(end[x]);*/
 
+        var u = dipresolve.resolve(end,game.map);
+        game.map = u.MAP;
+        var units=u.units;
 
-        //remove orders from players
-        model["player"].update({"_id": {$in:game.players}}, {orders:[]}, { multi: true }, function(err,num){});
-        //TODO: update game state on server
-        console.log(ret);
-        game.units=ret;
+        /*console.log("units after resolve")
+        for(var x in units)
+          if(units[x].owner=="Aus")
+            console.log(units[x]);*/
+
+        game.units=units;
         game.save();
-        //broadcast updated game state to all clients
+        
+        //console.log("resolve map's Rum")
+        //console.log(game.map.Rum)
+        //TODO: broadcast updated game state to all clients
+        var supply = dipresolve.countSupply(units,game.map);
 
         //informing client that called us
-        cb(null,ret);
+        cb(null,units,supply,game.map);
 
+      });
+    
+    });
+
+  });
+
+
+  socket.on('game:removeorders', function(gameID, cb){
+    //get units for gameID from mongoose
+    console.log("removing orders from units")
+
+    var _model = model["game"];
+      _model.findOne({'_id':gameID}, function(err, game){
+
+        model["player"].update({"_id": {$in:game.players}}, {orders:[]}, { multi: true }, function(err,num){});
+
+      //informing client that called us
+      cb(null);
+    });
+
+  });
+
+
+  socket.on('game:removesecondaryorders', function(gameID, cb){
+
+    console.log("removing secondary orders from players")
+    model["game"].findOne({'_id':gameID}, function(err, game){
+
+        model["player"].update(
+          {"_id": {$in:game.players}},
+          {
+            disbandorders:[],
+            retreatorders:[],
+            spawnorders:[]
+          },
+          { multi: true },
+          function(err,num){console.log(num)}
+        );
+      //informing client that called us
+      cb(null);
+    });
+
+  });
+
+
+
+  socket.on('game:resolvetwo', function(gameID, playerID, cb){
+    console.log("Game resolving");
+    //get units for gameID from mongoose
+
+    var _model = model["game"];
+
+    _model.findOne({'_id':gameID}, function(err, game){
+      model["player"].find({}).where("_id").in(game.players).select('retreatorders spawnorders disbandorders power').exec(function(er, data){
+        var toDisband=[];
+        var toRetreat=[];
+        var toSpawn=[];
+        //resolve disband orders
+        //resolve spawn and retreat
+        for (var x in data)
+        {
+          toDisband.push(data[x].disbandorders);
+          toRetreat.push(data[x].retreatorders);
+          toSpawn.push(data[x].spawnorders);
+        }
+
+        toDisband=_.flatten(toDisband,true);
+        toRetreat=_.flatten(toRetreat,true);
+        toSpawn=_.flatten(toSpawn,true);
+
+        var u = _.flatten(game.units);
+        
+        /*console.log("units before secondaryResolve")
+        for(var x in u)
+          if(u[x].owner=="Aus")
+            console.log(u[x]);*/
+
+        /*console.log("disband")
+        console.log(toDisband)
+        console.log("retreat")
+        console.log(toRetreat)
+        console.log("spawn")
+        console.log(toSpawn)  */    
+
+        var e = dipresolve.secondaryResolve(u,toDisband,toRetreat,toSpawn,game.map);
+        game.map = e.MAP;
+        var end = e.units;
+
+        /*console.log("units after secondaryResolve")
+        for(var x in end)
+          if(end[x].owner=="Aus")
+            console.log(end[x]);*/
+
+        //Are there still issues that need to be fixed?
+        
+        //Retreat units that are not retreated?
+          //for all units, units.order.move==r
+          //delete them
+        for(var x in end)
+        {
+          if(end[x].order.move=="r")
+            {delete end[x]; console.log("deleted retreat unit: " + end[x].province);}
+        }
+        end = _.compact(end)
+        var turn = game.turn;
+        if(turn%2==0)
+        {
+        //Countries with too many units?
+        //countSupply
+        var supply = dipresolve.countSupply(units,game.map)
+        console.log("supply")
+        console.log(supply)
+        //count units
+        var units = {"Aus":0,"Eng":0,"Fra":0,"Ger":0,"Ita":0,"Rus":0,"Tur":0};
+        for(var x in end)
+        {
+          units[end[x].owner]++;
+        }
+        console.log("units")
+        console.log(units)
+        //randomly disband until supply >= units
+        for(var x in supply)
+        {
+          var extraunits = units[x]-supply[x];
+          for(var i=0;i<extraunits;i++)
+          {
+            for(var y in end)
+            {
+              if(end[y].owner==x)
+              {
+                delete end[y];
+                break;
+              }
+            }
+          }
+        }
+
+        end = _.compact(end)
+        }
+        //remove orders from players
+        console.log("removing secondary orders from players")
+        model["player"].update(
+          {"_id": {$in:game.players}},
+          {
+            disbandorders:[],
+            retreatorders:[],
+            spawnorders:[]
+          },
+          { multi: true },
+          function(err,num){console.log(num)}
+        );
+
+        game.units=end;
+        game.save();
+        //TODO: broadcast updated game state to all clients
+
+        //informing client that called us
+        cb(null,end,game.map);
         
 
       });
@@ -224,14 +395,20 @@ io.sockets.on('connection', function (socket) {
   socket.on('user:login', function(args, cb){
     var _model = model['user'];
 
-    _model.findOne({name: args.name}, function(err, doc){ 
+    var login = function(doc){
+      user_sockets[doc._id] = socket;
+      socket.set('user_id', doc._id, function(){
+        cb(null,doc);
+      });
+    }
+
+    _model.findOne({name: args.name}, function(err, doc){
 
       // if username exists
       if(doc){
         // if passphrase correct
         if(args.passphrase == doc.passphrase){
-          // return user id 
-          cb(null, doc);
+          login(doc)
         }
         // else (passphrase incorrect)
         else {
@@ -246,7 +423,7 @@ io.sockets.on('connection', function (socket) {
         doc.save();
 
         // return user id
-        cb(null, doc);
+        login(doc)
       }
 
     });
@@ -271,6 +448,15 @@ io.sockets.on('connection', function (socket) {
     //  Automated schema loading from models folder
     //  Unit tests
 
+    var update_other = function(user_id, other_id){
+        if (user_id != other_id){
+          console.log('Attempting to broadcast to:', other_id)
+          if (other_id in user_sockets){
+            user_sockets[other_id].emit('update:force', args);
+          }  else {console.log('Broadcast failed, user not online.')}
+        }
+    }
+
     var _model = model[args.collection];
 
     switch(args.action){
@@ -291,20 +477,152 @@ io.sockets.on('connection', function (socket) {
       
       case 'POST':
         if (args.data){
+          socket.get('user_id', function(err, user_id){
+            console.log('create', args.collection,'from:', user_id);
+            console.log(args.data)
+          })
           //create new post in collection
           args.data._id =  mongoose.Types.ObjectId.fromString(args.data._id);
           newEntry = new _model(args.data);
           newEntry.save();
+          //broadcast update to all players
+          if (args.collection == 'game'){
+
+            socket.broadcast.emit('update:newgame')
+
+            // socket.broadcast.emit('update:newgame', args) 
+            
+            // args["game_id"] = args.data._id
+            // args["user_map"] = {}
+            // if (args.collection == 'game') {
+            //   var private_list = ["players", "turns", "chatrooms", "order_submit"]
+            //   for (key in args.data){
+            //     if (_.indexOf(private_list, key) > -1) delete args.data[key]
+            //   }
+            // }
+            // model['player'].find({'_id':{$in:args.players}}, function(err, player_list){
+
+            //   var user_ids = []
+            //   _.each(player_list, function(player){
+            //     user_ids.push(player.user)
+            //   })
+            //   console.log(user_ids)
+            //   model['user'].find({'_id':{$in:user_ids}}, function(err, user_list){
+
+            //     //build player id to user info map
+            //     _.each(player_list, function(player){
+            //       args.user_map[player._id] = _.find(user_list, function(user){
+            //         return (player.user == user._id)
+            //       })
+            //     })
+
+            //     _.each(user_ids, function(user_id){
+            //         socket.broadcast.emit('update:force', args)
+            //     });
+
+            //   })
+
+
+            // });
+
+
+          }
         }
         break;
 
       case 'update':
+        if(args.collection == 'chatroom'){ console.log('drop chat'); break;}//temporarily drop chatroom for debug
         if(args.data){
-          id = mongoose.Types.ObjectId.fromString(args.data._id);
-          delete args.data["_id"];
-          _model.update({_id: id}, args.data, {}, function(e,num){console.log(num)})
-        }
 
+          socket.get('user_id', function(err, user_id){
+            console.log('update from:', user_id, 'to:', args.collection);
+          })
+
+          var arg_id = mongoose.Types.ObjectId.fromString(args.data._id);
+          delete args.data["_id"];
+          _model.findOne({_id: arg_id}, function(e,doc){
+            if (doc){
+              _.extend(doc, args.data)
+              doc.save(function cb(err){
+                if (err) console.log(err);
+                //save complete
+
+/*have game id for game, naturally pull game id for player, need one for chatroom
+need to pass args.game_id, args.data, args.collection
+
+*/
+
+//user will only send own player obj
+//game will send game status, player stuff?
+//chatroom?
+
+/*
+user
+chatrooms other player's chatrooms
+messages other player's messages
+power
+timestamps
+_id same id
+*/
+
+                    //Broadcast update to other players in game
+                    // console.log(args.collection, id, args.data)
+                    
+                      // console.log(args.data)
+                var player_list = null
+                if (args.collection == 'player') player_id = mongoose.Types.ObjectId.toString(arg_id)
+                else player_id = args.data.players[0]
+                model['game'].findOne({'players': player_id}, function(err, game){
+                  console.log(args.data)
+                  args["game_id"] = game._id
+                  args.data["_id"] = arg_id
+                  args["user_map"] = {}
+                  if (args.collection == 'player') {
+                    //remove stuff we don't send to other players
+                    var private_list = ["orders", "chatrooms", "messages", "user"]
+                    for (key in args.data){
+                      if (_.indexOf(private_list, key) > -1) delete args.data[key]
+                    }
+                  }
+                  if (args.collection == 'game') {
+                    var private_list = ["players", "units", "turns", "chatrooms", "order_submit"]
+                    for (key in args.data){
+                      console.log(key)
+                      if (_.indexOf(private_list, key) > -1) delete args.data[key]
+                    }
+                  }
+                  model['player'].find({'_id':{$in:game.players}}, function(err, player_list){
+
+                    var user_ids = []
+                    _.each(player_list, function(player){
+                      user_ids.push(player.user)
+                    })
+                    console.log(user_ids)
+                    model['user'].find({'_id':{$in:user_ids}}, function(err, user_list){
+
+                      //build player id to user info map
+                      _.each(player_list, function(player){
+                        args.user_map[player._id] = _.find(user_list, function(user){
+                          return (player.user == user._id)
+                        })
+                      })
+
+                      _.each(user_ids, function(user_id){
+                        socket.get('user_id', function(err, data){
+                          update_other(data, user_id);
+                        });
+                      });
+
+                    })
+
+
+                  });
+                });
+              });
+            } 
+            else console.log('no doc to update');
+          });
+        }
         break;
       
       case 'DELETE':
@@ -315,9 +633,17 @@ io.sockets.on('connection', function (socket) {
         break;
     }
     
-  })
+  });
+
+  socket.on('disconnect', function(){
+    socket.get('user_id', function(err, user_id){
+      delete user_sockets[user_id];
+    });
+  });
 
 });
+
+  
 
 // RUN
 

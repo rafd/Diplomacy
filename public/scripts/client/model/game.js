@@ -37,11 +37,13 @@ define(['scripts/client/bootstrap.js'], function(){
       // if no ID, create a game from scratch
       if(spec['_id'] == undefined) {
         console.log("new game")
-
         this.set({
+          state:"primary",
           name: spec.name || "Game "+Math.floor(100*Math.random()),
           created_at: new Date().getTime(),
-          status: "pregame"
+          status: "pregame",
+          map: window.MAP,
+          turn: 1
         });
 
 

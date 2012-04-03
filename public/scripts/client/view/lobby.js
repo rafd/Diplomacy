@@ -17,6 +17,11 @@ define(['scripts/client/bootstrap.js'], function(){
       window.Games = new GameCollection();
       Games.fetch();
 
+      window.socket.on('update:newgame', function(){
+        Games.fetch();
+      })
+
+
       this.render();
       
     },

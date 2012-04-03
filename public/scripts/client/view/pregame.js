@@ -197,6 +197,7 @@ define(['scripts/client/bootstrap.js'], function(){
     anchor: '#player-list-ul',
     initialize: function(){
 
+
     },
     render: function(players){
       $(this.anchor).empty();
