@@ -9,8 +9,6 @@ define(['scripts/client/bootstrap.js'], function(){
     },
     initialize: function(model){
       this.model = model;
-
-
       this.render();
     },
     render: function(){
@@ -238,13 +236,18 @@ define(['scripts/client/bootstrap.js'], function(){
       if(u==undefined) 
         u=v;
       u.turn = turn;
+      var season;     
+      if(turn%2==0)
+        season="Fall";
+      else
+        season="Spring";
       if(s=="primary")
-        $(this.el).html(T['order_submit'].r({units:this.units.toData(),turn:turn}));
+        $(this.el).html(T['order_submit'].r({units:this.units.toData(),turn:turn,season:season}));
       else if (s=="secondary")
       {
         if(Object.keys(u).length==1 )
           u.msg1="You have no secondary moves"
-        $(this.el).html(T['secondary_order'].r({derp:u}));
+        $(this.el).html(T['secondary_order'].r({derp:u,season:season}));
       }
       else
       {
